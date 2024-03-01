@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module ecm_custom_models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>ecm_custom_models</strong></big></big></font></td
+></tr></table>
+    <p><tt>Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;module&nbsp;allows&nbsp;for&nbsp;equivalent&nbsp;circuits&nbsp;(and&nbsp;other&nbsp;models)&nbsp;that&nbsp;cannot&nbsp;be&nbsp;constructed&nbsp;using&nbsp;the&nbsp;circuit&nbsp;typing&nbsp;and&nbsp;drawing&nbsp;interfaces&nbsp;to&nbsp;be&nbsp;implemented.&nbsp;Doing&nbsp;so&nbsp;requires&nbsp;modifying&nbsp;this&nbsp;module.&nbsp;The&nbsp;base&nbsp;version&nbsp;of&nbsp;this&nbsp;module&nbsp;was&nbsp;last&nbsp;modified&nbsp;on&nbsp;4&nbsp;December&nbsp;2023&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+&nbsp;<br>
+Global&nbsp;variables:<br>
+override_impedance_method&nbsp;--&nbsp;Boolean,&nbsp;indicates&nbsp;if&nbsp;the&nbsp;standard&nbsp;impedance&nbsp;calculation&nbsp;should&nbsp;be&nbsp;performed&nbsp;or&nbsp;not&nbsp;(False&nbsp;if&nbsp;standard,&nbsp;True&nbsp;if&nbsp;not)<br>
+custom_model&nbsp;--&nbsp;the&nbsp;impedance&nbsp;function&nbsp;overriding&nbsp;the&nbsp;standard&nbsp;one<br>
+custom_model_diagrams&nbsp;--&nbsp;dictionary&nbsp;with&nbsp;model&nbsp;names&nbsp;(strings)&nbsp;ask&nbsp;keys&nbsp;and&nbsp;tuples&nbsp;of&nbsp;(diagram&nbsp;string,&nbsp;impedance&nbsp;function)&nbsp;as&nbsp;values<br>
+&nbsp;<br>
+Functions:<br>
+bisquert_2000_f&nbsp;--&nbsp;custom&nbsp;impedance&nbsp;function&nbsp;example<br>
+spherical_diffusion_impedance&nbsp;--&nbsp;custom&nbsp;impedance&nbsp;example<br>
+&nbsp;<br>
+When&nbsp;adding&nbsp;a&nbsp;new&nbsp;function,&nbsp;place&nbsp;it&nbsp;below&nbsp;the&nbsp;CUSTOM&nbsp;MODEL&nbsp;FUNCTIONS&nbsp;header,&nbsp;but&nbsp;above&nbsp;the&nbsp;CUSTOM&nbsp;MODEL&nbsp;DICTIONARY&nbsp;header.<br>
+&nbsp;<br>
+A&nbsp;custom&nbsp;impedance&nbsp;function&nbsp;can&nbsp;take&nbsp;only&nbsp;two&nbsp;arguments:&nbsp;the&nbsp;first&nbsp;argument&nbsp;must&nbsp;be&nbsp;a&nbsp;list&nbsp;of&nbsp;floating&nbsp;point&nbsp;values&nbsp;(the&nbsp;fit&nbsp;parameters)&nbsp;and&nbsp;the&nbsp;second&nbsp;argument&nbsp;must&nbsp;be&nbsp;a&nbsp;NumPy&nbsp;array&nbsp;of&nbsp;frequencies.&nbsp;It&nbsp;must&nbsp;return&nbsp;a&nbsp;NumPy&nbsp;array&nbsp;of&nbsp;complex&nbsp;numbers&nbsp;whose&nbsp;length&nbsp;is&nbsp;equal&nbsp;to&nbsp;that&nbsp;of&nbsp;the&nbsp;input&nbsp;array&nbsp;of&nbsp;frequencies.&nbsp;For&nbsp;more&nbsp;details,&nbsp;see&nbsp;the&nbsp;bisquert_2000_f&nbsp;docstring.<br>
+&nbsp;<br>
+To&nbsp;access&nbsp;a&nbsp;custom&nbsp;impedance&nbsp;function&nbsp;from&nbsp;DECiM,&nbsp;the&nbsp;function&nbsp;must&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;custom_model_diagrams&nbsp;dictionary.&nbsp;The&nbsp;key&nbsp;is&nbsp;a&nbsp;string;&nbsp;its&nbsp;text&nbsp;will&nbsp;appear&nbsp;in&nbsp;the&nbsp;circuit&nbsp;menu&nbsp;in&nbsp;the&nbsp;menu&nbsp;bar.&nbsp;The&nbsp;value&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;a&nbsp;circuit&nbsp;diagram&nbsp;string&nbsp;and&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;function.&nbsp;The&nbsp;number&nbsp;of&nbsp;parameters&nbsp;generated&nbsp;by&nbsp;the&nbsp;circuit&nbsp;string&nbsp;must&nbsp;match&nbsp;the&nbsp;number&nbsp;of&nbsp;parameters&nbsp;used&nbsp;in&nbsp;the&nbsp;custom&nbsp;impedance&nbsp;function.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-bisquert_2000_f"><strong>bisquert_2000_f</strong></a>(fp, freq)</dt><dd><tt>Example&nbsp;impedance&nbsp;function&nbsp;no.&nbsp;1.&nbsp;This&nbsp;is&nbsp;a&nbsp;transmission&nbsp;line&nbsp;model&nbsp;for&nbsp;porous&nbsp;electrodes.&nbsp;See&nbsp;Bisquert&nbsp;et&nbsp;al.,&nbsp;J.&nbsp;Phys.&nbsp;Chem.&nbsp;B.,&nbsp;2000,&nbsp;104,&nbsp;2287-2298.<br>
+&nbsp;<br>
+Arguments:<br>
+fp&nbsp;--&nbsp;list&nbsp;of&nbsp;fit&nbsp;parameters<br>
+freq&nbsp;--&nbsp;Real&nbsp;NumPy&nbsp;array&nbsp;of&nbsp;linear&nbsp;frequencies&nbsp;f<br>
+&nbsp;<br>
+Returns:<br>
+Complex&nbsp;NumPy&nbsp;array&nbsp;of&nbsp;impedances&nbsp;Z<br>
+&nbsp;<br>
+In&nbsp;the&nbsp;custom_model_diagrams&nbsp;dictionary,&nbsp;the&nbsp;diagram&nbsp;for&nbsp;this&nbsp;function&nbsp;is&nbsp;R0R1Q0.&nbsp;This&nbsp;diagram&nbsp;has&nbsp;two&nbsp;one-parameter&nbsp;elements&nbsp;and&nbsp;one&nbsp;two-parameter&nbsp;element.&nbsp;The&nbsp;circuit&nbsp;string&nbsp;is&nbsp;read&nbsp;from&nbsp;left&nbsp;to&nbsp;right,&nbsp;so:&nbsp;fp[0]&nbsp;is&nbsp;R0,&nbsp;fp[1]&nbsp;is&nbsp;R1,&nbsp;fp[2]&nbsp;is&nbsp;Q0,&nbsp;and&nbsp;fp[3]&nbsp;is&nbsp;n0,&nbsp;which&nbsp;is&nbsp;the&nbsp;exponent&nbsp;belonging&nbsp;to&nbsp;the&nbsp;CPE&nbsp;Q0.</tt></dd></dl>
+ <dl><dt><a name="-spherical_diffusion_impedance"><strong>spherical_diffusion_impedance</strong></a>(fp, freq)</dt><dd><tt>Example&nbsp;impedance&nbsp;function&nbsp;no.&nbsp;2.&nbsp;This&nbsp;is&nbsp;a&nbsp;simple&nbsp;spherical&nbsp;diffusion&nbsp;model.&nbsp;See&nbsp;Moskon&nbsp;&amp;&nbsp;Gaberscek,&nbsp;J.&nbsp;Power&nbsp;Sources&nbsp;Adv.&nbsp;2021,&nbsp;7,&nbsp;100047.<br>
+&nbsp;<br>
+Arguments:<br>
+fp&nbsp;--&nbsp;list&nbsp;of&nbsp;fit&nbsp;parameters<br>
+freq&nbsp;--&nbsp;Real&nbsp;NumPy&nbsp;array&nbsp;of&nbsp;linear&nbsp;frequencies&nbsp;f<br>
+&nbsp;<br>
+Returns:<br>
+Complex&nbsp;NumPy&nbsp;array&nbsp;of&nbsp;impedances&nbsp;Z<br>
+&nbsp;<br>
+In&nbsp;the&nbsp;custom_model_diagrams&nbsp;dictionary,&nbsp;the&nbsp;diagram&nbsp;for&nbsp;this&nbsp;function&nbsp;is&nbsp;R0C0.&nbsp;This&nbsp;diagram&nbsp;has&nbsp;two&nbsp;one-parameter&nbsp;elements.&nbsp;The&nbsp;circuit&nbsp;string&nbsp;is&nbsp;read&nbsp;from&nbsp;left&nbsp;to&nbsp;right,&nbsp;so&nbsp;fp[0]&nbsp;is&nbsp;R0&nbsp;and&nbsp;fp[1]&nbsp;is&nbsp;C0.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>custom_model</strong> = None<br>
+<strong>custom_model_diagrams</strong> = {'Porous electrode transmission line': ('R0R1Q0', &lt;function bisquert_2000_f&gt;), 'Spherical diffusion': ('R0C0', &lt;function spherical_diffusion_impedance&gt;)}<br>
+<strong>override_impedance_method</strong> = False</td></tr></table>
+</body></html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module ecm_file_io</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>ecm_file_io</strong></big></big></font></td
+></tr></table>
+    <p><tt>Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;all&nbsp;functions&nbsp;related&nbsp;to&nbsp;file&nbsp;I/O.&nbsp;Last&nbsp;modified&nbsp;4&nbsp;December&nbsp;2023&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+&nbsp;<br>
+Functions:<br>
+parseData&nbsp;--&nbsp;parse&nbsp;a&nbsp;text&nbsp;file&nbsp;containing&nbsp;measured&nbsp;data,&nbsp;return&nbsp;a&nbsp;dataSet<br>
+parseCircuitString&nbsp;--&nbsp;parse&nbsp;a&nbsp;circuit&nbsp;string,&nbsp;return&nbsp;a&nbsp;Circuit<br>
+assignIndicesAndValues&nbsp;--&nbsp;correct&nbsp;the&nbsp;indices&nbsp;and&nbsp;values&nbsp;obtained&nbsp;from&nbsp;a&nbsp;result&nbsp;(.recm2)&nbsp;file<br>
+parseResult&nbsp;--&nbsp;parse&nbsp;an&nbsp;RECM2&nbsp;file,&nbsp;return&nbsp;a&nbsp;Circuit,&nbsp;measured&nbsp;dataSet&nbsp;and&nbsp;list&nbsp;of&nbsp;model&nbsp;parameters<br>
+createResultFile&nbsp;--&nbsp;create&nbsp;an&nbsp;RECM2&nbsp;file&nbsp;based&nbsp;on&nbsp;the&nbsp;current&nbsp;data&nbsp;and&nbsp;model<br>
+parseCircuitPresets&nbsp;--&nbsp;validate&nbsp;the&nbsp;circuit&nbsp;definitions&nbsp;in&nbsp;the&nbsp;circuit&nbsp;presets&nbsp;(ecm_presets.decim_circuits)&nbsp;file,&nbsp;return&nbsp;a&nbsp;list&nbsp;with&nbsp;correct&nbsp;circuit&nbsp;strings</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="copy.html">copy</a><br>
+<a href="tkinter.filedialog.html">tkinter.filedialog</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+<a href="tkinter.simpledialog.html">tkinter.simpledialog</a><br>
+</td><td width="25%" valign=top><a href="tkinter.html">tkinter</a><br>
+<a href="tkinter.ttk.html">tkinter.ttk</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-assignIndicesAndValues"><strong>assignIndicesAndValues</strong></a>(specification_lines, raw_units)</dt><dd><tt>Change&nbsp;the&nbsp;indices&nbsp;and&nbsp;values&nbsp;of&nbsp;circuit&nbsp;elements&nbsp;based&nbsp;on&nbsp;input&nbsp;from&nbsp;an&nbsp;RECM2&nbsp;file&nbsp;and&nbsp;return&nbsp;fit&nbsp;parameters&nbsp;that&nbsp;can&nbsp;be&nbsp;accessed&nbsp;by&nbsp;all&nbsp;parts&nbsp;of&nbsp;DECiM.<br>
+&nbsp;<br>
+Arguments:<br>
+specification_lines&nbsp;--&nbsp;part&nbsp;of&nbsp;the&nbsp;RECM2&nbsp;file&nbsp;that&nbsp;contains&nbsp;information&nbsp;about&nbsp;the&nbsp;individual&nbsp;circuit&nbsp;elements<br>
+raw_units&nbsp;--&nbsp;ecm_circuits.Circuit&nbsp;object&nbsp;whose&nbsp;elements'&nbsp;values&nbsp;and&nbsp;indices&nbsp;must&nbsp;be&nbsp;corrected<br>
+&nbsp;<br>
+Returns:<br>
+fit_parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;fit&nbsp;parameters</tt></dd></dl>
+ <dl><dt><a name="-createResultFile"><strong>createResultFile</strong></a>(circuit, parameters, e_dataset, m_dataset, default_filename='')</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;result&nbsp;file.<br>
+&nbsp;<br>
+Arguments:<br>
+circuit&nbsp;--&nbsp;ecm_circuits.Circuit&nbsp;object<br>
+parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;fit&nbsp;parameters<br>
+e_dataset&nbsp;--&nbsp;dataSet&nbsp;of&nbsp;measured&nbsp;data<br>
+m_dataset&nbsp;--&nbsp;dataSet&nbsp;of&nbsp;model&nbsp;curve<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+default_filename&nbsp;--&nbsp;initial&nbsp;file&nbsp;name,&nbsp;will&nbsp;normally&nbsp;be&nbsp;changed&nbsp;by&nbsp;the&nbsp;user<br>
+&nbsp;<br>
+No&nbsp;return&nbsp;value.&nbsp;The&nbsp;function&nbsp;ends&nbsp;with&nbsp;closing&nbsp;the&nbsp;output&nbsp;RECM2&nbsp;file.</tt></dd></dl>
+ <dl><dt><a name="-parseCircuitPresets"><strong>parseCircuitPresets</strong></a>(filename)</dt><dd><tt>Parse&nbsp;the&nbsp;ecm_presets.decim_circuits&nbsp;file.<br>
+&nbsp;<br>
+Arguments:<br>
+filename&nbsp;--&nbsp;name&nbsp;of&nbsp;the&nbsp;presets&nbsp;file,&nbsp;should&nbsp;be&nbsp;ecm_presets.decim_circuits<br>
+&nbsp;<br>
+Returns:<br>
+valid_circuit_definitions&nbsp;--&nbsp;list&nbsp;of&nbsp;all&nbsp;correct&nbsp;circuit&nbsp;strings&nbsp;extracted&nbsp;from&nbsp;the&nbsp;file</tt></dd></dl>
+ <dl><dt><a name="-parseCircuitString"><strong>parseCircuitString</strong></a>(circuit_string)</dt><dd><tt>Parse&nbsp;a&nbsp;circuit&nbsp;string&nbsp;[such&nbsp;as&nbsp;(R0Q0)].<br>
+&nbsp;<br>
+Arguments:<br>
+circuit_string&nbsp;--&nbsp;the&nbsp;string&nbsp;defining&nbsp;a&nbsp;circuit<br>
+&nbsp;<br>
+Returns:<br>
+ecm_circuits.Circuit&nbsp;object&nbsp;whose&nbsp;diagram&nbsp;matches&nbsp;the&nbsp;one&nbsp;described&nbsp;by&nbsp;the&nbsp;circuit&nbsp;string.</tt></dd></dl>
+ <dl><dt><a name="-parseData"><strong>parseData</strong></a>(filename, reverse=True)</dt><dd><tt>Read&nbsp;a&nbsp;data&nbsp;file.&nbsp;The&nbsp;assumed&nbsp;structure&nbsp;is&nbsp;three&nbsp;columns:&nbsp;linear&nbsp;frequency&nbsp;(Hz),&nbsp;real&nbsp;part&nbsp;of&nbsp;impedance&nbsp;(Ohm),&nbsp;imaginary&nbsp;part&nbsp;of&nbsp;impedance&nbsp;(Ohm).<br>
+&nbsp;<br>
+Non-keyword&nbsp;arguments:<br>
+filename&nbsp;--&nbsp;relative&nbsp;path&nbsp;to&nbsp;file&nbsp;and&nbsp;name&nbsp;of&nbsp;file<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+reverse&nbsp;--&nbsp;Boolean,&nbsp;reverse&nbsp;the&nbsp;order&nbsp;of&nbsp;the&nbsp;imported&nbsp;data&nbsp;if&nbsp;True.&nbsp;Default&nbsp;is&nbsp;True.&nbsp;Should&nbsp;be&nbsp;True&nbsp;if&nbsp;the&nbsp;input&nbsp;file&nbsp;begins&nbsp;with&nbsp;the&nbsp;highest&nbsp;frequencies,&nbsp;otherwise&nbsp;it&nbsp;should&nbsp;be&nbsp;False.<br>
+&nbsp;<br>
+Returns:<br>
+ndata&nbsp;--&nbsp;list&nbsp;of&nbsp;arrays.&nbsp;ndata[0]&nbsp;is&nbsp;the&nbsp;frequency,&nbsp;ndata[1]&nbsp;the&nbsp;real&nbsp;impedance&nbsp;and&nbsp;ndata[2]&nbsp;the&nbsp;imaginary&nbsp;impedance.</tt></dd></dl>
+ <dl><dt><a name="-parseResult"><strong>parseResult</strong></a>(filename)</dt><dd><tt>Parse&nbsp;a&nbsp;result&nbsp;(.recm2)&nbsp;file.<br>
+&nbsp;<br>
+Arguments:<br>
+filename&nbsp;--&nbsp;Path&nbsp;to&nbsp;and&nbsp;name&nbsp;of&nbsp;the&nbsp;.recm2&nbsp;file&nbsp;to&nbsp;be&nbsp;parsed<br>
+&nbsp;<br>
+Returns&nbsp;tuple&nbsp;of:<br>
+circuit_input&nbsp;--&nbsp;ecm_circuits.Circuit&nbsp;object<br>
+dataSet&nbsp;object&nbsp;containing&nbsp;measured&nbsp;data<br>
+list&nbsp;of&nbsp;model&nbsp;parameters</tt></dd></dl>
+</td></tr></table>
+</body></html>
