@@ -4,7 +4,7 @@ DEC*i*M (Determination of Equivalent Circuit Models) is an equivalent circuit mo
 
 ## Prerequisites
 
-The current DEC*i*M version (1.1.1) requires the following software to already be installed on your computer:
+The current DEC*i*M version (1.1.2) requires the following software to already be installed on your computer:
 
 - Python 3.10 or higher (including copy, webbrowser, functools and tkinter as part of the Python Standard Library)
 - NumPy
@@ -17,7 +17,7 @@ Download the entire project. If the prerequisites are already installed, DEC*i*M
 
 ## Usage
 
-Open your preferred program to access the command line and navigate to the `src` directory of the DEC*i*M distribution. Provided your Python installation allow you to run Python 3 as `python`, you can start DEC*i*M from the command line as follows:
+Open your preferred program to access the command line and navigate to the `src` directory of the DEC*i*M distribution. Provided your Python installation allows you to run Python 3 as `python`, you can start DEC*i*M from the command line as follows:
 
 ```
 python DECiM.py

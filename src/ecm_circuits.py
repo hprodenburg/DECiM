@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains circuit arrangement code, impedance calculations and circuit selection UI code. Last modified 6 December 2023 by Henrik Rodenburg.
+"""Part of DECiM. This file contains circuit arrangement code, impedance calculations and circuit selection UI code. Last modified 14 March 2024 by Henrik Rodenburg.
 
 Classes:
 Circuit elements:
@@ -517,7 +517,7 @@ class Circuit():
         NumPy array of complex impedances."""
         self.set_element_values(fp)
         if ecmcm.override_impedance_method:
-            return ecmcm.custom_model(fp, freq)
+            return ecmcm.custom_model_diagrams[ecmcm.custom_model_name][1](fp, freq)
         return self.diagram.Z(freq)
 
 ###############################

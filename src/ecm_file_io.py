@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains all functions related to file I/O. Last modified 10 January 2023 by Henrik Rodenburg.
+"""Part of DECiM. This file contains all functions related to file I/O. Last modified 14 March 2024 by Henrik Rodenburg.
 
 Functions:
 parseData -- parse a text file containing measured data, return a dataSet
@@ -21,6 +21,7 @@ import tkinter.filedialog as fdiag
 
 from ecm_datastructure import dataSet
 from ecm_circuits import Circuit, Unit, Resistor, Capacitor, Inductor, ConstantPhaseElement, WarburgOpen, WarburgShort, GerischerElement
+import ecm_custom_models as ecmcm
 
 #####################
 ##DATA FILE PARSING##
@@ -207,6 +208,8 @@ def parseResult(filename):
     reading_specification_lines = False
     reading_statistics = False
     reading_measured_data = False
+    #Boolean to indicate if the program has a custom model to deal with or not
+    custom_model = False
     spec_lines = [] #Specification lines
     file = open(filename, "r") #Open a new RECM2 file
     for line in file: #Read the file line by line. Reading is done looking for headers in REVERSE ORDER. This is important.
@@ -232,12 +235,24 @@ def parseResult(filename):
         if line == ">MODEL PARAMETERS\n": #Look for the specification lines
             reading_specification_lines = True #Set reading state
         if reading_circuit_string and line not in [">CIRCUIT DEFINITION\n", "\n"]: #Skip the announcement line and empty lines
+            split_list = list(line.split())
+            if split_list[0] == "CUSTOM" and split_list[1] == "MODEL:":
+                custom_model = True
+                circuit_input = parseCircuitString(split_list[2])
             circuit_input = parseCircuitString(line[:-1]) #Read the circuit string
             reading_circuit_string = False #Set reading state
         if line == ">CIRCUIT DEFINITION\n": #Look for the circuit definition
             reading_circuit_string = True #Set reading state
     file.close()
-    return circuit_input, dataSet(freq = measured_data[0], real = measured_data[1], imag = measured_data[2]), model_parameters #Returns the circuit (treated), the data and the parameter list
+    if not custom_model:
+        return circuit_input, dataSet(freq = measured_data[0], real = measured_data[1], imag = measured_data[2]), model_parameters, custom_model #Returns the circuit (treated), the data and the parameter list
+    model_name = split_list[3]
+    for s in split_list[4:]:
+        model_name += " "
+        model_name += s
+    if model_name in ecmcm.custom_model_diagrams:
+        return circuit_input, dataSet(freq = measured_data[0], real = measured_data[1], imag = measured_data[2]), model_parameters, custom_model, model_name
+    return circuit_input, dataSet(freq = measured_data[0], real = measured_data[1], imag = measured_data[2]), model_parameters, False
 
 #######################
 ##RESULT FILE WRITING##
@@ -264,7 +279,10 @@ def createResultFile(circuit, parameters, e_dataset, m_dataset, default_filename
     outfile = open(fn, "w")
     #Circuit definition
     outfile.write(">CIRCUIT DEFINITION\n")
-    outfile.write(circuit.diagram.generate_circuit_string(verbose = True) + "\n\n")
+    if ecmcm.override_impedance_method:
+        outfile.write("CUSTOM MODEL: " + ecmcm.custom_model_diagrams[ecmcm.custom_model_name][0] + " " + ecmcm.custom_model_name + "\n\n")
+    else:
+        outfile.write(circuit.diagram.generate_circuit_string(verbose = True) + "\n\n")
     #Model parameter section
     e_units = {"R": "Ohm", "L": "H", "C": "F", "Q": "Fs^(n-1)", "n": "", "O": "Ohm", "S": "Ohm", "G": "Ohm", "k": "s^{1/2}", "l": "s^{1/2}", "m": "s^{1/2}"}
     outfile.write(">MODEL PARAMETERS\n")

@@ -1,4 +1,4 @@
-"""Part of DECiM. This module allows for equivalent circuits (and other models) that cannot be constructed using the circuit typing and drawing interfaces to be implemented. Doing so requires modifying this module. The base version of this module was last modified on 4 December 2023 by Henrik Rodenburg.
+"""Part of DECiM. This module allows for equivalent circuits (and other models) that cannot be constructed using the circuit typing and drawing interfaces to be implemented. Doing so requires modifying this module. The base version of this module was last modified on 14 March 2024 by Henrik Rodenburg.
 
 Global variables:
 override_impedance_method -- Boolean, indicates if the standard impedance calculation should be performed or not (False if standard, True if not)
@@ -8,6 +8,7 @@ custom_model_diagrams -- dictionary with model names (strings) ask keys and tupl
 Functions:
 bisquert_2000_f -- custom impedance function example
 spherical_diffusion_impedance -- custom impedance example
+miec_transmission_line -- general equivalent circuit for mixed conductors
 
 When adding a new function, place it below the CUSTOM MODEL FUNCTIONS header, but above the CUSTOM MODEL DICTIONARY header.
 
@@ -26,7 +27,7 @@ import numpy as np
 ############
 
 override_impedance_method = False #This variable indicates whether or not the standard impedance method of the Circuit class in ecm_circuits should be overridden. Should be False upon program start-up.
-custom_model = None #The function that replaces the standard impedance method if override_impedance_method is set to True. Should be None upon program start-up.
+custom_model_name = None #The function that replaces the standard impedance method if override_impedance_method is set to True. Should be None upon program start-up.
 
 ##########################
 ##CUSTOM MODEL FUNCTIONS##
@@ -61,7 +62,46 @@ def spherical_diffusion_impedance(fp, freq):
     In the custom_model_diagrams dictionary, the diagram for this function is R0C0. This diagram has two one-parameter elements. The circuit string is read from left to right, so fp[0] is R0 and fp[1] is C0."""
     sqtm = np.sqrt(1j*2*np.pi*freq*fp[0]*fp[1])
     return fp[0]*np.tanh(sqtm)/(sqtm - np.tanh(sqtm))
+
+def miec_transmission_line(fp, freq):
+    """Transmission line model for mixed conductors based on Jamnik & Maier, J. Electrochem. Soc. 1999, 146(11), 4183-4188.
+    Also featured in Lee et al., Monatsh. Chem. 2009, 140, 1113-1119.
     
+    Arguments:
+    fp -- list of fit parameters
+    freq -- Real NumPy array of linear frequencies f
+    
+    Returns:
+    Complex NumPy array of impedances Z
+    
+    Model parameters:
+    R0, fp[0] -- R_ion
+    R1, fp[1] -- R_eon
+    R2, fp[2] -- R_ion^perp
+    R3, fp[3] -- R_eon^perp
+    C0, fp[4] -- C_inf
+    Q0, fp[5] -- C_chem
+    n0, fp[6] -- Sample thickness (in meters)
+    C1, fp[7] -- C_ion^perp
+    C2, fp[8] -- C_eon^perp
+    L0, fp[9] -- Lead wire inductance"""
+    omega = 2*np.pi*freq
+    z_ion_perp = fp[2]/(1 + 1j*omega*fp[2]*fp[7])
+    z_eon_perp = fp[3]/(1 + 1j*omega*fp[3]*fp[8])
+    d_chem = fp[6]**2/((fp[0] + fp[1])*fp[5])
+    z_inf = fp[0]*fp[1]/(fp[0] + fp[1]) + 2*(z_ion_perp*z_eon_perp)/(z_ion_perp + z_eon_perp)
+    z_0 = 1/(1/(fp[0] + 2*z_ion_perp) + 1/(fp[1] + 2*z_eon_perp))
+    root = np.sqrt(1j*omega*(fp[6]**2)/(4*d_chem))
+    troot = np.tanh(root)
+    com = (fp[0] + fp[1])/(2*(z_ion_perp + z_eon_perp))
+    numer = (1 + com)*troot
+    denom = root + com*troot
+    z_non_periph = z_inf + (z_0 - z_inf)*(numer/denom)
+    z_c_inf = 1/(1j*omega*fp[4])
+    z_cap = 1/(1/z_non_periph + 1/z_c_inf)
+    z_l_wire = 1j*omega*fp[9]
+    return z_cap + z_l_wire
+
 #Other functions go here...
 
 ###########################
@@ -69,4 +109,4 @@ def spherical_diffusion_impedance(fp, freq):
 ###########################
 
 #Functions must be added to this dictionary
-custom_model_diagrams = {"Porous electrode transmission line": ("R0R1Q0", bisquert_2000_f), "Spherical diffusion": ("R0C0", spherical_diffusion_impedance)}
+custom_model_diagrams = {"Porous electrode transmission line": ("R0R1Q0", bisquert_2000_f), "Spherical diffusion": ("R0C0", spherical_diffusion_impedance), "Mixed conductor": ("R0R1R2R3C0Q0C1C2L0", miec_transmission_line)}

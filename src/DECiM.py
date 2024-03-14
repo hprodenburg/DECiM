@@ -1,6 +1,6 @@
 """DECiM (Determination of Equivalent Circuit Models) is an equivalent circuit model fitting program for impedance data. It is a GUI-based program.
 Much of the source code is spread over other python source files, all of which must be in the same folder as DECiM.py to ensure that the program works correctly.
-DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.1.1, 6 March 2024.
+DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.1.2, 14 March 2024.
 
 This is the core module -- when launched, DECiM starts. This module also defines the Window class."""
 
@@ -44,7 +44,7 @@ mp.use("TKAgg")
 #############################
 
 #These modules are for the most part imported in full because technically, DECiM could have been just one file -- the only reason these are separate modules is for readability. However, the 'from module import *' statement is avoided to ensure that it is clear where all the classes and functions are coming from.
-from ecm_circuits import Circuit, CircuitManager, CircuitDefinitionWindow #Circuit models, elements, impedance calculations, and circuit selection.
+from ecm_circuits import Circuit, CircuitManager, CircuitDefinitionWindow, Circuit, Unit, Resistor, ConstantPhaseElement #Circuit models, elements, impedance calculations, and circuit selection.
 from ecm_helpers import nearest, maxima #Helper functions nearest(a, b) and maxima(b).
 from ecm_file_io import parseData, parseCircuitString, parseResult, createResultFile, parseCircuitPresets #Functions related to parsing data files, creating result files and parsing result files.
 from ecm_datastructure import dataSet #dataSet class.
@@ -290,8 +290,13 @@ class Window(ttk.Frame):
     def loadResult(self):
         """Open a dialog window for opening result (.recm2) files. Import the data and model, set the plot title and circuit, and update the plots with the new data and model."""
         fn = fdiag.askopenfilename(filetypes = [("Result files", ".recm2"), ("All files", "*.*")])
-        circmodel, self.data, self.interactive.parameters = parseResult(fn)
-        self.setCircuit(circmodel)
+        result = parseResult(fn)
+        circmodel, self.data, self.interactive.parameters = result[:3]
+        if result[3]: #Custom model
+            ecmcm.override_impedance_method = True
+            self.setCustomModel(circmodel, result[4])
+        else: #No custom model
+            self.setCircuit(circmodel)
         try:
             self.plots.title = list(fn.split("/"))[-1]
         except:
@@ -461,19 +466,19 @@ class Window(ttk.Frame):
         self.circop.set(circuit_model.diagram.generate_circuit_string(verbose = True))
         self.interactive.reset_parameter_dropdown()
         
-    def setCustomModel(self, circuit_model, impedance_function, circuit_name):
+    def setCustomModel(self, circuit_model, impedance_function_name):
         """Change the circuit model to a new circuit with a custom impedance function.
         
         Arguments:
         self -- needs access to instance of Window class, like all other functions defined in it
         circuit_model -- a Circuit object from ecm_circuits
-        impedance_function -- any function that returns Z defined in ecm_custom_models
+        impedance_function_name -- any key in the custom_model_diagrams dictionary in ecm_custom_models
         circuit_name -- string containing the name of the custom model"""
         ecmcm.override_impedance_method = True
-        ecmcm.custom_model = impedance_function
+        ecmcm.custom_model_name = impedance_function_name
         self.circuit_manager.circuit = circuit_model
         self.interactive.circuit = circuit_model
-        self.circop.set(circuit_name)
+        self.circop.set(impedance_function_name)
         self.interactive.reset_parameter_dropdown()
 
     def selectCircuit(self):
@@ -499,7 +504,7 @@ class Window(ttk.Frame):
     def addCustomModels(self, submenu):
         """Create the circuit presets defined in ecm_custom_models."""
         for m in ecmcm.custom_model_diagrams:
-            submenu.add_command(label = m, command = partial(self.setCustomModel, parseCircuitString(ecmcm.custom_model_diagrams[m][0]), ecmcm.custom_model_diagrams[m][1], m))
+            submenu.add_command(label = m, command = partial(self.setCustomModel, parseCircuitString(ecmcm.custom_model_diagrams[m][0]), m))
 
     #HELPER FUNCTIONS
             

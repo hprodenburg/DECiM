@@ -8,7 +8,7 @@
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>ecm_custom_models</strong></big></big></font></td
 ></tr></table>
-    <p><tt>Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;module&nbsp;allows&nbsp;for&nbsp;equivalent&nbsp;circuits&nbsp;(and&nbsp;other&nbsp;models)&nbsp;that&nbsp;cannot&nbsp;be&nbsp;constructed&nbsp;using&nbsp;the&nbsp;circuit&nbsp;typing&nbsp;and&nbsp;drawing&nbsp;interfaces&nbsp;to&nbsp;be&nbsp;implemented.&nbsp;Doing&nbsp;so&nbsp;requires&nbsp;modifying&nbsp;this&nbsp;module.&nbsp;The&nbsp;base&nbsp;version&nbsp;of&nbsp;this&nbsp;module&nbsp;was&nbsp;last&nbsp;modified&nbsp;on&nbsp;4&nbsp;December&nbsp;2023&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+    <p><tt>Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;module&nbsp;allows&nbsp;for&nbsp;equivalent&nbsp;circuits&nbsp;(and&nbsp;other&nbsp;models)&nbsp;that&nbsp;cannot&nbsp;be&nbsp;constructed&nbsp;using&nbsp;the&nbsp;circuit&nbsp;typing&nbsp;and&nbsp;drawing&nbsp;interfaces&nbsp;to&nbsp;be&nbsp;implemented.&nbsp;Doing&nbsp;so&nbsp;requires&nbsp;modifying&nbsp;this&nbsp;module.&nbsp;The&nbsp;base&nbsp;version&nbsp;of&nbsp;this&nbsp;module&nbsp;was&nbsp;last&nbsp;modified&nbsp;on&nbsp;14&nbsp;March&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
 &nbsp;<br>
 Global&nbsp;variables:<br>
 override_impedance_method&nbsp;--&nbsp;Boolean,&nbsp;indicates&nbsp;if&nbsp;the&nbsp;standard&nbsp;impedance&nbsp;calculation&nbsp;should&nbsp;be&nbsp;performed&nbsp;or&nbsp;not&nbsp;(False&nbsp;if&nbsp;standard,&nbsp;True&nbsp;if&nbsp;not)<br>
@@ -18,6 +18,7 @@ custom_model_diagrams&nbsp;--&nbsp;dictionary&nbsp;with&nbsp;model&nbsp;names&nb
 Functions:<br>
 bisquert_2000_f&nbsp;--&nbsp;custom&nbsp;impedance&nbsp;function&nbsp;example<br>
 spherical_diffusion_impedance&nbsp;--&nbsp;custom&nbsp;impedance&nbsp;example<br>
+miec_transmission_line&nbsp;--&nbsp;general&nbsp;equivalent&nbsp;circuit&nbsp;for&nbsp;mixed&nbsp;conductors<br>
 &nbsp;<br>
 When&nbsp;adding&nbsp;a&nbsp;new&nbsp;function,&nbsp;place&nbsp;it&nbsp;below&nbsp;the&nbsp;CUSTOM&nbsp;MODEL&nbsp;FUNCTIONS&nbsp;header,&nbsp;but&nbsp;above&nbsp;the&nbsp;CUSTOM&nbsp;MODEL&nbsp;DICTIONARY&nbsp;header.<br>
 &nbsp;<br>
@@ -49,6 +50,27 @@ Returns:<br>
 Complex&nbsp;NumPy&nbsp;array&nbsp;of&nbsp;impedances&nbsp;Z<br>
 &nbsp;<br>
 In&nbsp;the&nbsp;custom_model_diagrams&nbsp;dictionary,&nbsp;the&nbsp;diagram&nbsp;for&nbsp;this&nbsp;function&nbsp;is&nbsp;R0R1Q0.&nbsp;This&nbsp;diagram&nbsp;has&nbsp;two&nbsp;one-parameter&nbsp;elements&nbsp;and&nbsp;one&nbsp;two-parameter&nbsp;element.&nbsp;The&nbsp;circuit&nbsp;string&nbsp;is&nbsp;read&nbsp;from&nbsp;left&nbsp;to&nbsp;right,&nbsp;so:&nbsp;fp[0]&nbsp;is&nbsp;R0,&nbsp;fp[1]&nbsp;is&nbsp;R1,&nbsp;fp[2]&nbsp;is&nbsp;Q0,&nbsp;and&nbsp;fp[3]&nbsp;is&nbsp;n0,&nbsp;which&nbsp;is&nbsp;the&nbsp;exponent&nbsp;belonging&nbsp;to&nbsp;the&nbsp;CPE&nbsp;Q0.</tt></dd></dl>
+ <dl><dt><a name="-miec_transmission_line"><strong>miec_transmission_line</strong></a>(fp, freq)</dt><dd><tt>Transmission&nbsp;line&nbsp;model&nbsp;for&nbsp;mixed&nbsp;conductors&nbsp;based&nbsp;on&nbsp;Jamnik&nbsp;&amp;&nbsp;Maier,&nbsp;J.&nbsp;Electrochem.&nbsp;Soc.&nbsp;1999,&nbsp;146(11),&nbsp;4183-4188.<br>
+Also&nbsp;featured&nbsp;in&nbsp;Lee&nbsp;et&nbsp;al.,&nbsp;Monatsh.&nbsp;Chem.&nbsp;2009,&nbsp;140,&nbsp;1113-1119.<br>
+&nbsp;<br>
+Arguments:<br>
+fp&nbsp;--&nbsp;list&nbsp;of&nbsp;fit&nbsp;parameters<br>
+freq&nbsp;--&nbsp;Real&nbsp;NumPy&nbsp;array&nbsp;of&nbsp;linear&nbsp;frequencies&nbsp;f<br>
+&nbsp;<br>
+Returns:<br>
+Complex&nbsp;NumPy&nbsp;array&nbsp;of&nbsp;impedances&nbsp;Z<br>
+&nbsp;<br>
+Model&nbsp;parameters:<br>
+R0,&nbsp;fp[0]&nbsp;--&nbsp;R_ion<br>
+R1,&nbsp;fp[1]&nbsp;--&nbsp;R_eon<br>
+R2,&nbsp;fp[2]&nbsp;--&nbsp;R_ion^perp<br>
+R3,&nbsp;fp[3]&nbsp;--&nbsp;R_eon^perp<br>
+C0,&nbsp;fp[4]&nbsp;--&nbsp;C_inf<br>
+Q0,&nbsp;fp[5]&nbsp;--&nbsp;C_chem<br>
+n0,&nbsp;fp[6]&nbsp;--&nbsp;Sample&nbsp;thickness&nbsp;(in&nbsp;meters)<br>
+C1,&nbsp;fp[7]&nbsp;--&nbsp;C_ion^perp<br>
+C2,&nbsp;fp[8]&nbsp;--&nbsp;C_eon^perp<br>
+L0,&nbsp;fp[9]&nbsp;--&nbsp;Lead&nbsp;wire&nbsp;inductance</tt></dd></dl>
  <dl><dt><a name="-spherical_diffusion_impedance"><strong>spherical_diffusion_impedance</strong></a>(fp, freq)</dt><dd><tt>Example&nbsp;impedance&nbsp;function&nbsp;no.&nbsp;2.&nbsp;This&nbsp;is&nbsp;a&nbsp;simple&nbsp;spherical&nbsp;diffusion&nbsp;model.&nbsp;See&nbsp;Moskon&nbsp;&amp;&nbsp;Gaberscek,&nbsp;J.&nbsp;Power&nbsp;Sources&nbsp;Adv.&nbsp;2021,&nbsp;7,&nbsp;100047.<br>
 &nbsp;<br>
 Arguments:<br>
@@ -66,7 +88,7 @@ In&nbsp;the&nbsp;custom_model_diagrams&nbsp;dictionary,&nbsp;the&nbsp;diagram&nb
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>custom_model</strong> = None<br>
-<strong>custom_model_diagrams</strong> = {'Porous electrode transmission line': ('R0R1Q0', &lt;function bisquert_2000_f&gt;), 'Spherical diffusion': ('R0C0', &lt;function spherical_diffusion_impedance&gt;)}<br>
+<td width="100%"><strong>custom_model_diagrams</strong> = {'Mixed conductor': ('R0R1R2R3C0Q0C1C2L0', &lt;function miec_transmission_line&gt;), 'Porous electrode transmission line': ('R0R1Q0', &lt;function bisquert_2000_f&gt;), 'Spherical diffusion': ('R0C0', &lt;function spherical_diffusion_impedance&gt;)}<br>
+<strong>custom_model_name</strong> = None<br>
 <strong>override_impedance_method</strong> = False</td></tr></table>
 </body></html>
