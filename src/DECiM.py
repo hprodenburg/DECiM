@@ -1,6 +1,6 @@
 """DECiM (Determination of Equivalent Circuit Models) is an equivalent circuit model fitting program for impedance data. It is a GUI-based program.
 Much of the source code is spread over other python source files, all of which must be in the same folder as DECiM.py to ensure that the program works correctly.
-DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.1.2, 14 March 2024.
+DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.0, 18 March 2024.
 
 This is the core module -- when launched, DECiM starts. This module also defines the Window class."""
 
@@ -46,7 +46,7 @@ mp.use("TKAgg")
 #These modules are for the most part imported in full because technically, DECiM could have been just one file -- the only reason these are separate modules is for readability. However, the 'from module import *' statement is avoided to ensure that it is clear where all the classes and functions are coming from.
 from ecm_circuits import Circuit, CircuitManager, CircuitDefinitionWindow, Circuit, Unit, Resistor, ConstantPhaseElement #Circuit models, elements, impedance calculations, and circuit selection.
 from ecm_helpers import nearest, maxima #Helper functions nearest(a, b) and maxima(b).
-from ecm_file_io import parseData, parseCircuitString, parseResult, createResultFile, parseCircuitPresets #Functions related to parsing data files, creating result files and parsing result files.
+from ecm_file_io import parseData, parseCircuitString, parseResult, createResultFile, parseCircuitPresets, DataSpecificationWindow #Functions related to parsing data files, creating result files and parsing result files.
 from ecm_datastructure import dataSet #dataSet class.
 from ecm_plot import PlotFrame, limiter #PlotFrame and limiter classes. DECiM's plots are plotted in a PlotFrame.
 from ecm_fit import RefinementEngine, RefinementWindow #The classes dealing with the refinement procedures.
@@ -189,6 +189,8 @@ class Window(ttk.Frame):
         fileMenu.add_separator()
         fileMenu.add_command(label = "Save result...", command = self.saveResult)
         fileMenu.add_separator()
+        fileMenu.add_command(label = "Specify data file layout...", command = self.defineDataFile)
+        fileMenu.add_separator()
         fileMenu.add_command(label = "Exit", command = self.exitApplication)
         in_menu.add_cascade(label = "File", menu = fileMenu)
 
@@ -269,11 +271,14 @@ class Window(ttk.Frame):
 
     #Loading and saving files
 
+    def defineDataFile(self):
+        """Open a DataSpecificationWindow to specify what information is contained in which column of the datafiles."""
+        DataSpecificationWindow("ecm_datafiles.decim_specification")
+
     def loadData(self):
         """Open a dialog window for opening data (.txt) files. Import the data, set the plot title and circuit, and update the plots with the new data."""
         fn = fdiag.askopenfilename(filetypes = [("Text files", ".txt"), ("All files", "*.*")])
-        imported_data = parseData(fn)
-        self.data = dataSet(freq = imported_data[0], real = imported_data[1], imag = imported_data[2])
+        self.data = parseData(fn)
         try:
             self.plots.title = list(fn.split("/"))[-1]
         except:

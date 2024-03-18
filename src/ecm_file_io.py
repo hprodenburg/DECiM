@@ -1,4 +1,8 @@
-"""Part of DECiM. This file contains all functions related to file I/O. Last modified 14 March 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains all functions related to file I/O. Last modified 18 March 2024 by Henrik Rodenburg.
+
+Classes:
+DataSpecificationFile -- settings file that holds information about data file layout.
+DataSpecificationWindow -- toplevel window to modify the DataSpecificationFile.
 
 Functions:
 parseData -- parse a text file containing measured data, return a dataSet
@@ -23,21 +27,112 @@ from ecm_datastructure import dataSet
 from ecm_circuits import Circuit, Unit, Resistor, Capacitor, Inductor, ConstantPhaseElement, WarburgOpen, WarburgShort, GerischerElement
 import ecm_custom_models as ecmcm
 
+#######################
+##DATA FILE STRUCTURE##
+#######################
+
+class DataSpecificationFile():
+    def __init__(self, filename):
+        """Settings file that specifies the layout of data (.txt, .csv, ...) files.
+        
+        Init arguments:
+        filename -- name of the data specification file
+        
+        Attributes:
+        name -- name of file
+        columns -- list containing the column data types; the order of the items in the list is the order of the columns.
+        
+        Methods:
+        read -- read the data specification file and save its contents to self.columns
+        write -- write the information in the columns list to the data specification file"""
+        self.name = filename
+        self.columns = ["FREQ", "REAL", "IMAG"]
+    
+    def read(self):
+        """Read the settings file and save its contents to self.columns."""
+        file = open(self.name, "r")
+        self.columns = []
+        for line in file:
+            line = line.rstrip("\n")
+            self.columns.append(line)
+        file.close()
+        
+    def write(self):
+        """Write self.columns to the settings file."""
+        file = open(self.name, "w")
+        for c in self.columns[:-1]:
+            file.write(c + "\n")
+        file.write(self.columns[-1])
+        file.close()
+
+class DataSpecificationWindow(tk.Toplevel):
+    def __init__(self, dataspec_filename):
+        """Datafile specification window. Here, you can indicate which column of your .txt or .csv file contains which dimension of the impedance spectrum.
+        
+        Init arguments:
+        dataspec_filename -- Name of the data specification file. Default: ecm_datafiles.decim_specification
+        
+        Attributes:
+        cframes -- ttk.Frame objects holding labels and dropdown menus
+        dataspec_file -- Data specification file
+        dropdowns -- tk.OptionMenu objects with which impedance components can be chosen
+        quantities -- tk.StringVar objects to hold the chosen components
+        save_button -- tk.Button to save the file layout and close the toplevel window
+        tags -- Dictionary, converts names shown to the user to strings found in the data specification file.
+        
+        Methods:
+        make_UI -- make the UI
+        save_and_exit -- write the chosen data types to the data specification file and close the toplevel window."""
+        self.dataspec_file = DataSpecificationFile(dataspec_filename)
+        self.dropdowns = []
+        self.quantities = []
+        self.tags = {"Frequency (Hz)": "FREQ", "Re[Z] (Ohm)": "REAL", "Im[Z] (Ohm)": "IMAG", "-Im[Z] (Ohm)": "-IMAG", "|Z| (Ohm)": "AMPL", "Phase angle (degrees)": "PHASE", "-Phase angle (degrees)": "-PHASE"}
+        super().__init__()
+        self.title("Data file column layout")
+        self.width = int(self.winfo_screenwidth()*0.20)
+        self.height = int(self.winfo_screenheight()*0.30)
+        self.geometry("{:d}x{:d}".format(self.width, self.height))
+        self.make_UI()
+    
+    def make_UI(self):
+        """Make frames for the tk.OptionMenus and labels and pack them. Also make and pack the button to save and exit."""
+        for i in range(1, 4, 1):
+            self.cframes = []
+            self.cframes.append(ttk.Frame(self))
+            self.cframes[-1].pack(side = tk.TOP, anchor = tk.CENTER, fill = tk.BOTH, expand = tk.YES)
+            clb = tk.Label(self.cframes[-1], text = "Column {:d}:".format(i))
+            clb.pack(side = tk.LEFT, anchor = tk.N)
+            self.quantities.append(tk.StringVar())
+            self.dropdowns.append(tk.OptionMenu(self.cframes[-1], self.quantities[-1], "Frequency (Hz)", "Re[Z] (Ohm)", "Im[Z] (Ohm)", "-Im[Z] (Ohm)", "|Z| (Ohm)", "Phase angle (degrees)", "-Phase angle (degrees)"))
+            self.dropdowns[-1].pack(side = tk.LEFT, anchor = tk.N)
+                        
+        self.save_button = tk.Button(self, text = "Save and exit", command = self.save_and_exit)
+        self.save_button.pack(side = tk.BOTTOM, anchor = tk.W)
+        
+    def save_and_exit(self):
+        """Write the file layout to the data specification file and close the toplevel window."""
+        for q in range(len(self.quantities)):
+            self.dataspec_file.columns[q] = self.tags[self.quantities[q].get()]
+        self.dataspec_file.write()
+        self.destroy()
+
 #####################
 ##DATA FILE PARSING##
 #####################
 
-def parseData(filename, reverse = True):
+def parseData(filename, dataspec_filename = "ecm_datafiles.decim_specification", reverse = True):
     """Read a data file. The assumed structure is three columns: linear frequency (Hz), real part of impedance (Ohm), imaginary part of impedance (Ohm).
     
     Non-keyword arguments:
     filename -- relative path to file and name of file
     
     Keyword arguments:
+    dataspec_filename -- Name of file that specificies which information is in which column of the datafile.
     reverse -- Boolean, reverse the order of the imported data if True. Default is True. Should be True if the input file begins with the highest frequencies, otherwise it should be False.
     
     Returns:
-    ndata -- list of arrays. ndata[0] is the frequency, ndata[1] the real impedance and ndata[2] the imaginary impedance."""
+    dataSet object"""
+    #First, read the data from the file, split by column
     data = []
     file = open(filename, "r")
     for line in file:
@@ -58,12 +153,28 @@ def parseData(filename, reverse = True):
                 continue
     file.close()
     ndata = []
-    if reverse:
-        for d in data:
+    for d in data:
+        if reverse:
             d.reverse()
-            ndata.append(np.array(d))
-        return ndata
-    return data
+        ndata.append(np.array(d))
+    data = ndata
+    #Establish what information is in each column and return a dataSet
+    dataspec_file = DataSpecificationFile(dataspec_filename)
+    dataspec_file.read()
+    if "FREQ" in dataspec_file.columns and "REAL" in dataspec_file.columns and "-IMAG" in dataspec_file.columns:
+        return dataSet(freq = data[dataspec_file.columns.index("FREQ")], real = data[dataspec_file.columns.index("REAL")], imag = -data[dataspec_file.columns.index("-IMAG")])
+    elif "FREQ" in dataspec_file.columns and "REAL" in dataspec_file.columns and "IMAG" in dataspec_file.columns:
+        return dataSet(freq = data[dataspec_file.columns.index("FREQ")], real = data[dataspec_file.columns.index("REAL")], imag = data[dataspec_file.columns.index("IMAG")])
+    elif "FREQ" in dataspec_file.columns and "AMPL" in dataspec_file.columns and "-PHASE" in dataspec_file.columns:
+        calc_real = data[dataspec_file.columns.index("AMPL")]*np.cos(-data[dataspec_file.columns.index("-PHASE")]*np.pi/180)
+        calc_imag = data[dataspec_file.columns.index("AMPL")]*np.sin(-data[dataspec_file.columns.index("-PHASE")]*np.pi/180)
+        return dataSet(freq = data[dataspec_file.columns.index("FREQ")], real = calc_real, imag = calc_imag)
+    elif "FREQ" in dataspec_file.columns and "AMPL" in dataspec_file.columns and "PHASE" in dataspec_file.columns:
+        calc_real = data[dataspec_file.columns.index("AMPL")]*np.cos(data[dataspec_file.columns.index("PHASE")]*np.pi/180)
+        calc_imag = data[dataspec_file.columns.index("AMPL")]*np.sin(data[dataspec_file.columns.index("PHASE")]*np.pi/180)
+        return dataSet(freq = data[dataspec_file.columns.index("FREQ")], real = calc_real, imag = calc_imag)
+    print("Error: Data file column layout is invalid.")
+    return dataSet()
 
 ##################################
 ##PROCESSING RESULT FILE PARSING##
