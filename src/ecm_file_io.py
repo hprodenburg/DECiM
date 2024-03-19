@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains all functions related to file I/O. Last modified 18 March 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains all functions related to file I/O. Last modified 19 March 2024 by Henrik Rodenburg.
 
 Classes:
 DataSpecificationFile -- settings file that holds information about data file layout.
@@ -350,7 +350,8 @@ def parseResult(filename):
             if split_list[0] == "CUSTOM" and split_list[1] == "MODEL:":
                 custom_model = True
                 circuit_input = parseCircuitString(split_list[2])
-            circuit_input = parseCircuitString(line[:-1]) #Read the circuit string
+            else:
+                circuit_input = parseCircuitString(line[:-1]) #Read the circuit string
             reading_circuit_string = False #Set reading state
         if line == ">CIRCUIT DEFINITION\n": #Look for the circuit definition
             reading_circuit_string = True #Set reading state
