@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the Z-HIT maths and window. Last modified 9 January 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the Z-HIT maths and window. Last modified 5 April 2024 by Henrik Rodenburg.
 
 Classes:
 ZHITWindow -- handles the Z-HIT transform"""
@@ -150,6 +150,8 @@ class ZHITWindow(tk.Toplevel):
         #Figure initialisation
         self.fig, (self.nyquist, self.bode_amp) = pt.subplots(nrows = 1, ncols = 2)
         self.bode_phase = self.bode_amp.twinx()
+        self.bode_phase.yaxis.tick_right()
+        self.bode_phase.yaxis.set_label_position("right")
         self.canvas = btk.FigureCanvasTkAgg(self.fig, self.plotting_frame)
         self.canvas.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
         #Toolbar
@@ -194,6 +196,8 @@ class ZHITWindow(tk.Toplevel):
         self.bode_amp.set_xlabel("f (Hz)")
         self.bode_amp.set_ylabel("|Z| ($\Omega$)")
         self.bode_phase.set_ylabel("$\phi$ ($^\circ$)")
+        self.bode_phase.yaxis.tick_right()
+        self.bode_phase.yaxis.set_label_position("right")
         #Set scales
         self.nyquist.set_xscale("linear")
         self.nyquist.set_yscale("linear")

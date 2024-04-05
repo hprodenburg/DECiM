@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the plotting canvas class and some additional plotting-related code. Last modified 1 March 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the plotting canvas class and some additional plotting-related code. Last modified 5 April 2024 by Henrik Rodenburg.
 
 Classes:
 limiter -- handles the upper and lower limits of the plots
@@ -223,6 +223,7 @@ class PlotFrame(ttk.Frame):
             self.phase.set_ylabel("Y\'\' ($\Omega^{-1}$)", color = "#117740")
             self.phase.tick_params(axis = "y", labelcolor = "#117740")
             self.phase.yaxis.tick_right()
+            self.phase.yaxis.set_label_position("right")
         else:
             self.amplitude.set_title("Amplitude and phase angle")
             self.amplitude.set_ylabel("|Z| (Ohm)", color = "#114077")
@@ -230,6 +231,7 @@ class PlotFrame(ttk.Frame):
             self.phase.set_ylabel("Phase angle (degrees)", color = "#117740")
             self.phase.tick_params(axis = "y", labelcolor = "#117740")
             self.phase.yaxis.tick_right()
+            self.phase.yaxis.set_label_position("right")
 
         #Log-scale the amplitude if requested via self.logamp.
         self.amplitude.set_xscale("log")

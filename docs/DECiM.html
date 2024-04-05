@@ -1,66 +1,64 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html><head><title>Python: module DECiM</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-</head><body bgcolor="#f0f0f8">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python: module DECiM</title>
+</head><body>
 
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
-<tr bgcolor="#7799ee">
-<td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>DECiM</strong></big></big></font></td
-></tr></table>
-    <p><tt>DECiM&nbsp;(Determination&nbsp;of&nbsp;Equivalent&nbsp;Circuit&nbsp;Models)&nbsp;is&nbsp;an&nbsp;equivalent&nbsp;circuit&nbsp;model&nbsp;fitting&nbsp;program&nbsp;for&nbsp;impedance&nbsp;data.&nbsp;It&nbsp;is&nbsp;a&nbsp;GUI-based&nbsp;program.<br>
+<table class="heading">
+<tr class="heading-text decor">
+<td class="title">&nbsp;<br><strong class="title">DECiM</strong></td>
+</tr></table>
+    <p><span class="code">DECiM&nbsp;(Determination&nbsp;of&nbsp;Equivalent&nbsp;Circuit&nbsp;Models)&nbsp;is&nbsp;an&nbsp;equivalent&nbsp;circuit&nbsp;model&nbsp;fitting&nbsp;program&nbsp;for&nbsp;impedance&nbsp;data.&nbsp;It&nbsp;is&nbsp;a&nbsp;GUI-based&nbsp;program.<br>
 Much&nbsp;of&nbsp;the&nbsp;source&nbsp;code&nbsp;is&nbsp;spread&nbsp;over&nbsp;other&nbsp;python&nbsp;source&nbsp;files,&nbsp;all&nbsp;of&nbsp;which&nbsp;must&nbsp;be&nbsp;in&nbsp;the&nbsp;same&nbsp;folder&nbsp;as&nbsp;DECiM.py&nbsp;to&nbsp;ensure&nbsp;that&nbsp;the&nbsp;program&nbsp;works&nbsp;correctly.<br>
-DECiM&nbsp;was&nbsp;written&nbsp;and&nbsp;is&nbsp;maintained&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.&nbsp;Current&nbsp;version:&nbsp;1.2.1,&nbsp;18&nbsp;March&nbsp;2024.<br>
+DECiM&nbsp;was&nbsp;written&nbsp;and&nbsp;is&nbsp;maintained&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.&nbsp;Current&nbsp;version:&nbsp;1.2.2,&nbsp;5&nbsp;April&nbsp;2024.<br>
 &nbsp;<br>
-This&nbsp;is&nbsp;the&nbsp;core&nbsp;module&nbsp;--&nbsp;when&nbsp;launched,&nbsp;DECiM&nbsp;starts.&nbsp;This&nbsp;module&nbsp;also&nbsp;defines&nbsp;the&nbsp;<a href="#Window">Window</a>&nbsp;class.</tt></p>
+This&nbsp;is&nbsp;the&nbsp;core&nbsp;module&nbsp;--&nbsp;when&nbsp;launched,&nbsp;DECiM&nbsp;starts.&nbsp;This&nbsp;module&nbsp;also&nbsp;defines&nbsp;the&nbsp;<a href="#Window">Window</a>&nbsp;class.</span></p>
 <p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#aa55cc">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+<table class="section">
+<tr class="decor pkg-content-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Modules</strong></td></tr>
     
-<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="matplotlib.animation.html">matplotlib.animation</a><br>
+<tr><td class="decor pkg-content-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><table><tr><td class="multicolumn"><a href="matplotlib.animation.html">matplotlib.animation</a><br>
 <a href="matplotlib.backends.backend_tkagg.html">matplotlib.backends.backend_tkagg</a><br>
 <a href="copy.html">copy</a><br>
 <a href="ecm_custom_models.html">ecm_custom_models</a><br>
-</td><td width="25%" valign=top><a href="tkinter.filedialog.html">tkinter.filedialog</a><br>
+</td><td class="multicolumn"><a href="tkinter.filedialog.html">tkinter.filedialog</a><br>
 <a href="matplotlib.figure.html">matplotlib.figure</a><br>
 <a href="matplotlib.html">matplotlib</a><br>
 <a href="numpy.html">numpy</a><br>
-</td><td width="25%" valign=top><a href="scipy.optimize.html">scipy.optimize</a><br>
+</td><td class="multicolumn"><a href="scipy.optimize.html">scipy.optimize</a><br>
 <a href="matplotlib.pyplot.html">matplotlib.pyplot</a><br>
 <a href="tkinter.simpledialog.html">tkinter.simpledialog</a><br>
 <a href="tkinter.html">tkinter</a><br>
-</td><td width="25%" valign=top><a href="tkinter.ttk.html">tkinter.ttk</a><br>
+</td><td class="multicolumn"><a href="tkinter.ttk.html">tkinter.ttk</a><br>
 <a href="webbrowser.html">webbrowser</a><br>
 </td></tr></table></td></tr></table><p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#ee77aa">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+<table class="section">
+<tr class="decor index-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Classes</strong></td></tr>
     
-<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl>
-<dt><font face="helvetica, arial"><a href="tkinter.ttk.html#Frame">tkinter.ttk.Frame</a>(<a href="tkinter.ttk.html#Widget">tkinter.ttk.Widget</a>)
-</font></dt><dd>
+<tr><td class="decor index-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><dl>
+<dt class="heading-text"><a href="tkinter.ttk.html#Frame">tkinter.ttk.Frame</a>(<a href="tkinter.ttk.html#Widget">tkinter.ttk.Widget</a>)
+</dt><dd>
 <dl>
-<dt><font face="helvetica, arial"><a href="DECiM.html#Window">Window</a>
-</font></dt></dl>
+<dt class="heading-text"><a href="DECiM.html#Window">Window</a>
+</dt></dl>
 </dd>
 </dl>
  <p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#ffc8d8">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="Window">class <strong>Window</strong></a>(<a href="tkinter.ttk.html#Frame">tkinter.ttk.Frame</a>)</font></td></tr>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="Window">class <strong>Window</strong></a>(<a href="tkinter.ttk.html#Frame">tkinter.ttk.Frame</a>)</td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt><a href="#Window">Window</a>(width,&nbsp;height)<br>
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#Window">Window</a>(width,&nbsp;height)<br>
 &nbsp;<br>
-<br>&nbsp;</tt></td></tr>
+<br>&nbsp;</span></td></tr>
 <tr><td>&nbsp;</td>
-<td width="100%"><dl><dt>Method resolution order:</dt>
+<td class="singlecolumn"><dl><dt>Method resolution order:</dt>
 <dd><a href="DECiM.html#Window">Window</a></dd>
 <dd><a href="tkinter.ttk.html#Frame">tkinter.ttk.Frame</a></dd>
 <dd><a href="tkinter.ttk.html#Widget">tkinter.ttk.Widget</a></dd>
@@ -74,7 +72,7 @@ This&nbsp;is&nbsp;the&nbsp;core&nbsp;module&nbsp;--&nbsp;when&nbsp;launched,&nbs
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="Window-__init__"><strong>__init__</strong></a>(self, width, height)</dt><dd><tt>Core&nbsp;class&nbsp;of&nbsp;DECiM.&nbsp;From&nbsp;here,&nbsp;all&nbsp;other&nbsp;parts&nbsp;of&nbsp;the&nbsp;program&nbsp;are&nbsp;accessed.<br>
+<dl><dt><a name="Window-__init__"><strong>__init__</strong></a>(self, width, height)</dt><dd><span class="code">Core&nbsp;class&nbsp;of&nbsp;DECiM.&nbsp;From&nbsp;here,&nbsp;all&nbsp;other&nbsp;parts&nbsp;of&nbsp;the&nbsp;program&nbsp;are&nbsp;accessed.<br>
 &nbsp;<br>
 Init&nbsp;arguments:<br>
 width&nbsp;--&nbsp;<a href="#Window">Window</a>&nbsp;width<br>
@@ -122,164 +120,164 @@ Circuit&nbsp;selection:&nbsp;setCircuit,&nbsp;selectCircuit,&nbsp;setCustomModel
 &nbsp;<br>
 showInstructions&nbsp;--&nbsp;launch&nbsp;the&nbsp;Help&nbsp;window<br>
 &nbsp;<br>
-markFrequencies&nbsp;--&nbsp;mark&nbsp;frequencies&nbsp;that&nbsp;are&nbsp;integer&nbsp;powers&nbsp;of&nbsp;10</tt></dd></dl>
+markFrequencies&nbsp;--&nbsp;mark&nbsp;frequencies&nbsp;that&nbsp;are&nbsp;integer&nbsp;powers&nbsp;of&nbsp;10</span></dd></dl>
 
-<dl><dt><a name="Window-addCircuitPresets"><strong>addCircuitPresets</strong></a>(self, submenu)</dt><dd><tt>Create&nbsp;the&nbsp;circuit&nbsp;presets&nbsp;that&nbsp;use&nbsp;the&nbsp;normal&nbsp;impedance&nbsp;function&nbsp;as&nbsp;defined&nbsp;in&nbsp;ecm_presets.decim_circuits.</tt></dd></dl>
+<dl><dt><a name="Window-addCircuitPresets"><strong>addCircuitPresets</strong></a>(self, submenu)</dt><dd><span class="code">Create&nbsp;the&nbsp;circuit&nbsp;presets&nbsp;that&nbsp;use&nbsp;the&nbsp;normal&nbsp;impedance&nbsp;function&nbsp;as&nbsp;defined&nbsp;in&nbsp;ecm_presets.decim_circuits.</span></dd></dl>
 
-<dl><dt><a name="Window-addCustomModels"><strong>addCustomModels</strong></a>(self, submenu)</dt><dd><tt>Create&nbsp;the&nbsp;circuit&nbsp;presets&nbsp;defined&nbsp;in&nbsp;ecm_custom_models.</tt></dd></dl>
+<dl><dt><a name="Window-addCustomModels"><strong>addCustomModels</strong></a>(self, submenu)</dt><dd><span class="code">Create&nbsp;the&nbsp;circuit&nbsp;presets&nbsp;defined&nbsp;in&nbsp;ecm_custom_models.</span></dd></dl>
 
-<dl><dt><a name="Window-advancedRefinement"><strong>advancedRefinement</strong></a>(self)</dt><dd><tt>Launch&nbsp;the&nbsp;refinement&nbsp;window&nbsp;and&nbsp;wait&nbsp;for&nbsp;the&nbsp;result.&nbsp;If&nbsp;the&nbsp;user&nbsp;accepts&nbsp;the&nbsp;result,&nbsp;replace&nbsp;the&nbsp;model&nbsp;parameters&nbsp;with&nbsp;the&nbsp;result&nbsp;and&nbsp;update&nbsp;the&nbsp;plots.</tt></dd></dl>
+<dl><dt><a name="Window-advancedRefinement"><strong>advancedRefinement</strong></a>(self)</dt><dd><span class="code">Launch&nbsp;the&nbsp;refinement&nbsp;window&nbsp;and&nbsp;wait&nbsp;for&nbsp;the&nbsp;result.&nbsp;If&nbsp;the&nbsp;user&nbsp;accepts&nbsp;the&nbsp;result,&nbsp;replace&nbsp;the&nbsp;model&nbsp;parameters&nbsp;with&nbsp;the&nbsp;result&nbsp;and&nbsp;update&nbsp;the&nbsp;plots.</span></dd></dl>
 
-<dl><dt><a name="Window-canvasUpdate"><strong>canvasUpdate</strong></a>(self)</dt><dd><tt>General&nbsp;plot&nbsp;update&nbsp;function.&nbsp;Update&nbsp;all&nbsp;limits,&nbsp;generate&nbsp;the&nbsp;model&nbsp;line&nbsp;from&nbsp;the&nbsp;parameters&nbsp;and&nbsp;the&nbsp;circuit&nbsp;impedance&nbsp;function,&nbsp;and&nbsp;update&nbsp;the&nbsp;plots.</tt></dd></dl>
+<dl><dt><a name="Window-canvasUpdate"><strong>canvasUpdate</strong></a>(self)</dt><dd><span class="code">General&nbsp;plot&nbsp;update&nbsp;function.&nbsp;Update&nbsp;all&nbsp;limits,&nbsp;generate&nbsp;the&nbsp;model&nbsp;line&nbsp;from&nbsp;the&nbsp;parameters&nbsp;and&nbsp;the&nbsp;circuit&nbsp;impedance&nbsp;function,&nbsp;and&nbsp;update&nbsp;the&nbsp;plots.</span></dd></dl>
 
-<dl><dt><a name="Window-defineDataFile"><strong>defineDataFile</strong></a>(self)</dt><dd><tt>Open&nbsp;a&nbsp;DataSpecificationWindow&nbsp;to&nbsp;specify&nbsp;what&nbsp;information&nbsp;is&nbsp;contained&nbsp;in&nbsp;which&nbsp;column&nbsp;of&nbsp;the&nbsp;datafiles.</tt></dd></dl>
+<dl><dt><a name="Window-defineDataFile"><strong>defineDataFile</strong></a>(self)</dt><dd><span class="code">Open&nbsp;a&nbsp;DataSpecificationWindow&nbsp;to&nbsp;specify&nbsp;what&nbsp;information&nbsp;is&nbsp;contained&nbsp;in&nbsp;which&nbsp;column&nbsp;of&nbsp;the&nbsp;datafiles.</span></dd></dl>
 
-<dl><dt><a name="Window-exitApplication"><strong>exitApplication</strong></a>(self)</dt><dd><tt>Exit&nbsp;DECiM.</tt></dd></dl>
+<dl><dt><a name="Window-exitApplication"><strong>exitApplication</strong></a>(self)</dt><dd><span class="code">Exit&nbsp;DECiM.</span></dd></dl>
 
-<dl><dt><a name="Window-generateFit"><strong>generateFit</strong></a>(self)</dt><dd><tt>Generate&nbsp;the&nbsp;model&nbsp;dataset&nbsp;from&nbsp;the&nbsp;model&nbsp;parameters,&nbsp;circuit&nbsp;model&nbsp;and&nbsp;a&nbsp;logarithmically&nbsp;spaced&nbsp;NumPy&nbsp;array&nbsp;of&nbsp;frequencies.</tt></dd></dl>
+<dl><dt><a name="Window-generateFit"><strong>generateFit</strong></a>(self)</dt><dd><span class="code">Generate&nbsp;the&nbsp;model&nbsp;dataset&nbsp;from&nbsp;the&nbsp;model&nbsp;parameters,&nbsp;circuit&nbsp;model&nbsp;and&nbsp;a&nbsp;logarithmically&nbsp;spaced&nbsp;NumPy&nbsp;array&nbsp;of&nbsp;frequencies.</span></dd></dl>
 
-<dl><dt><a name="Window-getMaxima"><strong>getMaxima</strong></a>(self)</dt><dd><tt>Using&nbsp;the&nbsp;model&nbsp;curve,&nbsp;get&nbsp;the&nbsp;maxima&nbsp;of&nbsp;the&nbsp;complex&nbsp;plane&nbsp;plot,&nbsp;then&nbsp;launch&nbsp;a&nbsp;window&nbsp;with&nbsp;a&nbsp;Text&nbsp;widget&nbsp;in&nbsp;which&nbsp;the&nbsp;frequencies&nbsp;at&nbsp;the&nbsp;maxima&nbsp;are&nbsp;displayed.</tt></dd></dl>
+<dl><dt><a name="Window-getMaxima"><strong>getMaxima</strong></a>(self)</dt><dd><span class="code">Using&nbsp;the&nbsp;model&nbsp;curve,&nbsp;get&nbsp;the&nbsp;maxima&nbsp;of&nbsp;the&nbsp;complex&nbsp;plane&nbsp;plot,&nbsp;then&nbsp;launch&nbsp;a&nbsp;window&nbsp;with&nbsp;a&nbsp;Text&nbsp;widget&nbsp;in&nbsp;which&nbsp;the&nbsp;frequencies&nbsp;at&nbsp;the&nbsp;maxima&nbsp;are&nbsp;displayed.</span></dd></dl>
 
-<dl><dt><a name="Window-loadData"><strong>loadData</strong></a>(self)</dt><dd><tt>Open&nbsp;a&nbsp;dialog&nbsp;window&nbsp;for&nbsp;opening&nbsp;data&nbsp;(.txt)&nbsp;files.&nbsp;Import&nbsp;the&nbsp;data,&nbsp;set&nbsp;the&nbsp;plot&nbsp;title&nbsp;and&nbsp;circuit,&nbsp;and&nbsp;update&nbsp;the&nbsp;plots&nbsp;with&nbsp;the&nbsp;new&nbsp;data.</tt></dd></dl>
+<dl><dt><a name="Window-loadData"><strong>loadData</strong></a>(self)</dt><dd><span class="code">Open&nbsp;a&nbsp;dialog&nbsp;window&nbsp;for&nbsp;opening&nbsp;data&nbsp;(.txt)&nbsp;files.&nbsp;Import&nbsp;the&nbsp;data,&nbsp;set&nbsp;the&nbsp;plot&nbsp;title&nbsp;and&nbsp;circuit,&nbsp;and&nbsp;update&nbsp;the&nbsp;plots&nbsp;with&nbsp;the&nbsp;new&nbsp;data.</span></dd></dl>
 
-<dl><dt><a name="Window-loadResult"><strong>loadResult</strong></a>(self)</dt><dd><tt>Open&nbsp;a&nbsp;dialog&nbsp;window&nbsp;for&nbsp;opening&nbsp;result&nbsp;(.recm2)&nbsp;files.&nbsp;Import&nbsp;the&nbsp;data&nbsp;and&nbsp;model,&nbsp;set&nbsp;the&nbsp;plot&nbsp;title&nbsp;and&nbsp;circuit,&nbsp;and&nbsp;update&nbsp;the&nbsp;plots&nbsp;with&nbsp;the&nbsp;new&nbsp;data&nbsp;and&nbsp;model.</tt></dd></dl>
+<dl><dt><a name="Window-loadResult"><strong>loadResult</strong></a>(self)</dt><dd><span class="code">Open&nbsp;a&nbsp;dialog&nbsp;window&nbsp;for&nbsp;opening&nbsp;result&nbsp;(.recm2)&nbsp;files.&nbsp;Import&nbsp;the&nbsp;data&nbsp;and&nbsp;model,&nbsp;set&nbsp;the&nbsp;plot&nbsp;title&nbsp;and&nbsp;circuit,&nbsp;and&nbsp;update&nbsp;the&nbsp;plots&nbsp;with&nbsp;the&nbsp;new&nbsp;data&nbsp;and&nbsp;model.</span></dd></dl>
 
-<dl><dt><a name="Window-make_UI"><strong>make_UI</strong></a>(self)</dt><dd><tt>Create&nbsp;the&nbsp;DECiM&nbsp;core&nbsp;window&nbsp;UI:&nbsp;the&nbsp;menu&nbsp;bar,&nbsp;plots,&nbsp;slider,&nbsp;dowpdown,&nbsp;buttons,&nbsp;and&nbsp;entry&nbsp;boxes.</tt></dd></dl>
+<dl><dt><a name="Window-make_UI"><strong>make_UI</strong></a>(self)</dt><dd><span class="code">Create&nbsp;the&nbsp;DECiM&nbsp;core&nbsp;window&nbsp;UI:&nbsp;the&nbsp;menu&nbsp;bar,&nbsp;plots,&nbsp;slider,&nbsp;dowpdown,&nbsp;buttons,&nbsp;and&nbsp;entry&nbsp;boxes.</span></dd></dl>
 
-<dl><dt><a name="Window-make_calculatemenu"><strong>make_calculatemenu</strong></a>(self, in_menu)</dt><dd><tt>Create&nbsp;the&nbsp;Calculate&nbsp;menu&nbsp;in&nbsp;the&nbsp;menu&nbsp;bar.</tt></dd></dl>
+<dl><dt><a name="Window-make_calculatemenu"><strong>make_calculatemenu</strong></a>(self, in_menu)</dt><dd><span class="code">Create&nbsp;the&nbsp;Calculate&nbsp;menu&nbsp;in&nbsp;the&nbsp;menu&nbsp;bar.</span></dd></dl>
 
-<dl><dt><a name="Window-make_circuitbutton"><strong>make_circuitbutton</strong></a>(self)</dt><dd><tt>Create&nbsp;the&nbsp;button&nbsp;which&nbsp;launches&nbsp;the&nbsp;circuit&nbsp;drawing&nbsp;window.</tt></dd></dl>
+<dl><dt><a name="Window-make_circuitbutton"><strong>make_circuitbutton</strong></a>(self)</dt><dd><span class="code">Create&nbsp;the&nbsp;button&nbsp;which&nbsp;launches&nbsp;the&nbsp;circuit&nbsp;drawing&nbsp;window.</span></dd></dl>
 
-<dl><dt><a name="Window-make_circuitmenu"><strong>make_circuitmenu</strong></a>(self, in_menu)</dt><dd><tt>Create&nbsp;the&nbsp;Circuit&nbsp;menu&nbsp;in&nbsp;the&nbsp;menu&nbsp;bar.</tt></dd></dl>
+<dl><dt><a name="Window-make_circuitmenu"><strong>make_circuitmenu</strong></a>(self, in_menu)</dt><dd><span class="code">Create&nbsp;the&nbsp;Circuit&nbsp;menu&nbsp;in&nbsp;the&nbsp;menu&nbsp;bar.</span></dd></dl>
 
-<dl><dt><a name="Window-make_filemenu"><strong>make_filemenu</strong></a>(self, in_menu)</dt><dd><tt>Create&nbsp;the&nbsp;File&nbsp;menu&nbsp;in&nbsp;the&nbsp;menu&nbsp;bar.</tt></dd></dl>
+<dl><dt><a name="Window-make_filemenu"><strong>make_filemenu</strong></a>(self, in_menu)</dt><dd><span class="code">Create&nbsp;the&nbsp;File&nbsp;menu&nbsp;in&nbsp;the&nbsp;menu&nbsp;bar.</span></dd></dl>
 
-<dl><dt><a name="Window-make_helpmenu"><strong>make_helpmenu</strong></a>(self, in_menu)</dt><dd><tt>Create&nbsp;the&nbsp;Help&nbsp;menu&nbsp;in&nbsp;the&nbsp;menu&nbsp;bar.</tt></dd></dl>
+<dl><dt><a name="Window-make_helpmenu"><strong>make_helpmenu</strong></a>(self, in_menu)</dt><dd><span class="code">Create&nbsp;the&nbsp;Help&nbsp;menu&nbsp;in&nbsp;the&nbsp;menu&nbsp;bar.</span></dd></dl>
 
-<dl><dt><a name="Window-make_historymenu"><strong>make_historymenu</strong></a>(self, in_menu)</dt><dd><tt>Create&nbsp;the&nbsp;History&nbsp;menu&nbsp;in&nbsp;the&nbsp;menu&nbsp;bar.</tt></dd></dl>
+<dl><dt><a name="Window-make_historymenu"><strong>make_historymenu</strong></a>(self, in_menu)</dt><dd><span class="code">Create&nbsp;the&nbsp;History&nbsp;menu&nbsp;in&nbsp;the&nbsp;menu&nbsp;bar.</span></dd></dl>
 
-<dl><dt><a name="Window-make_menus"><strong>make_menus</strong></a>(self)</dt><dd><tt>Create&nbsp;the&nbsp;menu&nbsp;bar.&nbsp;The&nbsp;tabs&nbsp;of&nbsp;the&nbsp;menu&nbsp;are&nbsp;created&nbsp;in&nbsp;separate&nbsp;functions.</tt></dd></dl>
+<dl><dt><a name="Window-make_menus"><strong>make_menus</strong></a>(self)</dt><dd><span class="code">Create&nbsp;the&nbsp;menu&nbsp;bar.&nbsp;The&nbsp;tabs&nbsp;of&nbsp;the&nbsp;menu&nbsp;are&nbsp;created&nbsp;in&nbsp;separate&nbsp;functions.</span></dd></dl>
 
-<dl><dt><a name="Window-make_plotmenu"><strong>make_plotmenu</strong></a>(self, in_menu)</dt><dd><tt>Create&nbsp;the&nbsp;Plot&nbsp;menu&nbsp;in&nbsp;the&nbsp;menu&nbsp;bar.</tt></dd></dl>
+<dl><dt><a name="Window-make_plotmenu"><strong>make_plotmenu</strong></a>(self, in_menu)</dt><dd><span class="code">Create&nbsp;the&nbsp;Plot&nbsp;menu&nbsp;in&nbsp;the&nbsp;menu&nbsp;bar.</span></dd></dl>
 
-<dl><dt><a name="Window-markFrequencies"><strong>markFrequencies</strong></a>(self)</dt><dd><tt>Place&nbsp;or&nbsp;remove&nbsp;circles,&nbsp;lines&nbsp;and&nbsp;text&nbsp;on&nbsp;the&nbsp;complex&nbsp;plane&nbsp;plot&nbsp;to&nbsp;indicate&nbsp;datapoints&nbsp;whose&nbsp;frequency&nbsp;is&nbsp;an&nbsp;integer&nbsp;power&nbsp;of&nbsp;10.&nbsp;If&nbsp;the&nbsp;exact&nbsp;frequency&nbsp;is&nbsp;not&nbsp;present,&nbsp;the&nbsp;nearest&nbsp;point&nbsp;is&nbsp;marked.</tt></dd></dl>
+<dl><dt><a name="Window-markFrequencies"><strong>markFrequencies</strong></a>(self)</dt><dd><span class="code">Place&nbsp;or&nbsp;remove&nbsp;circles,&nbsp;lines&nbsp;and&nbsp;text&nbsp;on&nbsp;the&nbsp;complex&nbsp;plane&nbsp;plot&nbsp;to&nbsp;indicate&nbsp;datapoints&nbsp;whose&nbsp;frequency&nbsp;is&nbsp;an&nbsp;integer&nbsp;power&nbsp;of&nbsp;10.&nbsp;If&nbsp;the&nbsp;exact&nbsp;frequency&nbsp;is&nbsp;not&nbsp;present,&nbsp;the&nbsp;nearest&nbsp;point&nbsp;is&nbsp;marked.</span></dd></dl>
 
-<dl><dt><a name="Window-minRefine"><strong>minRefine</strong></a>(self)</dt><dd><tt>Optimize&nbsp;all&nbsp;model&nbsp;parameters&nbsp;using&nbsp;a&nbsp;unit&nbsp;weighting&nbsp;scheme&nbsp;and&nbsp;update&nbsp;the&nbsp;plots.</tt></dd></dl>
+<dl><dt><a name="Window-minRefine"><strong>minRefine</strong></a>(self)</dt><dd><span class="code">Optimize&nbsp;all&nbsp;model&nbsp;parameters&nbsp;using&nbsp;a&nbsp;unit&nbsp;weighting&nbsp;scheme&nbsp;and&nbsp;update&nbsp;the&nbsp;plots.</span></dd></dl>
 
-<dl><dt><a name="Window-on_screen"><strong>on_screen</strong></a>(self)</dt><dd><tt>Scale&nbsp;the&nbsp;window&nbsp;to&nbsp;the&nbsp;dimensionms&nbsp;of&nbsp;the&nbsp;screen&nbsp;and&nbsp;finish&nbsp;the&nbsp;UI&nbsp;initialization.</tt></dd></dl>
+<dl><dt><a name="Window-on_screen"><strong>on_screen</strong></a>(self)</dt><dd><span class="code">Scale&nbsp;the&nbsp;window&nbsp;to&nbsp;the&nbsp;dimensionms&nbsp;of&nbsp;the&nbsp;screen&nbsp;and&nbsp;finish&nbsp;the&nbsp;UI&nbsp;initialization.</span></dd></dl>
 
-<dl><dt><a name="Window-openManual"><strong>openManual</strong></a>(self)</dt><dd><tt>Open&nbsp;the&nbsp;PDF&nbsp;manual.</tt></dd></dl>
+<dl><dt><a name="Window-openManual"><strong>openManual</strong></a>(self)</dt><dd><span class="code">Open&nbsp;the&nbsp;PDF&nbsp;manual.</span></dd></dl>
 
-<dl><dt><a name="Window-performZHIT"><strong>performZHIT</strong></a>(self)</dt><dd><tt>Launch&nbsp;a&nbsp;Z-HIT&nbsp;window&nbsp;and&nbsp;wait&nbsp;for&nbsp;the&nbsp;result.&nbsp;If&nbsp;the&nbsp;result&nbsp;is&nbsp;accepted,&nbsp;replace&nbsp;the&nbsp;data&nbsp;with&nbsp;the&nbsp;Z-HIT&nbsp;fit&nbsp;result.</tt></dd></dl>
+<dl><dt><a name="Window-performZHIT"><strong>performZHIT</strong></a>(self)</dt><dd><span class="code">Launch&nbsp;a&nbsp;Z-HIT&nbsp;window&nbsp;and&nbsp;wait&nbsp;for&nbsp;the&nbsp;result.&nbsp;If&nbsp;the&nbsp;result&nbsp;is&nbsp;accepted,&nbsp;replace&nbsp;the&nbsp;data&nbsp;with&nbsp;the&nbsp;Z-HIT&nbsp;fit&nbsp;result.</span></dd></dl>
 
-<dl><dt><a name="Window-plotNonInteractive"><strong>plotNonInteractive</strong></a>(self)</dt><dd><tt>Launch&nbsp;the&nbsp;dataset&nbsp;selector&nbsp;window&nbsp;and&nbsp;add&nbsp;or&nbsp;remove&nbsp;the&nbsp;non-interactive&nbsp;selected&nbsp;data&nbsp;and&nbsp;model.</tt></dd></dl>
+<dl><dt><a name="Window-plotNonInteractive"><strong>plotNonInteractive</strong></a>(self)</dt><dd><span class="code">Launch&nbsp;the&nbsp;dataset&nbsp;selector&nbsp;window&nbsp;and&nbsp;add&nbsp;or&nbsp;remove&nbsp;the&nbsp;non-interactive&nbsp;selected&nbsp;data&nbsp;and&nbsp;model.</span></dd></dl>
 
-<dl><dt><a name="Window-resetView"><strong>resetView</strong></a>(self)</dt><dd><tt>Reset&nbsp;the&nbsp;plots'&nbsp;view&nbsp;limits.</tt></dd></dl>
+<dl><dt><a name="Window-resetView"><strong>resetView</strong></a>(self)</dt><dd><span class="code">Reset&nbsp;the&nbsp;plots'&nbsp;view&nbsp;limits.</span></dd></dl>
 
-<dl><dt><a name="Window-saveResult"><strong>saveResult</strong></a>(self)</dt><dd><tt>Open&nbsp;a&nbsp;dialog&nbsp;window&nbsp;for&nbsp;saving&nbsp;result&nbsp;(.recm2)&nbsp;files.</tt></dd></dl>
+<dl><dt><a name="Window-saveResult"><strong>saveResult</strong></a>(self)</dt><dd><span class="code">Open&nbsp;a&nbsp;dialog&nbsp;window&nbsp;for&nbsp;saving&nbsp;result&nbsp;(.recm2)&nbsp;files.</span></dd></dl>
 
-<dl><dt><a name="Window-saveToHistory"><strong>saveToHistory</strong></a>(self)</dt><dd><tt>Save&nbsp;the&nbsp;current&nbsp;data&nbsp;and&nbsp;model&nbsp;to&nbsp;History,&nbsp;where&nbsp;they&nbsp;can&nbsp;be&nbsp;accessed&nbsp;later.</tt></dd></dl>
+<dl><dt><a name="Window-saveToHistory"><strong>saveToHistory</strong></a>(self)</dt><dd><span class="code">Save&nbsp;the&nbsp;current&nbsp;data&nbsp;and&nbsp;model&nbsp;to&nbsp;History,&nbsp;where&nbsp;they&nbsp;can&nbsp;be&nbsp;accessed&nbsp;later.</span></dd></dl>
 
-<dl><dt><a name="Window-selectCircuit"><strong>selectCircuit</strong></a>(self)</dt><dd><tt>Open&nbsp;a&nbsp;circuit&nbsp;drawing&nbsp;window&nbsp;and&nbsp;wait&nbsp;for&nbsp;it&nbsp;to&nbsp;be&nbsp;closed&nbsp;to&nbsp;obtain&nbsp;a&nbsp;new&nbsp;circuit.&nbsp;Then&nbsp;set&nbsp;the&nbsp;model&nbsp;circuit&nbsp;to&nbsp;the&nbsp;obtained&nbsp;circuit.</tt></dd></dl>
+<dl><dt><a name="Window-selectCircuit"><strong>selectCircuit</strong></a>(self)</dt><dd><span class="code">Open&nbsp;a&nbsp;circuit&nbsp;drawing&nbsp;window&nbsp;and&nbsp;wait&nbsp;for&nbsp;it&nbsp;to&nbsp;be&nbsp;closed&nbsp;to&nbsp;obtain&nbsp;a&nbsp;new&nbsp;circuit.&nbsp;Then&nbsp;set&nbsp;the&nbsp;model&nbsp;circuit&nbsp;to&nbsp;the&nbsp;obtained&nbsp;circuit.</span></dd></dl>
 
-<dl><dt><a name="Window-selectOtherDataset"><strong>selectOtherDataset</strong></a>(self)</dt><dd><tt>Launch&nbsp;the&nbsp;dataset&nbsp;selector&nbsp;window&nbsp;and&nbsp;replace&nbsp;the&nbsp;current&nbsp;data&nbsp;and&nbsp;model&nbsp;with&nbsp;the&nbsp;selected&nbsp;model.</tt></dd></dl>
+<dl><dt><a name="Window-selectOtherDataset"><strong>selectOtherDataset</strong></a>(self)</dt><dd><span class="code">Launch&nbsp;the&nbsp;dataset&nbsp;selector&nbsp;window&nbsp;and&nbsp;replace&nbsp;the&nbsp;current&nbsp;data&nbsp;and&nbsp;model&nbsp;with&nbsp;the&nbsp;selected&nbsp;model.</span></dd></dl>
 
-<dl><dt><a name="Window-setAmpVisibility"><strong>setAmpVisibility</strong></a>(self)</dt><dd><tt>Toggle&nbsp;visibility&nbsp;of&nbsp;the&nbsp;amplitude&nbsp;or&nbsp;real&nbsp;admittance.</tt></dd></dl>
+<dl><dt><a name="Window-setAmpVisibility"><strong>setAmpVisibility</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;visibility&nbsp;of&nbsp;the&nbsp;amplitude&nbsp;or&nbsp;real&nbsp;admittance.</span></dd></dl>
 
-<dl><dt><a name="Window-setCircuit"><strong>setCircuit</strong></a>(self, circuit_model)</dt><dd><tt>Change&nbsp;the&nbsp;circuit&nbsp;model&nbsp;to&nbsp;a&nbsp;new&nbsp;circuit&nbsp;whose&nbsp;impedance&nbsp;function&nbsp;matches&nbsp;the&nbsp;expected&nbsp;function&nbsp;from&nbsp;the&nbsp;circuit&nbsp;diagram.<br>
+<dl><dt><a name="Window-setCircuit"><strong>setCircuit</strong></a>(self, circuit_model)</dt><dd><span class="code">Change&nbsp;the&nbsp;circuit&nbsp;model&nbsp;to&nbsp;a&nbsp;new&nbsp;circuit&nbsp;whose&nbsp;impedance&nbsp;function&nbsp;matches&nbsp;the&nbsp;expected&nbsp;function&nbsp;from&nbsp;the&nbsp;circuit&nbsp;diagram.<br>
 &nbsp;<br>
 Arguments:<br>
 self&nbsp;--&nbsp;needs&nbsp;access&nbsp;to&nbsp;instance&nbsp;of&nbsp;<a href="#Window">Window</a>&nbsp;class,&nbsp;like&nbsp;all&nbsp;other&nbsp;functions&nbsp;defined&nbsp;in&nbsp;it<br>
-circuit_model&nbsp;--&nbsp;a&nbsp;Circuit&nbsp;object&nbsp;from&nbsp;ecm_circuits</tt></dd></dl>
+circuit_model&nbsp;--&nbsp;a&nbsp;Circuit&nbsp;object&nbsp;from&nbsp;ecm_circuits</span></dd></dl>
 
-<dl><dt><a name="Window-setCustomModel"><strong>setCustomModel</strong></a>(self, circuit_model, impedance_function_name)</dt><dd><tt>Change&nbsp;the&nbsp;circuit&nbsp;model&nbsp;to&nbsp;a&nbsp;new&nbsp;circuit&nbsp;with&nbsp;a&nbsp;custom&nbsp;impedance&nbsp;function.<br>
+<dl><dt><a name="Window-setCustomModel"><strong>setCustomModel</strong></a>(self, circuit_model, impedance_function_name)</dt><dd><span class="code">Change&nbsp;the&nbsp;circuit&nbsp;model&nbsp;to&nbsp;a&nbsp;new&nbsp;circuit&nbsp;with&nbsp;a&nbsp;custom&nbsp;impedance&nbsp;function.<br>
 &nbsp;<br>
 Arguments:<br>
 self&nbsp;--&nbsp;needs&nbsp;access&nbsp;to&nbsp;instance&nbsp;of&nbsp;<a href="#Window">Window</a>&nbsp;class,&nbsp;like&nbsp;all&nbsp;other&nbsp;functions&nbsp;defined&nbsp;in&nbsp;it<br>
 circuit_model&nbsp;--&nbsp;a&nbsp;Circuit&nbsp;object&nbsp;from&nbsp;ecm_circuits<br>
 impedance_function_name&nbsp;--&nbsp;any&nbsp;key&nbsp;in&nbsp;the&nbsp;custom_model_diagrams&nbsp;dictionary&nbsp;in&nbsp;ecm_custom_models<br>
-circuit_name&nbsp;--&nbsp;string&nbsp;containing&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;custom&nbsp;model</tt></dd></dl>
+circuit_name&nbsp;--&nbsp;string&nbsp;containing&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;custom&nbsp;model</span></dd></dl>
 
-<dl><dt><a name="Window-setLogAmp"><strong>setLogAmp</strong></a>(self)</dt><dd><tt>Toggle&nbsp;log&nbsp;scale&nbsp;for&nbsp;the&nbsp;amplitude&nbsp;or&nbsp;real&nbsp;admittance.</tt></dd></dl>
+<dl><dt><a name="Window-setLogAmp"><strong>setLogAmp</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;log&nbsp;scale&nbsp;for&nbsp;the&nbsp;amplitude&nbsp;or&nbsp;real&nbsp;admittance.</span></dd></dl>
 
-<dl><dt><a name="Window-setLogPhase"><strong>setLogPhase</strong></a>(self)</dt><dd><tt>Toggle&nbsp;log&nbsp;scale&nbsp;for&nbsp;the&nbsp;phase&nbsp;(not&nbsp;recommended)&nbsp;or&nbsp;imaginary&nbsp;admittance.</tt></dd></dl>
+<dl><dt><a name="Window-setLogPhase"><strong>setLogPhase</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;log&nbsp;scale&nbsp;for&nbsp;the&nbsp;phase&nbsp;(not&nbsp;recommended)&nbsp;or&nbsp;imaginary&nbsp;admittance.</span></dd></dl>
 
-<dl><dt><a name="Window-setPhaseVisibility"><strong>setPhaseVisibility</strong></a>(self)</dt><dd><tt>Toggle&nbsp;visibility&nbsp;of&nbsp;the&nbsp;phase&nbsp;or&nbsp;imaginary&nbsp;admittance.</tt></dd></dl>
+<dl><dt><a name="Window-setPhaseVisibility"><strong>setPhaseVisibility</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;visibility&nbsp;of&nbsp;the&nbsp;phase&nbsp;or&nbsp;imaginary&nbsp;admittance.</span></dd></dl>
 
-<dl><dt><a name="Window-setRefinementRange"><strong>setRefinementRange</strong></a>(self)</dt><dd><tt>Open&nbsp;a&nbsp;simple&nbsp;dialog&nbsp;box&nbsp;to&nbsp;set&nbsp;the&nbsp;frequency&nbsp;limits&nbsp;used&nbsp;in&nbsp;the&nbsp;minRefine&nbsp;function.</tt></dd></dl>
+<dl><dt><a name="Window-setRefinementRange"><strong>setRefinementRange</strong></a>(self)</dt><dd><span class="code">Open&nbsp;a&nbsp;simple&nbsp;dialog&nbsp;box&nbsp;to&nbsp;set&nbsp;the&nbsp;frequency&nbsp;limits&nbsp;used&nbsp;in&nbsp;the&nbsp;minRefine&nbsp;function.</span></dd></dl>
 
-<dl><dt><a name="Window-showInstructions"><strong>showInstructions</strong></a>(self)</dt><dd><tt>Launch&nbsp;the&nbsp;help&nbsp;window.</tt></dd></dl>
+<dl><dt><a name="Window-showInstructions"><strong>showInstructions</strong></a>(self)</dt><dd><span class="code">Launch&nbsp;the&nbsp;help&nbsp;window.</span></dd></dl>
 
-<dl><dt><a name="Window-toggleAdmittancePlot"><strong>toggleAdmittancePlot</strong></a>(self)</dt><dd><tt>Switch&nbsp;between&nbsp;the&nbsp;amplitude+phase&nbsp;impedance&nbsp;and&nbsp;real+imaginary&nbsp;admittance&nbsp;plots.</tt></dd></dl>
+<dl><dt><a name="Window-toggleAdmittancePlot"><strong>toggleAdmittancePlot</strong></a>(self)</dt><dd><span class="code">Switch&nbsp;between&nbsp;the&nbsp;amplitude+phase&nbsp;impedance&nbsp;and&nbsp;real+imaginary&nbsp;admittance&nbsp;plots.</span></dd></dl>
 
-<dl><dt><a name="Window-toggleDataVisibility"><strong>toggleDataVisibility</strong></a>(self)</dt><dd><tt>Toggle&nbsp;visibility&nbsp;of&nbsp;the&nbsp;data.</tt></dd></dl>
+<dl><dt><a name="Window-toggleDataVisibility"><strong>toggleDataVisibility</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;visibility&nbsp;of&nbsp;the&nbsp;data.</span></dd></dl>
 
-<dl><dt><a name="Window-toggleFitVisibility"><strong>toggleFitVisibility</strong></a>(self)</dt><dd><tt>Toggle&nbsp;visibility&nbsp;of&nbsp;the&nbsp;fit.</tt></dd></dl>
+<dl><dt><a name="Window-toggleFitVisibility"><strong>toggleFitVisibility</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;visibility&nbsp;of&nbsp;the&nbsp;fit.</span></dd></dl>
 
-<dl><dt><a name="Window-typeCircuit"><strong>typeCircuit</strong></a>(self)</dt><dd><tt>Open&nbsp;a&nbsp;simple&nbsp;dialog&nbsp;box&nbsp;in&nbsp;which&nbsp;a&nbsp;circuit&nbsp;string&nbsp;can&nbsp;be&nbsp;typed.&nbsp;Generate&nbsp;a&nbsp;circuit&nbsp;from&nbsp;the&nbsp;string&nbsp;and&nbsp;set&nbsp;the&nbsp;model&nbsp;circuit&nbsp;to&nbsp;this&nbsp;new&nbsp;circuit.</tt></dd></dl>
+<dl><dt><a name="Window-typeCircuit"><strong>typeCircuit</strong></a>(self)</dt><dd><span class="code">Open&nbsp;a&nbsp;simple&nbsp;dialog&nbsp;box&nbsp;in&nbsp;which&nbsp;a&nbsp;circuit&nbsp;string&nbsp;can&nbsp;be&nbsp;typed.&nbsp;Generate&nbsp;a&nbsp;circuit&nbsp;from&nbsp;the&nbsp;string&nbsp;and&nbsp;set&nbsp;the&nbsp;model&nbsp;circuit&nbsp;to&nbsp;this&nbsp;new&nbsp;circuit.</span></dd></dl>
 
-<dl><dt><a name="Window-undoRefinement"><strong>undoRefinement</strong></a>(self)</dt><dd><tt>Replace&nbsp;the&nbsp;current&nbsp;model&nbsp;parameters&nbsp;with&nbsp;the&nbsp;previous&nbsp;parameters&nbsp;and&nbsp;remove&nbsp;the&nbsp;newest&nbsp;entry&nbsp;in&nbsp;the&nbsp;list&nbsp;of&nbsp;previous&nbsp;parameters.</tt></dd></dl>
+<dl><dt><a name="Window-undoRefinement"><strong>undoRefinement</strong></a>(self)</dt><dd><span class="code">Replace&nbsp;the&nbsp;current&nbsp;model&nbsp;parameters&nbsp;with&nbsp;the&nbsp;previous&nbsp;parameters&nbsp;and&nbsp;remove&nbsp;the&nbsp;newest&nbsp;entry&nbsp;in&nbsp;the&nbsp;list&nbsp;of&nbsp;previous&nbsp;parameters.</span></dd></dl>
 
 <hr>
 Methods inherited from <a href="tkinter.ttk.html#Widget">tkinter.ttk.Widget</a>:<br>
-<dl><dt><a name="Window-identify"><strong>identify</strong></a>(self, x, y)</dt><dd><tt>Returns&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;element&nbsp;at&nbsp;position&nbsp;x,&nbsp;y,&nbsp;or&nbsp;the&nbsp;empty<br>
+<dl><dt><a name="Window-identify"><strong>identify</strong></a>(self, x, y)</dt><dd><span class="code">Returns&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;element&nbsp;at&nbsp;position&nbsp;x,&nbsp;y,&nbsp;or&nbsp;the&nbsp;empty<br>
 string&nbsp;if&nbsp;the&nbsp;point&nbsp;does&nbsp;not&nbsp;lie&nbsp;within&nbsp;any&nbsp;element.<br>
 &nbsp;<br>
-x&nbsp;and&nbsp;y&nbsp;are&nbsp;pixel&nbsp;coordinates&nbsp;relative&nbsp;to&nbsp;the&nbsp;widget.</tt></dd></dl>
+x&nbsp;and&nbsp;y&nbsp;are&nbsp;pixel&nbsp;coordinates&nbsp;relative&nbsp;to&nbsp;the&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-instate"><strong>instate</strong></a>(self, statespec, callback=None, *args, **kw)</dt><dd><tt>Test&nbsp;the&nbsp;widget's&nbsp;state.<br>
+<dl><dt><a name="Window-instate"><strong>instate</strong></a>(self, statespec, callback=None, *args, **kw)</dt><dd><span class="code">Test&nbsp;the&nbsp;widget's&nbsp;state.<br>
 &nbsp;<br>
 If&nbsp;callback&nbsp;is&nbsp;not&nbsp;specified,&nbsp;returns&nbsp;True&nbsp;if&nbsp;the&nbsp;widget&nbsp;state<br>
 matches&nbsp;statespec&nbsp;and&nbsp;False&nbsp;otherwise.&nbsp;If&nbsp;callback&nbsp;is&nbsp;specified,<br>
 then&nbsp;it&nbsp;will&nbsp;be&nbsp;invoked&nbsp;with&nbsp;*args,&nbsp;**kw&nbsp;if&nbsp;the&nbsp;widget&nbsp;state<br>
-matches&nbsp;statespec.&nbsp;statespec&nbsp;is&nbsp;expected&nbsp;to&nbsp;be&nbsp;a&nbsp;sequence.</tt></dd></dl>
+matches&nbsp;statespec.&nbsp;statespec&nbsp;is&nbsp;expected&nbsp;to&nbsp;be&nbsp;a&nbsp;sequence.</span></dd></dl>
 
-<dl><dt><a name="Window-state"><strong>state</strong></a>(self, statespec=None)</dt><dd><tt>Modify&nbsp;or&nbsp;inquire&nbsp;widget&nbsp;state.<br>
+<dl><dt><a name="Window-state"><strong>state</strong></a>(self, statespec=None)</dt><dd><span class="code">Modify&nbsp;or&nbsp;inquire&nbsp;widget&nbsp;state.<br>
 &nbsp;<br>
 Widget&nbsp;state&nbsp;is&nbsp;returned&nbsp;if&nbsp;statespec&nbsp;is&nbsp;None,&nbsp;otherwise&nbsp;it&nbsp;is<br>
 set&nbsp;according&nbsp;to&nbsp;the&nbsp;statespec&nbsp;flags&nbsp;and&nbsp;then&nbsp;a&nbsp;new&nbsp;state&nbsp;spec<br>
 is&nbsp;returned&nbsp;indicating&nbsp;which&nbsp;flags&nbsp;were&nbsp;changed.&nbsp;statespec&nbsp;is<br>
-expected&nbsp;to&nbsp;be&nbsp;a&nbsp;sequence.</tt></dd></dl>
+expected&nbsp;to&nbsp;be&nbsp;a&nbsp;sequence.</span></dd></dl>
 
 <hr>
 Methods inherited from <a href="tkinter.html#BaseWidget">tkinter.BaseWidget</a>:<br>
-<dl><dt><a name="Window-destroy"><strong>destroy</strong></a>(self)</dt><dd><tt>Destroy&nbsp;this&nbsp;and&nbsp;all&nbsp;descendants&nbsp;widgets.</tt></dd></dl>
+<dl><dt><a name="Window-destroy"><strong>destroy</strong></a>(self)</dt><dd><span class="code">Destroy&nbsp;this&nbsp;and&nbsp;all&nbsp;descendants&nbsp;widgets.</span></dd></dl>
 
 <hr>
 Methods inherited from <a href="tkinter.html#Misc">tkinter.Misc</a>:<br>
 <dl><dt><a name="Window-__getitem__"><strong>__getitem__</strong></a> = <a href="#Window-cget">cget</a>(self, key)</dt></dl>
 
-<dl><dt><a name="Window-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+<dl><dt><a name="Window-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><span class="code">Return&nbsp;repr(self).</span></dd></dl>
 
 <dl><dt><a name="Window-__setitem__"><strong>__setitem__</strong></a>(self, key, value)</dt></dl>
 
-<dl><dt><a name="Window-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;window&nbsp;path&nbsp;name&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-__str__"><strong>__str__</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;window&nbsp;path&nbsp;name&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-after"><strong>after</strong></a>(self, ms, func=None, *args)</dt><dd><tt>Call&nbsp;function&nbsp;once&nbsp;after&nbsp;given&nbsp;time.<br>
+<dl><dt><a name="Window-after"><strong>after</strong></a>(self, ms, func=None, *args)</dt><dd><span class="code">Call&nbsp;function&nbsp;once&nbsp;after&nbsp;given&nbsp;time.<br>
 &nbsp;<br>
 MS&nbsp;specifies&nbsp;the&nbsp;time&nbsp;in&nbsp;milliseconds.&nbsp;FUNC&nbsp;gives&nbsp;the<br>
 function&nbsp;which&nbsp;shall&nbsp;be&nbsp;called.&nbsp;Additional&nbsp;parameters<br>
 are&nbsp;given&nbsp;as&nbsp;parameters&nbsp;to&nbsp;the&nbsp;function&nbsp;call.&nbsp;&nbsp;Return<br>
-identifier&nbsp;to&nbsp;cancel&nbsp;scheduling&nbsp;with&nbsp;after_cancel.</tt></dd></dl>
+identifier&nbsp;to&nbsp;cancel&nbsp;scheduling&nbsp;with&nbsp;after_cancel.</span></dd></dl>
 
-<dl><dt><a name="Window-after_cancel"><strong>after_cancel</strong></a>(self, id)</dt><dd><tt>Cancel&nbsp;scheduling&nbsp;of&nbsp;function&nbsp;identified&nbsp;with&nbsp;ID.<br>
+<dl><dt><a name="Window-after_cancel"><strong>after_cancel</strong></a>(self, id)</dt><dd><span class="code">Cancel&nbsp;scheduling&nbsp;of&nbsp;function&nbsp;identified&nbsp;with&nbsp;ID.<br>
 &nbsp;<br>
 Identifier&nbsp;returned&nbsp;by&nbsp;after&nbsp;or&nbsp;after_idle&nbsp;must&nbsp;be<br>
-given&nbsp;as&nbsp;first&nbsp;parameter.</tt></dd></dl>
+given&nbsp;as&nbsp;first&nbsp;parameter.</span></dd></dl>
 
-<dl><dt><a name="Window-after_idle"><strong>after_idle</strong></a>(self, func, *args)</dt><dd><tt>Call&nbsp;FUNC&nbsp;once&nbsp;if&nbsp;the&nbsp;Tcl&nbsp;main&nbsp;loop&nbsp;has&nbsp;no&nbsp;event&nbsp;to<br>
+<dl><dt><a name="Window-after_idle"><strong>after_idle</strong></a>(self, func, *args)</dt><dd><span class="code">Call&nbsp;FUNC&nbsp;once&nbsp;if&nbsp;the&nbsp;Tcl&nbsp;main&nbsp;loop&nbsp;has&nbsp;no&nbsp;event&nbsp;to<br>
 process.<br>
 &nbsp;<br>
 Return&nbsp;an&nbsp;identifier&nbsp;to&nbsp;cancel&nbsp;the&nbsp;scheduling&nbsp;with<br>
-after_cancel.</tt></dd></dl>
+after_cancel.</span></dd></dl>
 
 <dl><dt><a name="Window-anchor"><strong>anchor</strong></a> = <a href="#Window-grid_anchor">grid_anchor</a>(self, anchor=None)</dt></dl>
 
 <dl><dt><a name="Window-bbox"><strong>bbox</strong></a> = <a href="#Window-grid_bbox">grid_bbox</a>(self, column=None, row=None, col2=None, row2=None)</dt></dl>
 
-<dl><dt><a name="Window-bell"><strong>bell</strong></a>(self, displayof=0)</dt><dd><tt>Ring&nbsp;a&nbsp;display's&nbsp;bell.</tt></dd></dl>
+<dl><dt><a name="Window-bell"><strong>bell</strong></a>(self, displayof=0)</dt><dd><span class="code">Ring&nbsp;a&nbsp;display's&nbsp;bell.</span></dd></dl>
 
-<dl><dt><a name="Window-bind"><strong>bind</strong></a>(self, sequence=None, func=None, add=None)</dt><dd><tt>Bind&nbsp;to&nbsp;this&nbsp;widget&nbsp;at&nbsp;event&nbsp;SEQUENCE&nbsp;a&nbsp;call&nbsp;to&nbsp;function&nbsp;FUNC.<br>
+<dl><dt><a name="Window-bind"><strong>bind</strong></a>(self, sequence=None, func=None, add=None)</dt><dd><span class="code">Bind&nbsp;to&nbsp;this&nbsp;widget&nbsp;at&nbsp;event&nbsp;SEQUENCE&nbsp;a&nbsp;call&nbsp;to&nbsp;function&nbsp;FUNC.<br>
 &nbsp;<br>
 SEQUENCE&nbsp;is&nbsp;a&nbsp;string&nbsp;of&nbsp;concatenated&nbsp;event<br>
 patterns.&nbsp;An&nbsp;event&nbsp;pattern&nbsp;is&nbsp;of&nbsp;the&nbsp;form<br>
@@ -315,41 +313,41 @@ Bind&nbsp;will&nbsp;return&nbsp;an&nbsp;identifier&nbsp;to&nbsp;allow&nbsp;delet
 unbind&nbsp;without&nbsp;memory&nbsp;leak.<br>
 &nbsp;<br>
 If&nbsp;FUNC&nbsp;or&nbsp;SEQUENCE&nbsp;is&nbsp;omitted&nbsp;the&nbsp;bound&nbsp;function&nbsp;or&nbsp;list<br>
-of&nbsp;bound&nbsp;events&nbsp;are&nbsp;returned.</tt></dd></dl>
+of&nbsp;bound&nbsp;events&nbsp;are&nbsp;returned.</span></dd></dl>
 
-<dl><dt><a name="Window-bind_all"><strong>bind_all</strong></a>(self, sequence=None, func=None, add=None)</dt><dd><tt>Bind&nbsp;to&nbsp;all&nbsp;widgets&nbsp;at&nbsp;an&nbsp;event&nbsp;SEQUENCE&nbsp;a&nbsp;call&nbsp;to&nbsp;function&nbsp;FUNC.<br>
+<dl><dt><a name="Window-bind_all"><strong>bind_all</strong></a>(self, sequence=None, func=None, add=None)</dt><dd><span class="code">Bind&nbsp;to&nbsp;all&nbsp;widgets&nbsp;at&nbsp;an&nbsp;event&nbsp;SEQUENCE&nbsp;a&nbsp;call&nbsp;to&nbsp;function&nbsp;FUNC.<br>
 An&nbsp;additional&nbsp;boolean&nbsp;parameter&nbsp;ADD&nbsp;specifies&nbsp;whether&nbsp;FUNC&nbsp;will<br>
 be&nbsp;called&nbsp;additionally&nbsp;to&nbsp;the&nbsp;other&nbsp;bound&nbsp;function&nbsp;or&nbsp;whether<br>
-it&nbsp;will&nbsp;replace&nbsp;the&nbsp;previous&nbsp;function.&nbsp;See&nbsp;bind&nbsp;for&nbsp;the&nbsp;return&nbsp;value.</tt></dd></dl>
+it&nbsp;will&nbsp;replace&nbsp;the&nbsp;previous&nbsp;function.&nbsp;See&nbsp;bind&nbsp;for&nbsp;the&nbsp;return&nbsp;value.</span></dd></dl>
 
-<dl><dt><a name="Window-bind_class"><strong>bind_class</strong></a>(self, className, sequence=None, func=None, add=None)</dt><dd><tt>Bind&nbsp;to&nbsp;widgets&nbsp;with&nbsp;bindtag&nbsp;CLASSNAME&nbsp;at&nbsp;event<br>
+<dl><dt><a name="Window-bind_class"><strong>bind_class</strong></a>(self, className, sequence=None, func=None, add=None)</dt><dd><span class="code">Bind&nbsp;to&nbsp;widgets&nbsp;with&nbsp;bindtag&nbsp;CLASSNAME&nbsp;at&nbsp;event<br>
 SEQUENCE&nbsp;a&nbsp;call&nbsp;of&nbsp;function&nbsp;FUNC.&nbsp;An&nbsp;additional<br>
 boolean&nbsp;parameter&nbsp;ADD&nbsp;specifies&nbsp;whether&nbsp;FUNC&nbsp;will&nbsp;be<br>
 called&nbsp;additionally&nbsp;to&nbsp;the&nbsp;other&nbsp;bound&nbsp;function&nbsp;or<br>
 whether&nbsp;it&nbsp;will&nbsp;replace&nbsp;the&nbsp;previous&nbsp;function.&nbsp;See&nbsp;bind&nbsp;for<br>
-the&nbsp;return&nbsp;value.</tt></dd></dl>
+the&nbsp;return&nbsp;value.</span></dd></dl>
 
-<dl><dt><a name="Window-bindtags"><strong>bindtags</strong></a>(self, tagList=None)</dt><dd><tt>Set&nbsp;or&nbsp;get&nbsp;the&nbsp;list&nbsp;of&nbsp;bindtags&nbsp;for&nbsp;this&nbsp;widget.<br>
+<dl><dt><a name="Window-bindtags"><strong>bindtags</strong></a>(self, tagList=None)</dt><dd><span class="code">Set&nbsp;or&nbsp;get&nbsp;the&nbsp;list&nbsp;of&nbsp;bindtags&nbsp;for&nbsp;this&nbsp;widget.<br>
 &nbsp;<br>
 With&nbsp;no&nbsp;argument&nbsp;return&nbsp;the&nbsp;list&nbsp;of&nbsp;all&nbsp;bindtags&nbsp;associated&nbsp;with<br>
 this&nbsp;widget.&nbsp;With&nbsp;a&nbsp;list&nbsp;of&nbsp;strings&nbsp;as&nbsp;argument&nbsp;the&nbsp;bindtags&nbsp;are<br>
 set&nbsp;to&nbsp;this&nbsp;list.&nbsp;The&nbsp;bindtags&nbsp;determine&nbsp;in&nbsp;which&nbsp;order&nbsp;events&nbsp;are<br>
-processed&nbsp;(see&nbsp;bind).</tt></dd></dl>
+processed&nbsp;(see&nbsp;bind).</span></dd></dl>
 
-<dl><dt><a name="Window-cget"><strong>cget</strong></a>(self, key)</dt><dd><tt>Return&nbsp;the&nbsp;resource&nbsp;value&nbsp;for&nbsp;a&nbsp;KEY&nbsp;given&nbsp;as&nbsp;string.</tt></dd></dl>
+<dl><dt><a name="Window-cget"><strong>cget</strong></a>(self, key)</dt><dd><span class="code">Return&nbsp;the&nbsp;resource&nbsp;value&nbsp;for&nbsp;a&nbsp;KEY&nbsp;given&nbsp;as&nbsp;string.</span></dd></dl>
 
-<dl><dt><a name="Window-clipboard_append"><strong>clipboard_append</strong></a>(self, string, **kw)</dt><dd><tt>Append&nbsp;STRING&nbsp;to&nbsp;the&nbsp;Tk&nbsp;clipboard.<br>
+<dl><dt><a name="Window-clipboard_append"><strong>clipboard_append</strong></a>(self, string, **kw)</dt><dd><span class="code">Append&nbsp;STRING&nbsp;to&nbsp;the&nbsp;Tk&nbsp;clipboard.<br>
 &nbsp;<br>
 A&nbsp;widget&nbsp;specified&nbsp;at&nbsp;the&nbsp;optional&nbsp;displayof&nbsp;keyword<br>
 argument&nbsp;specifies&nbsp;the&nbsp;target&nbsp;display.&nbsp;The&nbsp;clipboard<br>
-can&nbsp;be&nbsp;retrieved&nbsp;with&nbsp;selection_get.</tt></dd></dl>
+can&nbsp;be&nbsp;retrieved&nbsp;with&nbsp;selection_get.</span></dd></dl>
 
-<dl><dt><a name="Window-clipboard_clear"><strong>clipboard_clear</strong></a>(self, **kw)</dt><dd><tt>Clear&nbsp;the&nbsp;data&nbsp;in&nbsp;the&nbsp;Tk&nbsp;clipboard.<br>
+<dl><dt><a name="Window-clipboard_clear"><strong>clipboard_clear</strong></a>(self, **kw)</dt><dd><span class="code">Clear&nbsp;the&nbsp;data&nbsp;in&nbsp;the&nbsp;Tk&nbsp;clipboard.<br>
 &nbsp;<br>
 A&nbsp;widget&nbsp;specified&nbsp;for&nbsp;the&nbsp;optional&nbsp;displayof&nbsp;keyword<br>
-argument&nbsp;specifies&nbsp;the&nbsp;target&nbsp;display.</tt></dd></dl>
+argument&nbsp;specifies&nbsp;the&nbsp;target&nbsp;display.</span></dd></dl>
 
-<dl><dt><a name="Window-clipboard_get"><strong>clipboard_get</strong></a>(self, **kw)</dt><dd><tt>Retrieve&nbsp;data&nbsp;from&nbsp;the&nbsp;clipboard&nbsp;on&nbsp;window's&nbsp;display.<br>
+<dl><dt><a name="Window-clipboard_get"><strong>clipboard_get</strong></a>(self, **kw)</dt><dd><span class="code">Retrieve&nbsp;data&nbsp;from&nbsp;the&nbsp;clipboard&nbsp;on&nbsp;window's&nbsp;display.<br>
 &nbsp;<br>
 The&nbsp;window&nbsp;keyword&nbsp;defaults&nbsp;to&nbsp;the&nbsp;root&nbsp;window&nbsp;of&nbsp;the&nbsp;Tkinter<br>
 application.<br>
@@ -361,95 +359,95 @@ is&nbsp;to&nbsp;try&nbsp;UTF8_STRING&nbsp;and&nbsp;fall&nbsp;back&nbsp;to&nbsp;S
 &nbsp;<br>
 This&nbsp;command&nbsp;is&nbsp;equivalent&nbsp;to:<br>
 &nbsp;<br>
-<a href="#Window-selection_get">selection_get</a>(CLIPBOARD)</tt></dd></dl>
+<a href="#Window-selection_get">selection_get</a>(CLIPBOARD)</span></dd></dl>
 
 <dl><dt><a name="Window-columnconfigure"><strong>columnconfigure</strong></a> = <a href="#Window-grid_columnconfigure">grid_columnconfigure</a>(self, index, cnf={}, **kw)</dt></dl>
 
 <dl><dt><a name="Window-config"><strong>config</strong></a> = <a href="#Window-configure">configure</a>(self, cnf=None, **kw)</dt></dl>
 
-<dl><dt><a name="Window-configure"><strong>configure</strong></a>(self, cnf=None, **kw)</dt><dd><tt>Configure&nbsp;resources&nbsp;of&nbsp;a&nbsp;widget.<br>
+<dl><dt><a name="Window-configure"><strong>configure</strong></a>(self, cnf=None, **kw)</dt><dd><span class="code">Configure&nbsp;resources&nbsp;of&nbsp;a&nbsp;widget.<br>
 &nbsp;<br>
 The&nbsp;values&nbsp;for&nbsp;resources&nbsp;are&nbsp;specified&nbsp;as&nbsp;keyword<br>
 arguments.&nbsp;To&nbsp;get&nbsp;an&nbsp;overview&nbsp;about<br>
-the&nbsp;allowed&nbsp;keyword&nbsp;arguments&nbsp;call&nbsp;the&nbsp;method&nbsp;keys.</tt></dd></dl>
+the&nbsp;allowed&nbsp;keyword&nbsp;arguments&nbsp;call&nbsp;the&nbsp;method&nbsp;keys.</span></dd></dl>
 
-<dl><dt><a name="Window-deletecommand"><strong>deletecommand</strong></a>(self, name)</dt><dd><tt>Internal&nbsp;function.<br>
+<dl><dt><a name="Window-deletecommand"><strong>deletecommand</strong></a>(self, name)</dt><dd><span class="code">Internal&nbsp;function.<br>
 &nbsp;<br>
-Delete&nbsp;the&nbsp;Tcl&nbsp;command&nbsp;provided&nbsp;in&nbsp;NAME.</tt></dd></dl>
+Delete&nbsp;the&nbsp;Tcl&nbsp;command&nbsp;provided&nbsp;in&nbsp;NAME.</span></dd></dl>
 
-<dl><dt><a name="Window-event_add"><strong>event_add</strong></a>(self, virtual, *sequences)</dt><dd><tt>Bind&nbsp;a&nbsp;virtual&nbsp;event&nbsp;VIRTUAL&nbsp;(of&nbsp;the&nbsp;form&nbsp;&lt;&lt;Name&gt;&gt;)<br>
+<dl><dt><a name="Window-event_add"><strong>event_add</strong></a>(self, virtual, *sequences)</dt><dd><span class="code">Bind&nbsp;a&nbsp;virtual&nbsp;event&nbsp;VIRTUAL&nbsp;(of&nbsp;the&nbsp;form&nbsp;&lt;&lt;Name&gt;&gt;)<br>
 to&nbsp;an&nbsp;event&nbsp;SEQUENCE&nbsp;such&nbsp;that&nbsp;the&nbsp;virtual&nbsp;event&nbsp;is&nbsp;triggered<br>
-whenever&nbsp;SEQUENCE&nbsp;occurs.</tt></dd></dl>
+whenever&nbsp;SEQUENCE&nbsp;occurs.</span></dd></dl>
 
-<dl><dt><a name="Window-event_delete"><strong>event_delete</strong></a>(self, virtual, *sequences)</dt><dd><tt>Unbind&nbsp;a&nbsp;virtual&nbsp;event&nbsp;VIRTUAL&nbsp;from&nbsp;SEQUENCE.</tt></dd></dl>
+<dl><dt><a name="Window-event_delete"><strong>event_delete</strong></a>(self, virtual, *sequences)</dt><dd><span class="code">Unbind&nbsp;a&nbsp;virtual&nbsp;event&nbsp;VIRTUAL&nbsp;from&nbsp;SEQUENCE.</span></dd></dl>
 
-<dl><dt><a name="Window-event_generate"><strong>event_generate</strong></a>(self, sequence, **kw)</dt><dd><tt>Generate&nbsp;an&nbsp;event&nbsp;SEQUENCE.&nbsp;Additional<br>
+<dl><dt><a name="Window-event_generate"><strong>event_generate</strong></a>(self, sequence, **kw)</dt><dd><span class="code">Generate&nbsp;an&nbsp;event&nbsp;SEQUENCE.&nbsp;Additional<br>
 keyword&nbsp;arguments&nbsp;specify&nbsp;parameter&nbsp;of&nbsp;the&nbsp;event<br>
-(e.g.&nbsp;x,&nbsp;y,&nbsp;rootx,&nbsp;rooty).</tt></dd></dl>
+(e.g.&nbsp;x,&nbsp;y,&nbsp;rootx,&nbsp;rooty).</span></dd></dl>
 
-<dl><dt><a name="Window-event_info"><strong>event_info</strong></a>(self, virtual=None)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;virtual&nbsp;events&nbsp;or&nbsp;the&nbsp;information<br>
-about&nbsp;the&nbsp;SEQUENCE&nbsp;bound&nbsp;to&nbsp;the&nbsp;virtual&nbsp;event&nbsp;VIRTUAL.</tt></dd></dl>
+<dl><dt><a name="Window-event_info"><strong>event_info</strong></a>(self, virtual=None)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;virtual&nbsp;events&nbsp;or&nbsp;the&nbsp;information<br>
+about&nbsp;the&nbsp;SEQUENCE&nbsp;bound&nbsp;to&nbsp;the&nbsp;virtual&nbsp;event&nbsp;VIRTUAL.</span></dd></dl>
 
 <dl><dt><a name="Window-focus"><strong>focus</strong></a> = <a href="#Window-focus_set">focus_set</a>(self)</dt></dl>
 
-<dl><dt><a name="Window-focus_displayof"><strong>focus_displayof</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;widget&nbsp;which&nbsp;has&nbsp;currently&nbsp;the&nbsp;focus&nbsp;on&nbsp;the<br>
+<dl><dt><a name="Window-focus_displayof"><strong>focus_displayof</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;widget&nbsp;which&nbsp;has&nbsp;currently&nbsp;the&nbsp;focus&nbsp;on&nbsp;the<br>
 display&nbsp;where&nbsp;this&nbsp;widget&nbsp;is&nbsp;located.<br>
 &nbsp;<br>
-Return&nbsp;None&nbsp;if&nbsp;the&nbsp;application&nbsp;does&nbsp;not&nbsp;have&nbsp;the&nbsp;focus.</tt></dd></dl>
+Return&nbsp;None&nbsp;if&nbsp;the&nbsp;application&nbsp;does&nbsp;not&nbsp;have&nbsp;the&nbsp;focus.</span></dd></dl>
 
-<dl><dt><a name="Window-focus_force"><strong>focus_force</strong></a>(self)</dt><dd><tt>Direct&nbsp;input&nbsp;focus&nbsp;to&nbsp;this&nbsp;widget&nbsp;even&nbsp;if&nbsp;the<br>
+<dl><dt><a name="Window-focus_force"><strong>focus_force</strong></a>(self)</dt><dd><span class="code">Direct&nbsp;input&nbsp;focus&nbsp;to&nbsp;this&nbsp;widget&nbsp;even&nbsp;if&nbsp;the<br>
 application&nbsp;does&nbsp;not&nbsp;have&nbsp;the&nbsp;focus.&nbsp;Use&nbsp;with<br>
-caution!</tt></dd></dl>
+caution!</span></dd></dl>
 
-<dl><dt><a name="Window-focus_get"><strong>focus_get</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;widget&nbsp;which&nbsp;has&nbsp;currently&nbsp;the&nbsp;focus&nbsp;in&nbsp;the<br>
+<dl><dt><a name="Window-focus_get"><strong>focus_get</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;widget&nbsp;which&nbsp;has&nbsp;currently&nbsp;the&nbsp;focus&nbsp;in&nbsp;the<br>
 application.<br>
 &nbsp;<br>
 Use&nbsp;focus_displayof&nbsp;to&nbsp;allow&nbsp;working&nbsp;with&nbsp;several<br>
 displays.&nbsp;Return&nbsp;None&nbsp;if&nbsp;application&nbsp;does&nbsp;not&nbsp;have<br>
-the&nbsp;focus.</tt></dd></dl>
+the&nbsp;focus.</span></dd></dl>
 
-<dl><dt><a name="Window-focus_lastfor"><strong>focus_lastfor</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;widget&nbsp;which&nbsp;would&nbsp;have&nbsp;the&nbsp;focus&nbsp;if&nbsp;top&nbsp;level<br>
-for&nbsp;this&nbsp;widget&nbsp;gets&nbsp;the&nbsp;focus&nbsp;from&nbsp;the&nbsp;window&nbsp;manager.</tt></dd></dl>
+<dl><dt><a name="Window-focus_lastfor"><strong>focus_lastfor</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;widget&nbsp;which&nbsp;would&nbsp;have&nbsp;the&nbsp;focus&nbsp;if&nbsp;top&nbsp;level<br>
+for&nbsp;this&nbsp;widget&nbsp;gets&nbsp;the&nbsp;focus&nbsp;from&nbsp;the&nbsp;window&nbsp;manager.</span></dd></dl>
 
-<dl><dt><a name="Window-focus_set"><strong>focus_set</strong></a>(self)</dt><dd><tt>Direct&nbsp;input&nbsp;focus&nbsp;to&nbsp;this&nbsp;widget.<br>
+<dl><dt><a name="Window-focus_set"><strong>focus_set</strong></a>(self)</dt><dd><span class="code">Direct&nbsp;input&nbsp;focus&nbsp;to&nbsp;this&nbsp;widget.<br>
 &nbsp;<br>
 If&nbsp;the&nbsp;application&nbsp;currently&nbsp;does&nbsp;not&nbsp;have&nbsp;the&nbsp;focus<br>
 this&nbsp;widget&nbsp;will&nbsp;get&nbsp;the&nbsp;focus&nbsp;if&nbsp;the&nbsp;application&nbsp;gets<br>
-the&nbsp;focus&nbsp;through&nbsp;the&nbsp;window&nbsp;manager.</tt></dd></dl>
+the&nbsp;focus&nbsp;through&nbsp;the&nbsp;window&nbsp;manager.</span></dd></dl>
 
-<dl><dt><a name="Window-getboolean"><strong>getboolean</strong></a>(self, s)</dt><dd><tt>Return&nbsp;a&nbsp;boolean&nbsp;value&nbsp;for&nbsp;Tcl&nbsp;boolean&nbsp;values&nbsp;true&nbsp;and&nbsp;false&nbsp;given&nbsp;as&nbsp;parameter.</tt></dd></dl>
+<dl><dt><a name="Window-getboolean"><strong>getboolean</strong></a>(self, s)</dt><dd><span class="code">Return&nbsp;a&nbsp;boolean&nbsp;value&nbsp;for&nbsp;Tcl&nbsp;boolean&nbsp;values&nbsp;true&nbsp;and&nbsp;false&nbsp;given&nbsp;as&nbsp;parameter.</span></dd></dl>
 
 <dl><dt><a name="Window-getdouble"><strong>getdouble</strong></a>(self, s)</dt></dl>
 
 <dl><dt><a name="Window-getint"><strong>getint</strong></a>(self, s)</dt></dl>
 
-<dl><dt><a name="Window-getvar"><strong>getvar</strong></a>(self, name='PY_VAR')</dt><dd><tt>Return&nbsp;value&nbsp;of&nbsp;Tcl&nbsp;variable&nbsp;NAME.</tt></dd></dl>
+<dl><dt><a name="Window-getvar"><strong>getvar</strong></a>(self, name='PY_VAR')</dt><dd><span class="code">Return&nbsp;value&nbsp;of&nbsp;Tcl&nbsp;variable&nbsp;NAME.</span></dd></dl>
 
-<dl><dt><a name="Window-grab_current"><strong>grab_current</strong></a>(self)</dt><dd><tt>Return&nbsp;widget&nbsp;which&nbsp;has&nbsp;currently&nbsp;the&nbsp;grab&nbsp;in&nbsp;this&nbsp;application<br>
-or&nbsp;None.</tt></dd></dl>
+<dl><dt><a name="Window-grab_current"><strong>grab_current</strong></a>(self)</dt><dd><span class="code">Return&nbsp;widget&nbsp;which&nbsp;has&nbsp;currently&nbsp;the&nbsp;grab&nbsp;in&nbsp;this&nbsp;application<br>
+or&nbsp;None.</span></dd></dl>
 
-<dl><dt><a name="Window-grab_release"><strong>grab_release</strong></a>(self)</dt><dd><tt>Release&nbsp;grab&nbsp;for&nbsp;this&nbsp;widget&nbsp;if&nbsp;currently&nbsp;set.</tt></dd></dl>
+<dl><dt><a name="Window-grab_release"><strong>grab_release</strong></a>(self)</dt><dd><span class="code">Release&nbsp;grab&nbsp;for&nbsp;this&nbsp;widget&nbsp;if&nbsp;currently&nbsp;set.</span></dd></dl>
 
-<dl><dt><a name="Window-grab_set"><strong>grab_set</strong></a>(self)</dt><dd><tt>Set&nbsp;grab&nbsp;for&nbsp;this&nbsp;widget.<br>
+<dl><dt><a name="Window-grab_set"><strong>grab_set</strong></a>(self)</dt><dd><span class="code">Set&nbsp;grab&nbsp;for&nbsp;this&nbsp;widget.<br>
 &nbsp;<br>
 A&nbsp;grab&nbsp;directs&nbsp;all&nbsp;events&nbsp;to&nbsp;this&nbsp;and&nbsp;descendant<br>
-widgets&nbsp;in&nbsp;the&nbsp;application.</tt></dd></dl>
+widgets&nbsp;in&nbsp;the&nbsp;application.</span></dd></dl>
 
-<dl><dt><a name="Window-grab_set_global"><strong>grab_set_global</strong></a>(self)</dt><dd><tt>Set&nbsp;global&nbsp;grab&nbsp;for&nbsp;this&nbsp;widget.<br>
+<dl><dt><a name="Window-grab_set_global"><strong>grab_set_global</strong></a>(self)</dt><dd><span class="code">Set&nbsp;global&nbsp;grab&nbsp;for&nbsp;this&nbsp;widget.<br>
 &nbsp;<br>
 A&nbsp;global&nbsp;grab&nbsp;directs&nbsp;all&nbsp;events&nbsp;to&nbsp;this&nbsp;and<br>
 descendant&nbsp;widgets&nbsp;on&nbsp;the&nbsp;display.&nbsp;Use&nbsp;with&nbsp;caution&nbsp;-<br>
-other&nbsp;applications&nbsp;do&nbsp;not&nbsp;get&nbsp;events&nbsp;anymore.</tt></dd></dl>
+other&nbsp;applications&nbsp;do&nbsp;not&nbsp;get&nbsp;events&nbsp;anymore.</span></dd></dl>
 
-<dl><dt><a name="Window-grab_status"><strong>grab_status</strong></a>(self)</dt><dd><tt>Return&nbsp;None,&nbsp;"local"&nbsp;or&nbsp;"global"&nbsp;if&nbsp;this&nbsp;widget&nbsp;has<br>
-no,&nbsp;a&nbsp;local&nbsp;or&nbsp;a&nbsp;global&nbsp;grab.</tt></dd></dl>
+<dl><dt><a name="Window-grab_status"><strong>grab_status</strong></a>(self)</dt><dd><span class="code">Return&nbsp;None,&nbsp;"local"&nbsp;or&nbsp;"global"&nbsp;if&nbsp;this&nbsp;widget&nbsp;has<br>
+no,&nbsp;a&nbsp;local&nbsp;or&nbsp;a&nbsp;global&nbsp;grab.</span></dd></dl>
 
-<dl><dt><a name="Window-grid_anchor"><strong>grid_anchor</strong></a>(self, anchor=None)</dt><dd><tt>The&nbsp;anchor&nbsp;value&nbsp;controls&nbsp;how&nbsp;to&nbsp;place&nbsp;the&nbsp;grid&nbsp;within&nbsp;the<br>
+<dl><dt><a name="Window-grid_anchor"><strong>grid_anchor</strong></a>(self, anchor=None)</dt><dd><span class="code">The&nbsp;anchor&nbsp;value&nbsp;controls&nbsp;how&nbsp;to&nbsp;place&nbsp;the&nbsp;grid&nbsp;within&nbsp;the<br>
 master&nbsp;when&nbsp;no&nbsp;row/column&nbsp;has&nbsp;any&nbsp;weight.<br>
 &nbsp;<br>
-The&nbsp;default&nbsp;anchor&nbsp;is&nbsp;nw.</tt></dd></dl>
+The&nbsp;default&nbsp;anchor&nbsp;is&nbsp;nw.</span></dd></dl>
 
-<dl><dt><a name="Window-grid_bbox"><strong>grid_bbox</strong></a>(self, column=None, row=None, col2=None, row2=None)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;integer&nbsp;coordinates&nbsp;for&nbsp;the&nbsp;bounding<br>
+<dl><dt><a name="Window-grid_bbox"><strong>grid_bbox</strong></a>(self, column=None, row=None, col2=None, row2=None)</dt><dd><span class="code">Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;integer&nbsp;coordinates&nbsp;for&nbsp;the&nbsp;bounding<br>
 box&nbsp;of&nbsp;this&nbsp;widget&nbsp;controlled&nbsp;by&nbsp;the&nbsp;geometry&nbsp;manager&nbsp;grid.<br>
 &nbsp;<br>
 If&nbsp;COLUMN,&nbsp;ROW&nbsp;is&nbsp;given&nbsp;the&nbsp;bounding&nbsp;box&nbsp;applies&nbsp;from<br>
@@ -458,102 +456,104 @@ cell.&nbsp;If&nbsp;COL2&nbsp;and&nbsp;ROW2&nbsp;are&nbsp;given&nbsp;the&nbsp;bou
 starts&nbsp;at&nbsp;that&nbsp;cell.<br>
 &nbsp;<br>
 The&nbsp;returned&nbsp;integers&nbsp;specify&nbsp;the&nbsp;offset&nbsp;of&nbsp;the&nbsp;upper&nbsp;left<br>
-corner&nbsp;in&nbsp;the&nbsp;master&nbsp;widget&nbsp;and&nbsp;the&nbsp;width&nbsp;and&nbsp;height.</tt></dd></dl>
+corner&nbsp;in&nbsp;the&nbsp;master&nbsp;widget&nbsp;and&nbsp;the&nbsp;width&nbsp;and&nbsp;height.</span></dd></dl>
 
-<dl><dt><a name="Window-grid_columnconfigure"><strong>grid_columnconfigure</strong></a>(self, index, cnf={}, **kw)</dt><dd><tt>Configure&nbsp;column&nbsp;INDEX&nbsp;of&nbsp;a&nbsp;grid.<br>
+<dl><dt><a name="Window-grid_columnconfigure"><strong>grid_columnconfigure</strong></a>(self, index, cnf={}, **kw)</dt><dd><span class="code">Configure&nbsp;column&nbsp;INDEX&nbsp;of&nbsp;a&nbsp;grid.<br>
 &nbsp;<br>
 Valid&nbsp;resources&nbsp;are&nbsp;minsize&nbsp;(minimum&nbsp;size&nbsp;of&nbsp;the&nbsp;column),<br>
 weight&nbsp;(how&nbsp;much&nbsp;does&nbsp;additional&nbsp;space&nbsp;propagate&nbsp;to&nbsp;this&nbsp;column)<br>
-and&nbsp;pad&nbsp;(how&nbsp;much&nbsp;space&nbsp;to&nbsp;let&nbsp;additionally).</tt></dd></dl>
+and&nbsp;pad&nbsp;(how&nbsp;much&nbsp;space&nbsp;to&nbsp;let&nbsp;additionally).</span></dd></dl>
 
-<dl><dt><a name="Window-grid_location"><strong>grid_location</strong></a>(self, x, y)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;column&nbsp;and&nbsp;row&nbsp;which&nbsp;identify&nbsp;the&nbsp;cell<br>
+<dl><dt><a name="Window-grid_location"><strong>grid_location</strong></a>(self, x, y)</dt><dd><span class="code">Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;column&nbsp;and&nbsp;row&nbsp;which&nbsp;identify&nbsp;the&nbsp;cell<br>
 at&nbsp;which&nbsp;the&nbsp;pixel&nbsp;at&nbsp;position&nbsp;X&nbsp;and&nbsp;Y&nbsp;inside&nbsp;the&nbsp;master<br>
-widget&nbsp;is&nbsp;located.</tt></dd></dl>
+widget&nbsp;is&nbsp;located.</span></dd></dl>
 
-<dl><dt><a name="Window-grid_propagate"><strong>grid_propagate</strong></a>(self, flag=['_noarg_'])</dt><dd><tt>Set&nbsp;or&nbsp;get&nbsp;the&nbsp;status&nbsp;for&nbsp;propagation&nbsp;of&nbsp;geometry&nbsp;information.<br>
+<dl><dt><a name="Window-grid_propagate"><strong>grid_propagate</strong></a>(self, flag=['_noarg_'])</dt><dd><span class="code">Set&nbsp;or&nbsp;get&nbsp;the&nbsp;status&nbsp;for&nbsp;propagation&nbsp;of&nbsp;geometry&nbsp;information.<br>
 &nbsp;<br>
 A&nbsp;boolean&nbsp;argument&nbsp;specifies&nbsp;whether&nbsp;the&nbsp;geometry&nbsp;information<br>
 of&nbsp;the&nbsp;slaves&nbsp;will&nbsp;determine&nbsp;the&nbsp;size&nbsp;of&nbsp;this&nbsp;widget.&nbsp;If&nbsp;no&nbsp;argument<br>
-is&nbsp;given,&nbsp;the&nbsp;current&nbsp;setting&nbsp;will&nbsp;be&nbsp;returned.</tt></dd></dl>
+is&nbsp;given,&nbsp;the&nbsp;current&nbsp;setting&nbsp;will&nbsp;be&nbsp;returned.</span></dd></dl>
 
-<dl><dt><a name="Window-grid_rowconfigure"><strong>grid_rowconfigure</strong></a>(self, index, cnf={}, **kw)</dt><dd><tt>Configure&nbsp;row&nbsp;INDEX&nbsp;of&nbsp;a&nbsp;grid.<br>
+<dl><dt><a name="Window-grid_rowconfigure"><strong>grid_rowconfigure</strong></a>(self, index, cnf={}, **kw)</dt><dd><span class="code">Configure&nbsp;row&nbsp;INDEX&nbsp;of&nbsp;a&nbsp;grid.<br>
 &nbsp;<br>
 Valid&nbsp;resources&nbsp;are&nbsp;minsize&nbsp;(minimum&nbsp;size&nbsp;of&nbsp;the&nbsp;row),<br>
 weight&nbsp;(how&nbsp;much&nbsp;does&nbsp;additional&nbsp;space&nbsp;propagate&nbsp;to&nbsp;this&nbsp;row)<br>
-and&nbsp;pad&nbsp;(how&nbsp;much&nbsp;space&nbsp;to&nbsp;let&nbsp;additionally).</tt></dd></dl>
+and&nbsp;pad&nbsp;(how&nbsp;much&nbsp;space&nbsp;to&nbsp;let&nbsp;additionally).</span></dd></dl>
 
-<dl><dt><a name="Window-grid_size"><strong>grid_size</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;the&nbsp;number&nbsp;of&nbsp;column&nbsp;and&nbsp;rows&nbsp;in&nbsp;the&nbsp;grid.</tt></dd></dl>
+<dl><dt><a name="Window-grid_size"><strong>grid_size</strong></a>(self)</dt><dd><span class="code">Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;the&nbsp;number&nbsp;of&nbsp;column&nbsp;and&nbsp;rows&nbsp;in&nbsp;the&nbsp;grid.</span></dd></dl>
 
-<dl><dt><a name="Window-grid_slaves"><strong>grid_slaves</strong></a>(self, row=None, column=None)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;slaves&nbsp;of&nbsp;this&nbsp;widget<br>
-in&nbsp;its&nbsp;packing&nbsp;order.</tt></dd></dl>
+<dl><dt><a name="Window-grid_slaves"><strong>grid_slaves</strong></a>(self, row=None, column=None)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;slaves&nbsp;of&nbsp;this&nbsp;widget<br>
+in&nbsp;its&nbsp;packing&nbsp;order.</span></dd></dl>
 
-<dl><dt><a name="Window-image_names"><strong>image_names</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;existing&nbsp;image&nbsp;names.</tt></dd></dl>
+<dl><dt><a name="Window-image_names"><strong>image_names</strong></a>(self)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;existing&nbsp;image&nbsp;names.</span></dd></dl>
 
-<dl><dt><a name="Window-image_types"><strong>image_types</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;available&nbsp;image&nbsp;types&nbsp;(e.g.&nbsp;photo&nbsp;bitmap).</tt></dd></dl>
+<dl><dt><a name="Window-image_types"><strong>image_types</strong></a>(self)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;available&nbsp;image&nbsp;types&nbsp;(e.g.&nbsp;photo&nbsp;bitmap).</span></dd></dl>
 
-<dl><dt><a name="Window-keys"><strong>keys</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;resource&nbsp;names&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-info_patchlevel"><strong>info_patchlevel</strong></a>(self)</dt><dd><span class="code">Returns&nbsp;the&nbsp;exact&nbsp;version&nbsp;of&nbsp;the&nbsp;Tcl&nbsp;library.</span></dd></dl>
+
+<dl><dt><a name="Window-keys"><strong>keys</strong></a>(self)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;resource&nbsp;names&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
 <dl><dt><a name="Window-lift"><strong>lift</strong></a> = <a href="#Window-tkraise">tkraise</a>(self, aboveThis=None)</dt></dl>
 
-<dl><dt><a name="Window-lower"><strong>lower</strong></a>(self, belowThis=None)</dt><dd><tt>Lower&nbsp;this&nbsp;widget&nbsp;in&nbsp;the&nbsp;stacking&nbsp;order.</tt></dd></dl>
+<dl><dt><a name="Window-lower"><strong>lower</strong></a>(self, belowThis=None)</dt><dd><span class="code">Lower&nbsp;this&nbsp;widget&nbsp;in&nbsp;the&nbsp;stacking&nbsp;order.</span></dd></dl>
 
-<dl><dt><a name="Window-mainloop"><strong>mainloop</strong></a>(self, n=0)</dt><dd><tt>Call&nbsp;the&nbsp;mainloop&nbsp;of&nbsp;Tk.</tt></dd></dl>
+<dl><dt><a name="Window-mainloop"><strong>mainloop</strong></a>(self, n=0)</dt><dd><span class="code">Call&nbsp;the&nbsp;mainloop&nbsp;of&nbsp;Tk.</span></dd></dl>
 
-<dl><dt><a name="Window-nametowidget"><strong>nametowidget</strong></a>(self, name)</dt><dd><tt>Return&nbsp;the&nbsp;Tkinter&nbsp;instance&nbsp;of&nbsp;a&nbsp;widget&nbsp;identified&nbsp;by<br>
-its&nbsp;Tcl&nbsp;name&nbsp;NAME.</tt></dd></dl>
+<dl><dt><a name="Window-nametowidget"><strong>nametowidget</strong></a>(self, name)</dt><dd><span class="code">Return&nbsp;the&nbsp;Tkinter&nbsp;instance&nbsp;of&nbsp;a&nbsp;widget&nbsp;identified&nbsp;by<br>
+its&nbsp;Tcl&nbsp;name&nbsp;NAME.</span></dd></dl>
 
-<dl><dt><a name="Window-option_add"><strong>option_add</strong></a>(self, pattern, value, priority=None)</dt><dd><tt>Set&nbsp;a&nbsp;VALUE&nbsp;(second&nbsp;parameter)&nbsp;for&nbsp;an&nbsp;option<br>
+<dl><dt><a name="Window-option_add"><strong>option_add</strong></a>(self, pattern, value, priority=None)</dt><dd><span class="code">Set&nbsp;a&nbsp;VALUE&nbsp;(second&nbsp;parameter)&nbsp;for&nbsp;an&nbsp;option<br>
 PATTERN&nbsp;(first&nbsp;parameter).<br>
 &nbsp;<br>
 An&nbsp;optional&nbsp;third&nbsp;parameter&nbsp;gives&nbsp;the&nbsp;numeric&nbsp;priority<br>
-(defaults&nbsp;to&nbsp;80).</tt></dd></dl>
+(defaults&nbsp;to&nbsp;80).</span></dd></dl>
 
-<dl><dt><a name="Window-option_clear"><strong>option_clear</strong></a>(self)</dt><dd><tt>Clear&nbsp;the&nbsp;option&nbsp;database.<br>
+<dl><dt><a name="Window-option_clear"><strong>option_clear</strong></a>(self)</dt><dd><span class="code">Clear&nbsp;the&nbsp;option&nbsp;database.<br>
 &nbsp;<br>
-It&nbsp;will&nbsp;be&nbsp;reloaded&nbsp;if&nbsp;option_add&nbsp;is&nbsp;called.</tt></dd></dl>
+It&nbsp;will&nbsp;be&nbsp;reloaded&nbsp;if&nbsp;option_add&nbsp;is&nbsp;called.</span></dd></dl>
 
-<dl><dt><a name="Window-option_get"><strong>option_get</strong></a>(self, name, className)</dt><dd><tt>Return&nbsp;the&nbsp;value&nbsp;for&nbsp;an&nbsp;option&nbsp;NAME&nbsp;for&nbsp;this&nbsp;widget<br>
+<dl><dt><a name="Window-option_get"><strong>option_get</strong></a>(self, name, className)</dt><dd><span class="code">Return&nbsp;the&nbsp;value&nbsp;for&nbsp;an&nbsp;option&nbsp;NAME&nbsp;for&nbsp;this&nbsp;widget<br>
 with&nbsp;CLASSNAME.<br>
 &nbsp;<br>
-Values&nbsp;with&nbsp;higher&nbsp;priority&nbsp;override&nbsp;lower&nbsp;values.</tt></dd></dl>
+Values&nbsp;with&nbsp;higher&nbsp;priority&nbsp;override&nbsp;lower&nbsp;values.</span></dd></dl>
 
-<dl><dt><a name="Window-option_readfile"><strong>option_readfile</strong></a>(self, fileName, priority=None)</dt><dd><tt>Read&nbsp;file&nbsp;FILENAME&nbsp;into&nbsp;the&nbsp;option&nbsp;database.<br>
+<dl><dt><a name="Window-option_readfile"><strong>option_readfile</strong></a>(self, fileName, priority=None)</dt><dd><span class="code">Read&nbsp;file&nbsp;FILENAME&nbsp;into&nbsp;the&nbsp;option&nbsp;database.<br>
 &nbsp;<br>
 An&nbsp;optional&nbsp;second&nbsp;parameter&nbsp;gives&nbsp;the&nbsp;numeric<br>
-priority.</tt></dd></dl>
+priority.</span></dd></dl>
 
-<dl><dt><a name="Window-pack_propagate"><strong>pack_propagate</strong></a>(self, flag=['_noarg_'])</dt><dd><tt>Set&nbsp;or&nbsp;get&nbsp;the&nbsp;status&nbsp;for&nbsp;propagation&nbsp;of&nbsp;geometry&nbsp;information.<br>
+<dl><dt><a name="Window-pack_propagate"><strong>pack_propagate</strong></a>(self, flag=['_noarg_'])</dt><dd><span class="code">Set&nbsp;or&nbsp;get&nbsp;the&nbsp;status&nbsp;for&nbsp;propagation&nbsp;of&nbsp;geometry&nbsp;information.<br>
 &nbsp;<br>
 A&nbsp;boolean&nbsp;argument&nbsp;specifies&nbsp;whether&nbsp;the&nbsp;geometry&nbsp;information<br>
 of&nbsp;the&nbsp;slaves&nbsp;will&nbsp;determine&nbsp;the&nbsp;size&nbsp;of&nbsp;this&nbsp;widget.&nbsp;If&nbsp;no&nbsp;argument<br>
-is&nbsp;given&nbsp;the&nbsp;current&nbsp;setting&nbsp;will&nbsp;be&nbsp;returned.</tt></dd></dl>
+is&nbsp;given&nbsp;the&nbsp;current&nbsp;setting&nbsp;will&nbsp;be&nbsp;returned.</span></dd></dl>
 
-<dl><dt><a name="Window-pack_slaves"><strong>pack_slaves</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;slaves&nbsp;of&nbsp;this&nbsp;widget<br>
-in&nbsp;its&nbsp;packing&nbsp;order.</tt></dd></dl>
+<dl><dt><a name="Window-pack_slaves"><strong>pack_slaves</strong></a>(self)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;slaves&nbsp;of&nbsp;this&nbsp;widget<br>
+in&nbsp;its&nbsp;packing&nbsp;order.</span></dd></dl>
 
-<dl><dt><a name="Window-place_slaves"><strong>place_slaves</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;slaves&nbsp;of&nbsp;this&nbsp;widget<br>
-in&nbsp;its&nbsp;packing&nbsp;order.</tt></dd></dl>
+<dl><dt><a name="Window-place_slaves"><strong>place_slaves</strong></a>(self)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;slaves&nbsp;of&nbsp;this&nbsp;widget<br>
+in&nbsp;its&nbsp;packing&nbsp;order.</span></dd></dl>
 
 <dl><dt><a name="Window-propagate"><strong>propagate</strong></a> = <a href="#Window-pack_propagate">pack_propagate</a>(self, flag=['_noarg_'])</dt></dl>
 
-<dl><dt><a name="Window-quit"><strong>quit</strong></a>(self)</dt><dd><tt>Quit&nbsp;the&nbsp;Tcl&nbsp;interpreter.&nbsp;All&nbsp;widgets&nbsp;will&nbsp;be&nbsp;destroyed.</tt></dd></dl>
+<dl><dt><a name="Window-quit"><strong>quit</strong></a>(self)</dt><dd><span class="code">Quit&nbsp;the&nbsp;Tcl&nbsp;interpreter.&nbsp;All&nbsp;widgets&nbsp;will&nbsp;be&nbsp;destroyed.</span></dd></dl>
 
 <dl><dt><a name="Window-register"><strong>register</strong></a> = <a href="#Window-_register">_register</a>(self, func, subst=None, needcleanup=1)</dt></dl>
 
 <dl><dt><a name="Window-rowconfigure"><strong>rowconfigure</strong></a> = <a href="#Window-grid_rowconfigure">grid_rowconfigure</a>(self, index, cnf={}, **kw)</dt></dl>
 
-<dl><dt><a name="Window-selection_clear"><strong>selection_clear</strong></a>(self, **kw)</dt><dd><tt>Clear&nbsp;the&nbsp;current&nbsp;X&nbsp;selection.</tt></dd></dl>
+<dl><dt><a name="Window-selection_clear"><strong>selection_clear</strong></a>(self, **kw)</dt><dd><span class="code">Clear&nbsp;the&nbsp;current&nbsp;X&nbsp;selection.</span></dd></dl>
 
-<dl><dt><a name="Window-selection_get"><strong>selection_get</strong></a>(self, **kw)</dt><dd><tt>Return&nbsp;the&nbsp;contents&nbsp;of&nbsp;the&nbsp;current&nbsp;X&nbsp;selection.<br>
+<dl><dt><a name="Window-selection_get"><strong>selection_get</strong></a>(self, **kw)</dt><dd><span class="code">Return&nbsp;the&nbsp;contents&nbsp;of&nbsp;the&nbsp;current&nbsp;X&nbsp;selection.<br>
 &nbsp;<br>
 A&nbsp;keyword&nbsp;parameter&nbsp;selection&nbsp;specifies&nbsp;the&nbsp;name&nbsp;of<br>
 the&nbsp;selection&nbsp;and&nbsp;defaults&nbsp;to&nbsp;PRIMARY.&nbsp;&nbsp;A&nbsp;keyword<br>
 parameter&nbsp;displayof&nbsp;specifies&nbsp;a&nbsp;widget&nbsp;on&nbsp;the&nbsp;display<br>
 to&nbsp;use.&nbsp;A&nbsp;keyword&nbsp;parameter&nbsp;type&nbsp;specifies&nbsp;the&nbsp;form&nbsp;of&nbsp;data&nbsp;to&nbsp;be<br>
 fetched,&nbsp;defaulting&nbsp;to&nbsp;STRING&nbsp;except&nbsp;on&nbsp;X11,&nbsp;where&nbsp;UTF8_STRING&nbsp;is&nbsp;tried<br>
-before&nbsp;STRING.</tt></dd></dl>
+before&nbsp;STRING.</span></dd></dl>
 
-<dl><dt><a name="Window-selection_handle"><strong>selection_handle</strong></a>(self, command, **kw)</dt><dd><tt>Specify&nbsp;a&nbsp;function&nbsp;COMMAND&nbsp;to&nbsp;call&nbsp;if&nbsp;the&nbsp;X<br>
+<dl><dt><a name="Window-selection_handle"><strong>selection_handle</strong></a>(self, command, **kw)</dt><dd><span class="code">Specify&nbsp;a&nbsp;function&nbsp;COMMAND&nbsp;to&nbsp;call&nbsp;if&nbsp;the&nbsp;X<br>
 selection&nbsp;owned&nbsp;by&nbsp;this&nbsp;widget&nbsp;is&nbsp;queried&nbsp;by&nbsp;another<br>
 application.<br>
 &nbsp;<br>
@@ -563,45 +563,45 @@ arguments&nbsp;OFFSET&nbsp;and&nbsp;LENGTH&nbsp;which&nbsp;allows&nbsp;the&nbsp;
 of&nbsp;very&nbsp;long&nbsp;selections.&nbsp;The&nbsp;following&nbsp;keyword<br>
 parameters&nbsp;can&nbsp;be&nbsp;provided:<br>
 selection&nbsp;-&nbsp;name&nbsp;of&nbsp;the&nbsp;selection&nbsp;(default&nbsp;PRIMARY),<br>
-type&nbsp;-&nbsp;type&nbsp;of&nbsp;the&nbsp;selection&nbsp;(e.g.&nbsp;STRING,&nbsp;FILE_NAME).</tt></dd></dl>
+type&nbsp;-&nbsp;type&nbsp;of&nbsp;the&nbsp;selection&nbsp;(e.g.&nbsp;STRING,&nbsp;FILE_NAME).</span></dd></dl>
 
-<dl><dt><a name="Window-selection_own"><strong>selection_own</strong></a>(self, **kw)</dt><dd><tt>Become&nbsp;owner&nbsp;of&nbsp;X&nbsp;selection.<br>
+<dl><dt><a name="Window-selection_own"><strong>selection_own</strong></a>(self, **kw)</dt><dd><span class="code">Become&nbsp;owner&nbsp;of&nbsp;X&nbsp;selection.<br>
 &nbsp;<br>
 A&nbsp;keyword&nbsp;parameter&nbsp;selection&nbsp;specifies&nbsp;the&nbsp;name&nbsp;of<br>
-the&nbsp;selection&nbsp;(default&nbsp;PRIMARY).</tt></dd></dl>
+the&nbsp;selection&nbsp;(default&nbsp;PRIMARY).</span></dd></dl>
 
-<dl><dt><a name="Window-selection_own_get"><strong>selection_own_get</strong></a>(self, **kw)</dt><dd><tt>Return&nbsp;owner&nbsp;of&nbsp;X&nbsp;selection.<br>
+<dl><dt><a name="Window-selection_own_get"><strong>selection_own_get</strong></a>(self, **kw)</dt><dd><span class="code">Return&nbsp;owner&nbsp;of&nbsp;X&nbsp;selection.<br>
 &nbsp;<br>
 The&nbsp;following&nbsp;keyword&nbsp;parameter&nbsp;can<br>
 be&nbsp;provided:<br>
 selection&nbsp;-&nbsp;name&nbsp;of&nbsp;the&nbsp;selection&nbsp;(default&nbsp;PRIMARY),<br>
-type&nbsp;-&nbsp;type&nbsp;of&nbsp;the&nbsp;selection&nbsp;(e.g.&nbsp;STRING,&nbsp;FILE_NAME).</tt></dd></dl>
+type&nbsp;-&nbsp;type&nbsp;of&nbsp;the&nbsp;selection&nbsp;(e.g.&nbsp;STRING,&nbsp;FILE_NAME).</span></dd></dl>
 
-<dl><dt><a name="Window-send"><strong>send</strong></a>(self, interp, cmd, *args)</dt><dd><tt>Send&nbsp;Tcl&nbsp;command&nbsp;CMD&nbsp;to&nbsp;different&nbsp;interpreter&nbsp;INTERP&nbsp;to&nbsp;be&nbsp;executed.</tt></dd></dl>
+<dl><dt><a name="Window-send"><strong>send</strong></a>(self, interp, cmd, *args)</dt><dd><span class="code">Send&nbsp;Tcl&nbsp;command&nbsp;CMD&nbsp;to&nbsp;different&nbsp;interpreter&nbsp;INTERP&nbsp;to&nbsp;be&nbsp;executed.</span></dd></dl>
 
-<dl><dt><a name="Window-setvar"><strong>setvar</strong></a>(self, name='PY_VAR', value='1')</dt><dd><tt>Set&nbsp;Tcl&nbsp;variable&nbsp;NAME&nbsp;to&nbsp;VALUE.</tt></dd></dl>
+<dl><dt><a name="Window-setvar"><strong>setvar</strong></a>(self, name='PY_VAR', value='1')</dt><dd><span class="code">Set&nbsp;Tcl&nbsp;variable&nbsp;NAME&nbsp;to&nbsp;VALUE.</span></dd></dl>
 
 <dl><dt><a name="Window-size"><strong>size</strong></a> = <a href="#Window-grid_size">grid_size</a>(self)</dt></dl>
 
 <dl><dt><a name="Window-slaves"><strong>slaves</strong></a> = <a href="#Window-pack_slaves">pack_slaves</a>(self)</dt></dl>
 
-<dl><dt><a name="Window-tk_bisque"><strong>tk_bisque</strong></a>(self)</dt><dd><tt>Change&nbsp;the&nbsp;color&nbsp;scheme&nbsp;to&nbsp;light&nbsp;brown&nbsp;as&nbsp;used&nbsp;in&nbsp;Tk&nbsp;3.6&nbsp;and&nbsp;before.</tt></dd></dl>
+<dl><dt><a name="Window-tk_bisque"><strong>tk_bisque</strong></a>(self)</dt><dd><span class="code">Change&nbsp;the&nbsp;color&nbsp;scheme&nbsp;to&nbsp;light&nbsp;brown&nbsp;as&nbsp;used&nbsp;in&nbsp;Tk&nbsp;3.6&nbsp;and&nbsp;before.</span></dd></dl>
 
-<dl><dt><a name="Window-tk_focusFollowsMouse"><strong>tk_focusFollowsMouse</strong></a>(self)</dt><dd><tt>The&nbsp;widget&nbsp;under&nbsp;mouse&nbsp;will&nbsp;get&nbsp;automatically&nbsp;focus.&nbsp;Can&nbsp;not<br>
-be&nbsp;disabled&nbsp;easily.</tt></dd></dl>
+<dl><dt><a name="Window-tk_focusFollowsMouse"><strong>tk_focusFollowsMouse</strong></a>(self)</dt><dd><span class="code">The&nbsp;widget&nbsp;under&nbsp;mouse&nbsp;will&nbsp;get&nbsp;automatically&nbsp;focus.&nbsp;Can&nbsp;not<br>
+be&nbsp;disabled&nbsp;easily.</span></dd></dl>
 
-<dl><dt><a name="Window-tk_focusNext"><strong>tk_focusNext</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;next&nbsp;widget&nbsp;in&nbsp;the&nbsp;focus&nbsp;order&nbsp;which&nbsp;follows<br>
+<dl><dt><a name="Window-tk_focusNext"><strong>tk_focusNext</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;next&nbsp;widget&nbsp;in&nbsp;the&nbsp;focus&nbsp;order&nbsp;which&nbsp;follows<br>
 widget&nbsp;which&nbsp;has&nbsp;currently&nbsp;the&nbsp;focus.<br>
 &nbsp;<br>
 The&nbsp;focus&nbsp;order&nbsp;first&nbsp;goes&nbsp;to&nbsp;the&nbsp;next&nbsp;child,&nbsp;then&nbsp;to<br>
 the&nbsp;children&nbsp;of&nbsp;the&nbsp;child&nbsp;recursively&nbsp;and&nbsp;then&nbsp;to&nbsp;the<br>
 next&nbsp;sibling&nbsp;which&nbsp;is&nbsp;higher&nbsp;in&nbsp;the&nbsp;stacking&nbsp;order.&nbsp;&nbsp;A<br>
 widget&nbsp;is&nbsp;omitted&nbsp;if&nbsp;it&nbsp;has&nbsp;the&nbsp;takefocus&nbsp;resource&nbsp;set<br>
-to&nbsp;0.</tt></dd></dl>
+to&nbsp;0.</span></dd></dl>
 
-<dl><dt><a name="Window-tk_focusPrev"><strong>tk_focusPrev</strong></a>(self)</dt><dd><tt>Return&nbsp;previous&nbsp;widget&nbsp;in&nbsp;the&nbsp;focus&nbsp;order.&nbsp;See&nbsp;tk_focusNext&nbsp;for&nbsp;details.</tt></dd></dl>
+<dl><dt><a name="Window-tk_focusPrev"><strong>tk_focusPrev</strong></a>(self)</dt><dd><span class="code">Return&nbsp;previous&nbsp;widget&nbsp;in&nbsp;the&nbsp;focus&nbsp;order.&nbsp;See&nbsp;tk_focusNext&nbsp;for&nbsp;details.</span></dd></dl>
 
-<dl><dt><a name="Window-tk_setPalette"><strong>tk_setPalette</strong></a>(self, *args, **kw)</dt><dd><tt>Set&nbsp;a&nbsp;new&nbsp;color&nbsp;scheme&nbsp;for&nbsp;all&nbsp;widget&nbsp;elements.<br>
+<dl><dt><a name="Window-tk_setPalette"><strong>tk_setPalette</strong></a>(self, *args, **kw)</dt><dd><span class="code">Set&nbsp;a&nbsp;new&nbsp;color&nbsp;scheme&nbsp;for&nbsp;all&nbsp;widget&nbsp;elements.<br>
 &nbsp;<br>
 A&nbsp;single&nbsp;color&nbsp;as&nbsp;argument&nbsp;will&nbsp;cause&nbsp;that&nbsp;all&nbsp;colors&nbsp;of&nbsp;Tk<br>
 widget&nbsp;elements&nbsp;are&nbsp;derived&nbsp;from&nbsp;this.<br>
@@ -610,178 +610,183 @@ colors&nbsp;can&nbsp;be&nbsp;given.&nbsp;The&nbsp;following&nbsp;keywords&nbsp;a
 activeBackground,&nbsp;foreground,&nbsp;selectColor,<br>
 activeForeground,&nbsp;highlightBackground,&nbsp;selectBackground,<br>
 background,&nbsp;highlightColor,&nbsp;selectForeground,<br>
-disabledForeground,&nbsp;insertBackground,&nbsp;troughColor.</tt></dd></dl>
+disabledForeground,&nbsp;insertBackground,&nbsp;troughColor.</span></dd></dl>
 
-<dl><dt><a name="Window-tk_strictMotif"><strong>tk_strictMotif</strong></a>(self, boolean=None)</dt><dd><tt>Set&nbsp;Tcl&nbsp;internal&nbsp;variable,&nbsp;whether&nbsp;the&nbsp;look&nbsp;and&nbsp;feel<br>
+<dl><dt><a name="Window-tk_strictMotif"><strong>tk_strictMotif</strong></a>(self, boolean=None)</dt><dd><span class="code">Set&nbsp;Tcl&nbsp;internal&nbsp;variable,&nbsp;whether&nbsp;the&nbsp;look&nbsp;and&nbsp;feel<br>
 should&nbsp;adhere&nbsp;to&nbsp;Motif.<br>
 &nbsp;<br>
 A&nbsp;parameter&nbsp;of&nbsp;1&nbsp;means&nbsp;adhere&nbsp;to&nbsp;Motif&nbsp;(e.g.&nbsp;no&nbsp;color<br>
 change&nbsp;if&nbsp;mouse&nbsp;passes&nbsp;over&nbsp;slider).<br>
-Returns&nbsp;the&nbsp;set&nbsp;value.</tt></dd></dl>
+Returns&nbsp;the&nbsp;set&nbsp;value.</span></dd></dl>
 
-<dl><dt><a name="Window-tkraise"><strong>tkraise</strong></a>(self, aboveThis=None)</dt><dd><tt>Raise&nbsp;this&nbsp;widget&nbsp;in&nbsp;the&nbsp;stacking&nbsp;order.</tt></dd></dl>
+<dl><dt><a name="Window-tkraise"><strong>tkraise</strong></a>(self, aboveThis=None)</dt><dd><span class="code">Raise&nbsp;this&nbsp;widget&nbsp;in&nbsp;the&nbsp;stacking&nbsp;order.</span></dd></dl>
 
-<dl><dt><a name="Window-unbind"><strong>unbind</strong></a>(self, sequence, funcid=None)</dt><dd><tt>Unbind&nbsp;for&nbsp;this&nbsp;widget&nbsp;for&nbsp;event&nbsp;SEQUENCE&nbsp;&nbsp;the<br>
-function&nbsp;identified&nbsp;with&nbsp;FUNCID.</tt></dd></dl>
+<dl><dt><a name="Window-unbind"><strong>unbind</strong></a>(self, sequence, funcid=None)</dt><dd><span class="code">Unbind&nbsp;for&nbsp;this&nbsp;widget&nbsp;the&nbsp;event&nbsp;SEQUENCE.<br>
+&nbsp;<br>
+If&nbsp;FUNCID&nbsp;is&nbsp;given,&nbsp;only&nbsp;unbind&nbsp;the&nbsp;function&nbsp;identified&nbsp;with&nbsp;FUNCID<br>
+and&nbsp;also&nbsp;delete&nbsp;the&nbsp;corresponding&nbsp;Tcl&nbsp;command.<br>
+&nbsp;<br>
+Otherwise&nbsp;destroy&nbsp;the&nbsp;current&nbsp;binding&nbsp;for&nbsp;SEQUENCE,&nbsp;leaving&nbsp;SEQUENCE<br>
+unbound.</span></dd></dl>
 
-<dl><dt><a name="Window-unbind_all"><strong>unbind_all</strong></a>(self, sequence)</dt><dd><tt>Unbind&nbsp;for&nbsp;all&nbsp;widgets&nbsp;for&nbsp;event&nbsp;SEQUENCE&nbsp;all&nbsp;functions.</tt></dd></dl>
+<dl><dt><a name="Window-unbind_all"><strong>unbind_all</strong></a>(self, sequence)</dt><dd><span class="code">Unbind&nbsp;for&nbsp;all&nbsp;widgets&nbsp;for&nbsp;event&nbsp;SEQUENCE&nbsp;all&nbsp;functions.</span></dd></dl>
 
-<dl><dt><a name="Window-unbind_class"><strong>unbind_class</strong></a>(self, className, sequence)</dt><dd><tt>Unbind&nbsp;for&nbsp;all&nbsp;widgets&nbsp;with&nbsp;bindtag&nbsp;CLASSNAME&nbsp;for&nbsp;event&nbsp;SEQUENCE<br>
-all&nbsp;functions.</tt></dd></dl>
+<dl><dt><a name="Window-unbind_class"><strong>unbind_class</strong></a>(self, className, sequence)</dt><dd><span class="code">Unbind&nbsp;for&nbsp;all&nbsp;widgets&nbsp;with&nbsp;bindtag&nbsp;CLASSNAME&nbsp;for&nbsp;event&nbsp;SEQUENCE<br>
+all&nbsp;functions.</span></dd></dl>
 
-<dl><dt><a name="Window-update"><strong>update</strong></a>(self)</dt><dd><tt>Enter&nbsp;event&nbsp;loop&nbsp;until&nbsp;all&nbsp;pending&nbsp;events&nbsp;have&nbsp;been&nbsp;processed&nbsp;by&nbsp;Tcl.</tt></dd></dl>
+<dl><dt><a name="Window-update"><strong>update</strong></a>(self)</dt><dd><span class="code">Enter&nbsp;event&nbsp;loop&nbsp;until&nbsp;all&nbsp;pending&nbsp;events&nbsp;have&nbsp;been&nbsp;processed&nbsp;by&nbsp;Tcl.</span></dd></dl>
 
-<dl><dt><a name="Window-update_idletasks"><strong>update_idletasks</strong></a>(self)</dt><dd><tt>Enter&nbsp;event&nbsp;loop&nbsp;until&nbsp;all&nbsp;idle&nbsp;callbacks&nbsp;have&nbsp;been&nbsp;called.&nbsp;This<br>
+<dl><dt><a name="Window-update_idletasks"><strong>update_idletasks</strong></a>(self)</dt><dd><span class="code">Enter&nbsp;event&nbsp;loop&nbsp;until&nbsp;all&nbsp;idle&nbsp;callbacks&nbsp;have&nbsp;been&nbsp;called.&nbsp;This<br>
 will&nbsp;update&nbsp;the&nbsp;display&nbsp;of&nbsp;windows&nbsp;but&nbsp;not&nbsp;process&nbsp;events&nbsp;caused&nbsp;by<br>
-the&nbsp;user.</tt></dd></dl>
+the&nbsp;user.</span></dd></dl>
 
-<dl><dt><a name="Window-wait_variable"><strong>wait_variable</strong></a>(self, name='PY_VAR')</dt><dd><tt>Wait&nbsp;until&nbsp;the&nbsp;variable&nbsp;is&nbsp;modified.<br>
+<dl><dt><a name="Window-wait_variable"><strong>wait_variable</strong></a>(self, name='PY_VAR')</dt><dd><span class="code">Wait&nbsp;until&nbsp;the&nbsp;variable&nbsp;is&nbsp;modified.<br>
 &nbsp;<br>
 A&nbsp;parameter&nbsp;of&nbsp;type&nbsp;IntVar,&nbsp;StringVar,&nbsp;DoubleVar&nbsp;or<br>
-BooleanVar&nbsp;must&nbsp;be&nbsp;given.</tt></dd></dl>
+BooleanVar&nbsp;must&nbsp;be&nbsp;given.</span></dd></dl>
 
-<dl><dt><a name="Window-wait_visibility"><strong>wait_visibility</strong></a>(self, window=None)</dt><dd><tt>Wait&nbsp;until&nbsp;the&nbsp;visibility&nbsp;of&nbsp;a&nbsp;WIDGET&nbsp;changes<br>
+<dl><dt><a name="Window-wait_visibility"><strong>wait_visibility</strong></a>(self, window=None)</dt><dd><span class="code">Wait&nbsp;until&nbsp;the&nbsp;visibility&nbsp;of&nbsp;a&nbsp;WIDGET&nbsp;changes<br>
 (e.g.&nbsp;it&nbsp;appears).<br>
 &nbsp;<br>
-If&nbsp;no&nbsp;parameter&nbsp;is&nbsp;given&nbsp;self&nbsp;is&nbsp;used.</tt></dd></dl>
+If&nbsp;no&nbsp;parameter&nbsp;is&nbsp;given&nbsp;self&nbsp;is&nbsp;used.</span></dd></dl>
 
-<dl><dt><a name="Window-wait_window"><strong>wait_window</strong></a>(self, window=None)</dt><dd><tt>Wait&nbsp;until&nbsp;a&nbsp;WIDGET&nbsp;is&nbsp;destroyed.<br>
+<dl><dt><a name="Window-wait_window"><strong>wait_window</strong></a>(self, window=None)</dt><dd><span class="code">Wait&nbsp;until&nbsp;a&nbsp;WIDGET&nbsp;is&nbsp;destroyed.<br>
 &nbsp;<br>
-If&nbsp;no&nbsp;parameter&nbsp;is&nbsp;given&nbsp;self&nbsp;is&nbsp;used.</tt></dd></dl>
+If&nbsp;no&nbsp;parameter&nbsp;is&nbsp;given&nbsp;self&nbsp;is&nbsp;used.</span></dd></dl>
 
 <dl><dt><a name="Window-waitvar"><strong>waitvar</strong></a> = <a href="#Window-wait_variable">wait_variable</a>(self, name='PY_VAR')</dt></dl>
 
-<dl><dt><a name="Window-winfo_atom"><strong>winfo_atom</strong></a>(self, name, displayof=0)</dt><dd><tt>Return&nbsp;integer&nbsp;which&nbsp;represents&nbsp;atom&nbsp;NAME.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_atom"><strong>winfo_atom</strong></a>(self, name, displayof=0)</dt><dd><span class="code">Return&nbsp;integer&nbsp;which&nbsp;represents&nbsp;atom&nbsp;NAME.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_atomname"><strong>winfo_atomname</strong></a>(self, id, displayof=0)</dt><dd><tt>Return&nbsp;name&nbsp;of&nbsp;atom&nbsp;with&nbsp;identifier&nbsp;ID.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_atomname"><strong>winfo_atomname</strong></a>(self, id, displayof=0)</dt><dd><span class="code">Return&nbsp;name&nbsp;of&nbsp;atom&nbsp;with&nbsp;identifier&nbsp;ID.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_cells"><strong>winfo_cells</strong></a>(self)</dt><dd><tt>Return&nbsp;number&nbsp;of&nbsp;cells&nbsp;in&nbsp;the&nbsp;colormap&nbsp;for&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_cells"><strong>winfo_cells</strong></a>(self)</dt><dd><span class="code">Return&nbsp;number&nbsp;of&nbsp;cells&nbsp;in&nbsp;the&nbsp;colormap&nbsp;for&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_children"><strong>winfo_children</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;widgets&nbsp;which&nbsp;are&nbsp;children&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_children"><strong>winfo_children</strong></a>(self)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;widgets&nbsp;which&nbsp;are&nbsp;children&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_class"><strong>winfo_class</strong></a>(self)</dt><dd><tt>Return&nbsp;window&nbsp;class&nbsp;name&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_class"><strong>winfo_class</strong></a>(self)</dt><dd><span class="code">Return&nbsp;window&nbsp;class&nbsp;name&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_colormapfull"><strong>winfo_colormapfull</strong></a>(self)</dt><dd><tt>Return&nbsp;True&nbsp;if&nbsp;at&nbsp;the&nbsp;last&nbsp;color&nbsp;request&nbsp;the&nbsp;colormap&nbsp;was&nbsp;full.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_colormapfull"><strong>winfo_colormapfull</strong></a>(self)</dt><dd><span class="code">Return&nbsp;True&nbsp;if&nbsp;at&nbsp;the&nbsp;last&nbsp;color&nbsp;request&nbsp;the&nbsp;colormap&nbsp;was&nbsp;full.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_containing"><strong>winfo_containing</strong></a>(self, rootX, rootY, displayof=0)</dt><dd><tt>Return&nbsp;the&nbsp;widget&nbsp;which&nbsp;is&nbsp;at&nbsp;the&nbsp;root&nbsp;coordinates&nbsp;ROOTX,&nbsp;ROOTY.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_containing"><strong>winfo_containing</strong></a>(self, rootX, rootY, displayof=0)</dt><dd><span class="code">Return&nbsp;the&nbsp;widget&nbsp;which&nbsp;is&nbsp;at&nbsp;the&nbsp;root&nbsp;coordinates&nbsp;ROOTX,&nbsp;ROOTY.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_depth"><strong>winfo_depth</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;bits&nbsp;per&nbsp;pixel.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_depth"><strong>winfo_depth</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;number&nbsp;of&nbsp;bits&nbsp;per&nbsp;pixel.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_exists"><strong>winfo_exists</strong></a>(self)</dt><dd><tt>Return&nbsp;true&nbsp;if&nbsp;this&nbsp;widget&nbsp;exists.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_exists"><strong>winfo_exists</strong></a>(self)</dt><dd><span class="code">Return&nbsp;true&nbsp;if&nbsp;this&nbsp;widget&nbsp;exists.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_fpixels"><strong>winfo_fpixels</strong></a>(self, number)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;for&nbsp;the&nbsp;given&nbsp;distance&nbsp;NUMBER<br>
-(e.g.&nbsp;"3c")&nbsp;as&nbsp;float.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_fpixels"><strong>winfo_fpixels</strong></a>(self, number)</dt><dd><span class="code">Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;for&nbsp;the&nbsp;given&nbsp;distance&nbsp;NUMBER<br>
+(e.g.&nbsp;"3c")&nbsp;as&nbsp;float.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_geometry"><strong>winfo_geometry</strong></a>(self)</dt><dd><tt>Return&nbsp;geometry&nbsp;string&nbsp;for&nbsp;this&nbsp;widget&nbsp;in&nbsp;the&nbsp;form&nbsp;"widthxheight+X+Y".</tt></dd></dl>
+<dl><dt><a name="Window-winfo_geometry"><strong>winfo_geometry</strong></a>(self)</dt><dd><span class="code">Return&nbsp;geometry&nbsp;string&nbsp;for&nbsp;this&nbsp;widget&nbsp;in&nbsp;the&nbsp;form&nbsp;"widthxheight+X+Y".</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_height"><strong>winfo_height</strong></a>(self)</dt><dd><tt>Return&nbsp;height&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_height"><strong>winfo_height</strong></a>(self)</dt><dd><span class="code">Return&nbsp;height&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_id"><strong>winfo_id</strong></a>(self)</dt><dd><tt>Return&nbsp;identifier&nbsp;ID&nbsp;for&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_id"><strong>winfo_id</strong></a>(self)</dt><dd><span class="code">Return&nbsp;identifier&nbsp;ID&nbsp;for&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_interps"><strong>winfo_interps</strong></a>(self, displayof=0)</dt><dd><tt>Return&nbsp;the&nbsp;name&nbsp;of&nbsp;all&nbsp;Tcl&nbsp;interpreters&nbsp;for&nbsp;this&nbsp;display.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_interps"><strong>winfo_interps</strong></a>(self, displayof=0)</dt><dd><span class="code">Return&nbsp;the&nbsp;name&nbsp;of&nbsp;all&nbsp;Tcl&nbsp;interpreters&nbsp;for&nbsp;this&nbsp;display.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_ismapped"><strong>winfo_ismapped</strong></a>(self)</dt><dd><tt>Return&nbsp;true&nbsp;if&nbsp;this&nbsp;widget&nbsp;is&nbsp;mapped.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_ismapped"><strong>winfo_ismapped</strong></a>(self)</dt><dd><span class="code">Return&nbsp;true&nbsp;if&nbsp;this&nbsp;widget&nbsp;is&nbsp;mapped.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_manager"><strong>winfo_manager</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;window&nbsp;manager&nbsp;name&nbsp;for&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_manager"><strong>winfo_manager</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;window&nbsp;manager&nbsp;name&nbsp;for&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_name"><strong>winfo_name</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;name&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_name"><strong>winfo_name</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;name&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_parent"><strong>winfo_parent</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;parent&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_parent"><strong>winfo_parent</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;parent&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_pathname"><strong>winfo_pathname</strong></a>(self, id, displayof=0)</dt><dd><tt>Return&nbsp;the&nbsp;pathname&nbsp;of&nbsp;the&nbsp;widget&nbsp;given&nbsp;by&nbsp;ID.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_pathname"><strong>winfo_pathname</strong></a>(self, id, displayof=0)</dt><dd><span class="code">Return&nbsp;the&nbsp;pathname&nbsp;of&nbsp;the&nbsp;widget&nbsp;given&nbsp;by&nbsp;ID.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_pixels"><strong>winfo_pixels</strong></a>(self, number)</dt><dd><tt>Rounded&nbsp;integer&nbsp;value&nbsp;of&nbsp;winfo_fpixels.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_pixels"><strong>winfo_pixels</strong></a>(self, number)</dt><dd><span class="code">Rounded&nbsp;integer&nbsp;value&nbsp;of&nbsp;winfo_fpixels.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_pointerx"><strong>winfo_pointerx</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;x&nbsp;coordinate&nbsp;of&nbsp;the&nbsp;pointer&nbsp;on&nbsp;the&nbsp;root&nbsp;window.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_pointerx"><strong>winfo_pointerx</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;x&nbsp;coordinate&nbsp;of&nbsp;the&nbsp;pointer&nbsp;on&nbsp;the&nbsp;root&nbsp;window.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_pointerxy"><strong>winfo_pointerxy</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;x&nbsp;and&nbsp;y&nbsp;coordinates&nbsp;of&nbsp;the&nbsp;pointer&nbsp;on&nbsp;the&nbsp;root&nbsp;window.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_pointerxy"><strong>winfo_pointerxy</strong></a>(self)</dt><dd><span class="code">Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;x&nbsp;and&nbsp;y&nbsp;coordinates&nbsp;of&nbsp;the&nbsp;pointer&nbsp;on&nbsp;the&nbsp;root&nbsp;window.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_pointery"><strong>winfo_pointery</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;y&nbsp;coordinate&nbsp;of&nbsp;the&nbsp;pointer&nbsp;on&nbsp;the&nbsp;root&nbsp;window.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_pointery"><strong>winfo_pointery</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;y&nbsp;coordinate&nbsp;of&nbsp;the&nbsp;pointer&nbsp;on&nbsp;the&nbsp;root&nbsp;window.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_reqheight"><strong>winfo_reqheight</strong></a>(self)</dt><dd><tt>Return&nbsp;requested&nbsp;height&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_reqheight"><strong>winfo_reqheight</strong></a>(self)</dt><dd><span class="code">Return&nbsp;requested&nbsp;height&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_reqwidth"><strong>winfo_reqwidth</strong></a>(self)</dt><dd><tt>Return&nbsp;requested&nbsp;width&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_reqwidth"><strong>winfo_reqwidth</strong></a>(self)</dt><dd><span class="code">Return&nbsp;requested&nbsp;width&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_rgb"><strong>winfo_rgb</strong></a>(self, color)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;integer&nbsp;RGB&nbsp;values&nbsp;in&nbsp;range(65536)&nbsp;for&nbsp;color&nbsp;in&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_rgb"><strong>winfo_rgb</strong></a>(self, color)</dt><dd><span class="code">Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;integer&nbsp;RGB&nbsp;values&nbsp;in&nbsp;range(65536)&nbsp;for&nbsp;color&nbsp;in&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_rootx"><strong>winfo_rootx</strong></a>(self)</dt><dd><tt>Return&nbsp;x&nbsp;coordinate&nbsp;of&nbsp;upper&nbsp;left&nbsp;corner&nbsp;of&nbsp;this&nbsp;widget&nbsp;on&nbsp;the<br>
-root&nbsp;window.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_rootx"><strong>winfo_rootx</strong></a>(self)</dt><dd><span class="code">Return&nbsp;x&nbsp;coordinate&nbsp;of&nbsp;upper&nbsp;left&nbsp;corner&nbsp;of&nbsp;this&nbsp;widget&nbsp;on&nbsp;the<br>
+root&nbsp;window.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_rooty"><strong>winfo_rooty</strong></a>(self)</dt><dd><tt>Return&nbsp;y&nbsp;coordinate&nbsp;of&nbsp;upper&nbsp;left&nbsp;corner&nbsp;of&nbsp;this&nbsp;widget&nbsp;on&nbsp;the<br>
-root&nbsp;window.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_rooty"><strong>winfo_rooty</strong></a>(self)</dt><dd><span class="code">Return&nbsp;y&nbsp;coordinate&nbsp;of&nbsp;upper&nbsp;left&nbsp;corner&nbsp;of&nbsp;this&nbsp;widget&nbsp;on&nbsp;the<br>
+root&nbsp;window.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_screen"><strong>winfo_screen</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;screen&nbsp;name&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_screen"><strong>winfo_screen</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;screen&nbsp;name&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_screencells"><strong>winfo_screencells</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;cells&nbsp;in&nbsp;the&nbsp;colormap&nbsp;of&nbsp;the&nbsp;screen<br>
-of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_screencells"><strong>winfo_screencells</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;cells&nbsp;in&nbsp;the&nbsp;colormap&nbsp;of&nbsp;the&nbsp;screen<br>
+of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_screendepth"><strong>winfo_screendepth</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;bits&nbsp;per&nbsp;pixel&nbsp;of&nbsp;the&nbsp;root&nbsp;window&nbsp;of&nbsp;the<br>
-screen&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_screendepth"><strong>winfo_screendepth</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;number&nbsp;of&nbsp;bits&nbsp;per&nbsp;pixel&nbsp;of&nbsp;the&nbsp;root&nbsp;window&nbsp;of&nbsp;the<br>
+screen&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_screenheight"><strong>winfo_screenheight</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;of&nbsp;the&nbsp;height&nbsp;of&nbsp;the&nbsp;screen&nbsp;of&nbsp;this&nbsp;widget<br>
-in&nbsp;pixel.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_screenheight"><strong>winfo_screenheight</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;of&nbsp;the&nbsp;height&nbsp;of&nbsp;the&nbsp;screen&nbsp;of&nbsp;this&nbsp;widget<br>
+in&nbsp;pixel.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_screenmmheight"><strong>winfo_screenmmheight</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;of&nbsp;the&nbsp;height&nbsp;of&nbsp;the&nbsp;screen&nbsp;of<br>
-this&nbsp;widget&nbsp;in&nbsp;mm.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_screenmmheight"><strong>winfo_screenmmheight</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;of&nbsp;the&nbsp;height&nbsp;of&nbsp;the&nbsp;screen&nbsp;of<br>
+this&nbsp;widget&nbsp;in&nbsp;mm.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_screenmmwidth"><strong>winfo_screenmmwidth</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;of&nbsp;the&nbsp;width&nbsp;of&nbsp;the&nbsp;screen&nbsp;of<br>
-this&nbsp;widget&nbsp;in&nbsp;mm.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_screenmmwidth"><strong>winfo_screenmmwidth</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;of&nbsp;the&nbsp;width&nbsp;of&nbsp;the&nbsp;screen&nbsp;of<br>
+this&nbsp;widget&nbsp;in&nbsp;mm.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_screenvisual"><strong>winfo_screenvisual</strong></a>(self)</dt><dd><tt>Return&nbsp;one&nbsp;of&nbsp;the&nbsp;strings&nbsp;directcolor,&nbsp;grayscale,&nbsp;pseudocolor,<br>
+<dl><dt><a name="Window-winfo_screenvisual"><strong>winfo_screenvisual</strong></a>(self)</dt><dd><span class="code">Return&nbsp;one&nbsp;of&nbsp;the&nbsp;strings&nbsp;directcolor,&nbsp;grayscale,&nbsp;pseudocolor,<br>
 staticcolor,&nbsp;staticgray,&nbsp;or&nbsp;truecolor&nbsp;for&nbsp;the&nbsp;default<br>
-colormodel&nbsp;of&nbsp;this&nbsp;screen.</tt></dd></dl>
+colormodel&nbsp;of&nbsp;this&nbsp;screen.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_screenwidth"><strong>winfo_screenwidth</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;of&nbsp;the&nbsp;width&nbsp;of&nbsp;the&nbsp;screen&nbsp;of<br>
-this&nbsp;widget&nbsp;in&nbsp;pixel.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_screenwidth"><strong>winfo_screenwidth</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;of&nbsp;the&nbsp;width&nbsp;of&nbsp;the&nbsp;screen&nbsp;of<br>
+this&nbsp;widget&nbsp;in&nbsp;pixel.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_server"><strong>winfo_server</strong></a>(self)</dt><dd><tt>Return&nbsp;information&nbsp;of&nbsp;the&nbsp;X-Server&nbsp;of&nbsp;the&nbsp;screen&nbsp;of&nbsp;this&nbsp;widget&nbsp;in<br>
-the&nbsp;form&nbsp;"XmajorRminor&nbsp;vendor&nbsp;vendorVersion".</tt></dd></dl>
+<dl><dt><a name="Window-winfo_server"><strong>winfo_server</strong></a>(self)</dt><dd><span class="code">Return&nbsp;information&nbsp;of&nbsp;the&nbsp;X-Server&nbsp;of&nbsp;the&nbsp;screen&nbsp;of&nbsp;this&nbsp;widget&nbsp;in<br>
+the&nbsp;form&nbsp;"XmajorRminor&nbsp;vendor&nbsp;vendorVersion".</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_toplevel"><strong>winfo_toplevel</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;toplevel&nbsp;widget&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_toplevel"><strong>winfo_toplevel</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;toplevel&nbsp;widget&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_viewable"><strong>winfo_viewable</strong></a>(self)</dt><dd><tt>Return&nbsp;true&nbsp;if&nbsp;the&nbsp;widget&nbsp;and&nbsp;all&nbsp;its&nbsp;higher&nbsp;ancestors&nbsp;are&nbsp;mapped.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_viewable"><strong>winfo_viewable</strong></a>(self)</dt><dd><span class="code">Return&nbsp;true&nbsp;if&nbsp;the&nbsp;widget&nbsp;and&nbsp;all&nbsp;its&nbsp;higher&nbsp;ancestors&nbsp;are&nbsp;mapped.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_visual"><strong>winfo_visual</strong></a>(self)</dt><dd><tt>Return&nbsp;one&nbsp;of&nbsp;the&nbsp;strings&nbsp;directcolor,&nbsp;grayscale,&nbsp;pseudocolor,<br>
+<dl><dt><a name="Window-winfo_visual"><strong>winfo_visual</strong></a>(self)</dt><dd><span class="code">Return&nbsp;one&nbsp;of&nbsp;the&nbsp;strings&nbsp;directcolor,&nbsp;grayscale,&nbsp;pseudocolor,<br>
 staticcolor,&nbsp;staticgray,&nbsp;or&nbsp;truecolor&nbsp;for&nbsp;the<br>
-colormodel&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+colormodel&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_visualid"><strong>winfo_visualid</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;X&nbsp;identifier&nbsp;for&nbsp;the&nbsp;visual&nbsp;for&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_visualid"><strong>winfo_visualid</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;X&nbsp;identifier&nbsp;for&nbsp;the&nbsp;visual&nbsp;for&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_visualsavailable"><strong>winfo_visualsavailable</strong></a>(self, includeids=False)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;visuals&nbsp;available&nbsp;for&nbsp;the&nbsp;screen<br>
+<dl><dt><a name="Window-winfo_visualsavailable"><strong>winfo_visualsavailable</strong></a>(self, includeids=False)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;visuals&nbsp;available&nbsp;for&nbsp;the&nbsp;screen<br>
 of&nbsp;this&nbsp;widget.<br>
 &nbsp;<br>
 Each&nbsp;item&nbsp;in&nbsp;the&nbsp;list&nbsp;consists&nbsp;of&nbsp;a&nbsp;visual&nbsp;name&nbsp;(see&nbsp;winfo_visual),&nbsp;a<br>
-depth&nbsp;and&nbsp;if&nbsp;includeids&nbsp;is&nbsp;true&nbsp;is&nbsp;given&nbsp;also&nbsp;the&nbsp;X&nbsp;identifier.</tt></dd></dl>
+depth&nbsp;and&nbsp;if&nbsp;includeids&nbsp;is&nbsp;true&nbsp;is&nbsp;given&nbsp;also&nbsp;the&nbsp;X&nbsp;identifier.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_vrootheight"><strong>winfo_vrootheight</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;height&nbsp;of&nbsp;the&nbsp;virtual&nbsp;root&nbsp;window&nbsp;associated&nbsp;with&nbsp;this<br>
+<dl><dt><a name="Window-winfo_vrootheight"><strong>winfo_vrootheight</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;height&nbsp;of&nbsp;the&nbsp;virtual&nbsp;root&nbsp;window&nbsp;associated&nbsp;with&nbsp;this<br>
 widget&nbsp;in&nbsp;pixels.&nbsp;If&nbsp;there&nbsp;is&nbsp;no&nbsp;virtual&nbsp;root&nbsp;window&nbsp;return&nbsp;the<br>
-height&nbsp;of&nbsp;the&nbsp;screen.</tt></dd></dl>
+height&nbsp;of&nbsp;the&nbsp;screen.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_vrootwidth"><strong>winfo_vrootwidth</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;width&nbsp;of&nbsp;the&nbsp;virtual&nbsp;root&nbsp;window&nbsp;associated&nbsp;with&nbsp;this<br>
+<dl><dt><a name="Window-winfo_vrootwidth"><strong>winfo_vrootwidth</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;width&nbsp;of&nbsp;the&nbsp;virtual&nbsp;root&nbsp;window&nbsp;associated&nbsp;with&nbsp;this<br>
 widget&nbsp;in&nbsp;pixel.&nbsp;If&nbsp;there&nbsp;is&nbsp;no&nbsp;virtual&nbsp;root&nbsp;window&nbsp;return&nbsp;the<br>
-width&nbsp;of&nbsp;the&nbsp;screen.</tt></dd></dl>
+width&nbsp;of&nbsp;the&nbsp;screen.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_vrootx"><strong>winfo_vrootx</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;x&nbsp;offset&nbsp;of&nbsp;the&nbsp;virtual&nbsp;root&nbsp;relative&nbsp;to&nbsp;the&nbsp;root<br>
-window&nbsp;of&nbsp;the&nbsp;screen&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_vrootx"><strong>winfo_vrootx</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;x&nbsp;offset&nbsp;of&nbsp;the&nbsp;virtual&nbsp;root&nbsp;relative&nbsp;to&nbsp;the&nbsp;root<br>
+window&nbsp;of&nbsp;the&nbsp;screen&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_vrooty"><strong>winfo_vrooty</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;y&nbsp;offset&nbsp;of&nbsp;the&nbsp;virtual&nbsp;root&nbsp;relative&nbsp;to&nbsp;the&nbsp;root<br>
-window&nbsp;of&nbsp;the&nbsp;screen&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_vrooty"><strong>winfo_vrooty</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;y&nbsp;offset&nbsp;of&nbsp;the&nbsp;virtual&nbsp;root&nbsp;relative&nbsp;to&nbsp;the&nbsp;root<br>
+window&nbsp;of&nbsp;the&nbsp;screen&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_width"><strong>winfo_width</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;width&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_width"><strong>winfo_width</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;width&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_x"><strong>winfo_x</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;x&nbsp;coordinate&nbsp;of&nbsp;the&nbsp;upper&nbsp;left&nbsp;corner&nbsp;of&nbsp;this&nbsp;widget<br>
-in&nbsp;the&nbsp;parent.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_x"><strong>winfo_x</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;x&nbsp;coordinate&nbsp;of&nbsp;the&nbsp;upper&nbsp;left&nbsp;corner&nbsp;of&nbsp;this&nbsp;widget<br>
+in&nbsp;the&nbsp;parent.</span></dd></dl>
 
-<dl><dt><a name="Window-winfo_y"><strong>winfo_y</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;y&nbsp;coordinate&nbsp;of&nbsp;the&nbsp;upper&nbsp;left&nbsp;corner&nbsp;of&nbsp;this&nbsp;widget<br>
-in&nbsp;the&nbsp;parent.</tt></dd></dl>
+<dl><dt><a name="Window-winfo_y"><strong>winfo_y</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;y&nbsp;coordinate&nbsp;of&nbsp;the&nbsp;upper&nbsp;left&nbsp;corner&nbsp;of&nbsp;this&nbsp;widget<br>
+in&nbsp;the&nbsp;parent.</span></dd></dl>
 
 <hr>
 Data descriptors inherited from <a href="tkinter.html#Misc">tkinter.Misc</a>:<br>
 <dl><dt><strong>__dict__</strong></dt>
-<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
 </dl>
 <dl><dt><strong>__weakref__</strong></dt>
-<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
 </dl>
 <hr>
 Methods inherited from <a href="tkinter.html#Pack">tkinter.Pack</a>:<br>
@@ -791,7 +796,7 @@ Methods inherited from <a href="tkinter.html#Pack">tkinter.Pack</a>:<br>
 
 <dl><dt><a name="Window-pack"><strong>pack</strong></a> = <a href="#Window-pack_configure">pack_configure</a>(self, cnf={}, **kw)</dt></dl>
 
-<dl><dt><a name="Window-pack_configure"><strong>pack_configure</strong></a>(self, cnf={}, **kw)</dt><dd><tt>Pack&nbsp;a&nbsp;widget&nbsp;in&nbsp;the&nbsp;parent&nbsp;widget.&nbsp;Use&nbsp;as&nbsp;options:<br>
+<dl><dt><a name="Window-pack_configure"><strong>pack_configure</strong></a>(self, cnf={}, **kw)</dt><dd><span class="code">Pack&nbsp;a&nbsp;widget&nbsp;in&nbsp;the&nbsp;parent&nbsp;widget.&nbsp;Use&nbsp;as&nbsp;options:<br>
 after=widget&nbsp;-&nbsp;pack&nbsp;it&nbsp;after&nbsp;you&nbsp;have&nbsp;packed&nbsp;widget<br>
 anchor=NSEW&nbsp;(or&nbsp;subset)&nbsp;-&nbsp;position&nbsp;widget&nbsp;according&nbsp;to<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;given&nbsp;direction<br>
@@ -804,18 +809,18 @@ ipadx=amount&nbsp;-&nbsp;add&nbsp;internal&nbsp;padding&nbsp;in&nbsp;x&nbsp;dire
 ipady=amount&nbsp;-&nbsp;add&nbsp;internal&nbsp;padding&nbsp;in&nbsp;y&nbsp;direction<br>
 padx=amount&nbsp;-&nbsp;add&nbsp;padding&nbsp;in&nbsp;x&nbsp;direction<br>
 pady=amount&nbsp;-&nbsp;add&nbsp;padding&nbsp;in&nbsp;y&nbsp;direction<br>
-side=TOP&nbsp;or&nbsp;BOTTOM&nbsp;or&nbsp;LEFT&nbsp;or&nbsp;RIGHT&nbsp;-&nbsp;&nbsp;where&nbsp;to&nbsp;add&nbsp;this&nbsp;widget.</tt></dd></dl>
+side=TOP&nbsp;or&nbsp;BOTTOM&nbsp;or&nbsp;LEFT&nbsp;or&nbsp;RIGHT&nbsp;-&nbsp;&nbsp;where&nbsp;to&nbsp;add&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-pack_forget"><strong>pack_forget</strong></a>(self)</dt><dd><tt>Unmap&nbsp;this&nbsp;widget&nbsp;and&nbsp;do&nbsp;not&nbsp;use&nbsp;it&nbsp;for&nbsp;the&nbsp;packing&nbsp;order.</tt></dd></dl>
+<dl><dt><a name="Window-pack_forget"><strong>pack_forget</strong></a>(self)</dt><dd><span class="code">Unmap&nbsp;this&nbsp;widget&nbsp;and&nbsp;do&nbsp;not&nbsp;use&nbsp;it&nbsp;for&nbsp;the&nbsp;packing&nbsp;order.</span></dd></dl>
 
-<dl><dt><a name="Window-pack_info"><strong>pack_info</strong></a>(self)</dt><dd><tt>Return&nbsp;information&nbsp;about&nbsp;the&nbsp;packing&nbsp;options<br>
-for&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-pack_info"><strong>pack_info</strong></a>(self)</dt><dd><span class="code">Return&nbsp;information&nbsp;about&nbsp;the&nbsp;packing&nbsp;options<br>
+for&nbsp;this&nbsp;widget.</span></dd></dl>
 
 <hr>
 Methods inherited from <a href="tkinter.html#Place">tkinter.Place</a>:<br>
 <dl><dt><a name="Window-place"><strong>place</strong></a> = <a href="#Window-place_configure">place_configure</a>(self, cnf={}, **kw)</dt></dl>
 
-<dl><dt><a name="Window-place_configure"><strong>place_configure</strong></a>(self, cnf={}, **kw)</dt><dd><tt>Place&nbsp;a&nbsp;widget&nbsp;in&nbsp;the&nbsp;parent&nbsp;widget.&nbsp;Use&nbsp;as&nbsp;options:<br>
+<dl><dt><a name="Window-place_configure"><strong>place_configure</strong></a>(self, cnf={}, **kw)</dt><dd><span class="code">Place&nbsp;a&nbsp;widget&nbsp;in&nbsp;the&nbsp;parent&nbsp;widget.&nbsp;Use&nbsp;as&nbsp;options:<br>
 in=master&nbsp;-&nbsp;master&nbsp;relative&nbsp;to&nbsp;which&nbsp;the&nbsp;widget&nbsp;is&nbsp;placed<br>
 in_=master&nbsp;-&nbsp;see&nbsp;'in'&nbsp;option&nbsp;description<br>
 x=amount&nbsp;-&nbsp;locate&nbsp;anchor&nbsp;of&nbsp;this&nbsp;widget&nbsp;at&nbsp;position&nbsp;x&nbsp;of&nbsp;master<br>
@@ -834,18 +839,18 @@ relheight=amount&nbsp;-&nbsp;height&nbsp;of&nbsp;this&nbsp;widget&nbsp;between&n
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;relative&nbsp;to&nbsp;height&nbsp;of&nbsp;master&nbsp;(1.0&nbsp;is&nbsp;the&nbsp;same<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height&nbsp;as&nbsp;the&nbsp;master)<br>
 bordermode="inside"&nbsp;or&nbsp;"outside"&nbsp;-&nbsp;whether&nbsp;to&nbsp;take&nbsp;border&nbsp;width&nbsp;of<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;master&nbsp;widget&nbsp;into&nbsp;account</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;master&nbsp;widget&nbsp;into&nbsp;account</span></dd></dl>
 
-<dl><dt><a name="Window-place_forget"><strong>place_forget</strong></a>(self)</dt><dd><tt>Unmap&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-place_forget"><strong>place_forget</strong></a>(self)</dt><dd><span class="code">Unmap&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-place_info"><strong>place_info</strong></a>(self)</dt><dd><tt>Return&nbsp;information&nbsp;about&nbsp;the&nbsp;placing&nbsp;options<br>
-for&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-place_info"><strong>place_info</strong></a>(self)</dt><dd><span class="code">Return&nbsp;information&nbsp;about&nbsp;the&nbsp;placing&nbsp;options<br>
+for&nbsp;this&nbsp;widget.</span></dd></dl>
 
 <hr>
 Methods inherited from <a href="tkinter.html#Grid">tkinter.Grid</a>:<br>
 <dl><dt><a name="Window-grid"><strong>grid</strong></a> = <a href="#Window-grid_configure">grid_configure</a>(self, cnf={}, **kw)</dt></dl>
 
-<dl><dt><a name="Window-grid_configure"><strong>grid_configure</strong></a>(self, cnf={}, **kw)</dt><dd><tt>Position&nbsp;a&nbsp;widget&nbsp;in&nbsp;the&nbsp;parent&nbsp;widget&nbsp;in&nbsp;a&nbsp;grid.&nbsp;Use&nbsp;as&nbsp;options:<br>
+<dl><dt><a name="Window-grid_configure"><strong>grid_configure</strong></a>(self, cnf={}, **kw)</dt><dd><span class="code">Position&nbsp;a&nbsp;widget&nbsp;in&nbsp;the&nbsp;parent&nbsp;widget&nbsp;in&nbsp;a&nbsp;grid.&nbsp;Use&nbsp;as&nbsp;options:<br>
 column=number&nbsp;-&nbsp;use&nbsp;cell&nbsp;identified&nbsp;with&nbsp;given&nbsp;column&nbsp;(starting&nbsp;with&nbsp;0)<br>
 columnspan=number&nbsp;-&nbsp;this&nbsp;widget&nbsp;will&nbsp;span&nbsp;several&nbsp;columns<br>
 in=master&nbsp;-&nbsp;use&nbsp;master&nbsp;to&nbsp;contain&nbsp;this&nbsp;widget<br>
@@ -857,25 +862,24 @@ pady=amount&nbsp;-&nbsp;add&nbsp;padding&nbsp;in&nbsp;y&nbsp;direction<br>
 row=number&nbsp;-&nbsp;use&nbsp;cell&nbsp;identified&nbsp;with&nbsp;given&nbsp;row&nbsp;(starting&nbsp;with&nbsp;0)<br>
 rowspan=number&nbsp;-&nbsp;this&nbsp;widget&nbsp;will&nbsp;span&nbsp;several&nbsp;rows<br>
 sticky=NSEW&nbsp;-&nbsp;if&nbsp;cell&nbsp;is&nbsp;larger&nbsp;on&nbsp;which&nbsp;sides&nbsp;will&nbsp;this<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;widget&nbsp;stick&nbsp;to&nbsp;the&nbsp;cell&nbsp;boundary</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;widget&nbsp;stick&nbsp;to&nbsp;the&nbsp;cell&nbsp;boundary</span></dd></dl>
 
-<dl><dt><a name="Window-grid_forget"><strong>grid_forget</strong></a>(self)</dt><dd><tt>Unmap&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="Window-grid_forget"><strong>grid_forget</strong></a>(self)</dt><dd><span class="code">Unmap&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="Window-grid_info"><strong>grid_info</strong></a>(self)</dt><dd><tt>Return&nbsp;information&nbsp;about&nbsp;the&nbsp;options<br>
-for&nbsp;positioning&nbsp;this&nbsp;widget&nbsp;in&nbsp;a&nbsp;grid.</tt></dd></dl>
+<dl><dt><a name="Window-grid_info"><strong>grid_info</strong></a>(self)</dt><dd><span class="code">Return&nbsp;information&nbsp;about&nbsp;the&nbsp;options<br>
+for&nbsp;positioning&nbsp;this&nbsp;widget&nbsp;in&nbsp;a&nbsp;grid.</span></dd></dl>
 
-<dl><dt><a name="Window-grid_remove"><strong>grid_remove</strong></a>(self)</dt><dd><tt>Unmap&nbsp;this&nbsp;widget&nbsp;but&nbsp;remember&nbsp;the&nbsp;grid&nbsp;options.</tt></dd></dl>
+<dl><dt><a name="Window-grid_remove"><strong>grid_remove</strong></a>(self)</dt><dd><span class="code">Unmap&nbsp;this&nbsp;widget&nbsp;but&nbsp;remember&nbsp;the&nbsp;grid&nbsp;options.</span></dd></dl>
 
 <dl><dt><a name="Window-location"><strong>location</strong></a> = <a href="#Window-grid_location">grid_location</a>(self, x, y)</dt></dl>
 
 </td></tr></table></td></tr></table><p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#55aa55">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+<table class="section">
+<tr class="decor data-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Data</strong></td></tr>
     
-<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>app</strong> = &lt;DECiM.Window object .!window&gt;<br>
+<tr><td class="decor data-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><strong>app</strong> = &lt;DECiM.Window object .!window&gt;<br>
 <strong>font_sizes</strong> = {'large': 18, 'medium': 16, 'small': 12}<br>
 <strong>root</strong> = &lt;tkinter.Tk object .&gt;</td></tr></table>
 </body></html>
