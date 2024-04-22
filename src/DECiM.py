@@ -1,6 +1,6 @@
 """DECiM (Determination of Equivalent Circuit Models) is an equivalent circuit model fitting program for impedance data. It is a GUI-based program.
 Much of the source code is spread over other python source files, all of which must be in the same folder as DECiM.py to ensure that the program works correctly.
-DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.2, 5 April 2024.
+DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.3, 22 April 2024.
 
 This is the core module -- when launched, DECiM starts. This module also defines the Window class."""
 
@@ -29,6 +29,9 @@ from functools import partial
 
 #Web browser (help)
 import webbrowser
+
+#OS (help)
+import os
 
 #Tkinter (GUI)
 import tkinter as tk
@@ -519,7 +522,8 @@ class Window(ttk.Frame):
         
     def openManual(self):
         """Open the PDF manual."""
-        webbrowser.open_new(r'DECiM_Manual.pdf') #See https://stackoverflow.com/questions/19453338/opening-pdf-file
+        manual_path = os.path.realpath("../Manual.pdf")
+        webbrowser.open_new(r'file://' + manual_path) #See https://stackoverflow.com/questions/19453338/opening-pdf-file
 
     def generateFit(self):
         """Generate the model dataset from the model parameters, circuit model and a logarithmically spaced NumPy array of frequencies."""
