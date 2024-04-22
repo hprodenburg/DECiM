@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains circuit arrangement code, impedance calculations and circuit selection UI code. Last modified 14 March 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains circuit arrangement code, impedance calculations and circuit selection UI code. Last modified 22 April 2024 by Henrik Rodenburg.
 
 Classes:
 Circuit elements:
@@ -394,6 +394,23 @@ class Unit():
             else:
                 outlist.append(e)
         return outlist
+        
+    #Find a given unit within another unit based on its number
+    def find_unit(self, number):
+        """Find the unit U whose U.number == number.
+        
+        Arguments:
+        self
+        number -- integer, number of desired unit
+        
+        Returns:
+        Unit object whose number attribute matches the number argument."""
+        if self.number == number:
+            return self
+        else:
+            for e in self.elements:
+                if e.tag == "U":
+                    e.find_unit(number)
         
     def generate_circuit_string(self, verbose = True):
         """Generate the circuit string of the Unit. Used in RECM2 files and in building the menus in DECiM core
@@ -1116,6 +1133,7 @@ class PannableCanvas(tk.Canvas): #A canvas that can be panned and zoomed
         Arguments:
         self
         event -- mouse click event, which contains the (x, y) coordinates on which the user clicked."""
+        self.selector_window.make_backups() #Save the previous state
         self.selector_window.error_message.set("") #Clear any errors related to previous draw move
         cursor_x, cursor_y = self.canvasx(event.x), self.canvasy(event.y) #Mouse coordinates
         element_tag = self.selector_window.chosen_element.get()[0] #Element tag/abbreviation: R, C, L, ...
@@ -1184,7 +1202,7 @@ class PannableCanvas(tk.Canvas): #A canvas that can be panned and zoomed
         self.selector_window.update_mode_label()
         self.generate_dots()
         self.choose_dot_and_draw_dots(event)
-            
+        
     def redraw_circuit(self):
         """Clear the canvas and redraw the circuit."""
         self.delete("all") #Clear the canvas
@@ -1219,6 +1237,13 @@ class CircuitDefinitionWindow(tk.Toplevel): #The window that is lauched for maki
         element_idx -- the current element index
         element_numbers -- the current numbers of all individual element types
         
+        previously_drawn_circuits -- list of Circuit objects created in previous steps (merges, element placements)
+        previous_active_unit_numbers -- list of numbers identifying Unit objects that were previously the active unit
+        previous_element_numbers -- list of previous dicts of element numbers
+        previous_canvas_elements -- list of previous self.canvas.elements_on_canvas dicts
+        previous_dots -- list of previous self.canvas.dots lists
+        previous_merge_points -- list of previous self.canvas.merge_points dicts
+        
         buttonframe -- tk.Frame onto which buttons are place
         canvasframe -- tk.Frame onto which the PannableCanvas is placed
         canvas -- PannableCanvas object
@@ -1236,6 +1261,7 @@ class CircuitDefinitionWindow(tk.Toplevel): #The window that is lauched for maki
         
         drawing_mode_button -- tk.Button for switching between series and parallel drawing modes
         merge_units_button -- button to toggle merge mode on or off
+        undo_button -- button to undo most recent merge or placement; works multiple times
         clear_button -- button to clear the circuit and PannableCanvas
         end_button -- button to accept the circuit and close the circuit builder
         
@@ -1244,6 +1270,7 @@ class CircuitDefinitionWindow(tk.Toplevel): #The window that is lauched for maki
         
         Methods:
         update_mode_label -- update mode_label and merge_active
+        make_backups -- update the lists in which previous circuits, active units, etc. are held
         reset_element_dropdown -- add all the options in new_elements to element_dropdown
         toggle_series_parallel_mode -- switch drawing modes
         toggle_merge -- toggle merge mode on/off
@@ -1252,6 +1279,7 @@ class CircuitDefinitionWindow(tk.Toplevel): #The window that is lauched for maki
         add_element -- add an element to the active_unit
         merge_units -- create a new unit and put the selected units into it
         set_circuit_to_biggest_unit -- set chosen_circuit.diagram to the Unit that contains the most elements
+        undo_merge_or_placement -- undo the latest element placement or Unit merge
         clear_circuit -- clear chosen_circuit.diagram and clear the canvas
         terminate -- close the window; if chosen_circuit.diagram contains no elements, set it to the old circuit diagram"""
         #Window geometry
@@ -1261,12 +1289,18 @@ class CircuitDefinitionWindow(tk.Toplevel): #The window that is lauched for maki
         self.height = int(0.75*self.winfo_screenheight())
         self.geometry("{:d}x{:d}".format(self.width, self.height))
         
-        #Clear the circuit, but save the old one
+        #Clear the circuit, but save the old one; also make a list of previously drawn circuits for the Undo button
         self.chosen_circuit = Circuit(diagram = Unit(0, arrangement = "parallel"))
         self.chosen_circuit.diagram.elements = []
         self.active_unit = self.chosen_circuit.diagram
         self.units = [self.active_unit]
         self.old_circuit = previous_circuit
+        self.previously_drawn_circuits = []
+        self.previous_active_unit_numbers = []
+        self.previous_element_numbers = []
+        self.previous_canvas_elements = []
+        self.previous_dots = []
+        self.previous_merge_points = []
         
         #Tracking the circuit elements and units
         self.element_idx = 0
@@ -1308,6 +1342,8 @@ class CircuitDefinitionWindow(tk.Toplevel): #The window that is lauched for maki
         self.drawing_mode_button.pack(side = tk.TOP, anchor = tk.W)
         self.merge_units_button = tk.Button(self.buttonframe, text = "Merge units", command = self.toggle_merge)
         self.merge_units_button.pack(side = tk.TOP, anchor = tk.W)
+        self.undo_button = tk.Button(self.buttonframe, text = "Undo previous change", command = self.undo_merge_or_placement)
+        self.undo_button.pack(side = tk.TOP, anchor = tk.W)
         self.clear_button = tk.Button(self.buttonframe, text = "Reset circuit builder", command = self.clear_circuit)
         self.clear_button.pack(side = tk.TOP, anchor = tk.W)
         self.end_button = tk.Button(self.buttonframe, text = "Use circuit and close", command = self.terminate)
@@ -1336,6 +1372,15 @@ class CircuitDefinitionWindow(tk.Toplevel): #The window that is lauched for maki
         self.element_dropdown["menu"].delete(0, tk.END)
         for elem in self.new_elements:
             self.element_dropdown["menu"].add_command(label = elem, command = tk._setit(self.chosen_element, elem))
+    
+    def make_backups(self):
+        """Save the current circuit, active unit, and element numbers so the Undo button can work."""
+        self.previously_drawn_circuits.append(copy.deepcopy(self.chosen_circuit))
+        self.previous_active_unit_numbers.append(copy.deepcopy(self.active_unit.number))
+        self.previous_element_numbers.append(copy.deepcopy(self.element_numbers))
+        self.previous_canvas_elements.append(copy.deepcopy(self.canvas.elements_on_canvas))
+        self.previous_dots.append(copy.deepcopy(self.canvas.dots))
+        self.previous_merge_points.append(copy.deepcopy(self.canvas.merge_points))
     
     def toggle_series_parallel_mode(self):
         """Change between series and parallel drawing modes."""
@@ -1415,8 +1460,27 @@ class CircuitDefinitionWindow(tk.Toplevel): #The window that is lauched for maki
         uidx = ulens.index(max(ulens))
         self.chosen_circuit = Circuit(diagram = self.units[uidx])
     
+    def undo_merge_or_placement(self):
+        """Undo the latest merge or element placement."""
+        if len(self.previously_drawn_circuits) > 1:
+            self.chosen_circuit = copy.deepcopy(self.previously_drawn_circuits[-1])
+            del self.previously_drawn_circuits[-1]
+            self.active_unit = self.chosen_circuit.diagram.find_unit(self.previous_active_unit_numbers[-1])
+            del self.previous_active_unit_numbers[-1]
+            self.element_numbers = copy.deepcopy(self.previous_element_numbers[-1])
+            del self.previous_element_numbers[-1]
+            self.canvas.elements_on_canvas = copy.deepcopy(self.previous_canvas_elements[-1])
+            del self.previous_canvas_elements[-1]
+            self.canvas.dots = copy.deepcopy(self.previous_dots[-1])
+            del self.previous_dots[-1]
+            self.canvas.merge_points = copy.deepcopy(self.previous_merge_points[-1])
+            del self.previous_merge_points[-1]
+            self.canvas.redraw_circuit()
+        elif len(self.previously_drawn_circuits) == 1:
+            self.clear_circuit()
+    
     def clear_circuit(self):
-        """Set chosen_circuit to a Circuit whose diagram is empty, reset units and active_unit, clear the canvas, clear the canvas's list of dots and clear the canvas's dictionary of elements."""
+        """Set chosen_circuit to a Circuit whose diagram is empty, reset units and active_unit, clear the canvas, clear the canvas's list of dots, clear the canvas's dictionary of elements, and clear the backup lists."""
         self.chosen_circuit = Circuit(diagram = Unit(0, arrangement = "parallel"))
         self.chosen_circuit.diagram.elements = []
         for n in self.element_numbers:
@@ -1426,6 +1490,10 @@ class CircuitDefinitionWindow(tk.Toplevel): #The window that is lauched for maki
         self.canvas.delete("all")
         self.canvas.dots = []
         self.canvas.elements_on_canvas = {}
+        self.canvas.merge_points = {}
+        self.previously_drawn_circuits = []
+        self.previous_active_unit_numbers = []
+        self.previous_element_numbers = []
             
     def terminate(self):
         """Close the window and, if chosen_circuit is None or its diagram is empty, set chosen_circuit equal to old_circuit."""
