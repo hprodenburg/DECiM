@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains circuit arrangement code, impedance calculations and circuit selection UI code. Last modified 22 April 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains circuit arrangement code, impedance calculations and circuit selection UI code. Last modified 24 April 2024 by Henrik Rodenburg.
 
 Classes:
 Circuit elements:
@@ -8,6 +8,7 @@ Inductor
 ConstantPhaseElement
 WarburgOpen
 WarburgShort
+HavriliakNegami
 GerischerElement
 
 Circuit construction:
@@ -290,37 +291,41 @@ class WarburgShort():
         Returns:
         Complex NumPy array of impedances"""
         return self.S * (1j*frequency*self.l*2*np.pi)**-0.5 * np.tanh((1j*frequency*self.l)**0.5)
-        
-class GerischerElement():
-    def __init__(self, magnitude, m, number, idx, parent_unit):
-        """GerischerElement circuit element.
+
+class HavriliakNegami():
+    def __init__(self, magnitude, m, beta, gamma, number, idx, parent_unit):
+        """HavriliakNegami circuit element.
         
         Init arguments:
         magnitude -- magnitude
-        m -- second parameter
-        number -- number of this element within its specific element type
-        idx -- number of this element's first parameter among all parameters
-        parent_unit -- the lowest level Unit that contains this element
+        m -- timescale
+        beta -- exponent for j*omega*tau
+        gamma -- exponent for denominator
         
         Attributes:
         tag -- identifies the type of element
         G -- magnitude
-        m -- second parameter
+        m -- timescale
         number -- number of this element within its specific element type
         name -- string combining tag and number
-        idx -- number of this element's first parameter among all parameters
-        idx2 -- number of this element's second parameter among all parameters
+        idx -- number of this element's first parameter (magnitude) among all parameters
+        idx2 -- number of this element's second parameter (timescale) among all parameters
+        idx3 -- number of this element's third parameter (beta) among all parameters
+        idx4 -- number of this element's fourth parameter (gamma) among all parameters
         parent_units -- list of Units that contain this object; parent_units[0] is the lowest level Unit that contains it
         
         Methods:
-        Z -- returns the impedance for this element
-        """
-        self.tag = "G"
+        Z -- returns the impedance for this element"""
+        self.tag = "H"
         self.G = magnitude
         self.m = m
+        self.beta = beta
+        self.gamma = gamma
         self.number = number
         self.idx = idx
         self.idx2 = idx + 1
+        self.idx3 = idx + 2
+        self.idx4 = idx + 3
         self.name = self.tag + str(self.number)
         self.parent_units = []
         self.parent_units.append(parent_unit)
@@ -334,7 +339,26 @@ class GerischerElement():
         
         Returns:
         Complex NumPy array of impedances"""
-        return self.G/((self.m + 1j*frequency)**0.5)
+        return self.G/((1 + (1j*frequency*self.m)**self.beta)**self.gamma)
+        
+class GerischerElement(HavriliakNegami):
+    def __init__(self, magnitude, m, number, idx, parent_unit):
+        """GerischerElement circuit element. Special case of HavriliakNegami.
+        
+        Init arguments:
+        magnitude -- magnitude
+        m -- second parameter
+        number -- number of this element within its specific element type
+        idx -- number of this element's first parameter among all parameters
+        parent_unit -- the lowest level Unit that contains this element
+        
+        Attributes:
+        See HavriliakNegami class.
+        
+        Methods:
+        Z -- returns the impedance for this element (inherited from HavriliakNegami)"""
+        super().__init__(magnitude, m, 1, 0.5, number, idx, parent_unit)
+        self.tag = "G"
 
 class Unit():
     def __init__(self, number, arrangement = "series"):
@@ -492,9 +516,28 @@ class Circuit():
         diagram -- Unit describing the complete circuit
         
         Methods:
+        index_cleanup -- make sure the lowest element index is 0
         set_element_values -- match elements' values to those of the fit parameters
         impedance -- compute the circuit's impedance"""
         self.diagram = diagram
+        self.index_cleanup()
+        
+    def index_cleanup(self):
+        """Clean up the indices of the elements' parameters; make sure the lowest one is 0.
+        
+        Arguments:
+        self"""
+        min_index = 99 #The maximum parameter index is 99 for np.zeros(100) as the default parameter array
+        for element in self.diagram.list_elements(): #First determine the lowest index
+            if element.idx < min_index:
+                min_index = element.idx
+        for element in self.diagram.list_elements(): #Then subtract the minimum index
+            element.idx -= min_index
+            if element.tag in "QOSGH":
+                element.idx2 -= min_index
+            if element.tag == "H":
+                element.idx3 -= min_index
+                element.idx4 -= min_index
         
     def set_element_values(self, fitparams):
         """Assign all elements' parameters their values from the fit parameters list. This must be done before the impedance can be computed.
@@ -521,6 +564,11 @@ class Circuit():
             if element.tag == "G":
                 element.G = fitparams[element.idx]
                 element.m = fitparams[element.idx2]
+            if element.tag == "H":
+                element.G = fitparams[element.idx]
+                element.m = fitparams[element.idx2]
+                element.beta = fitparams[element.idx3]
+                element.gamma = fitparams[element.idx4]
 
     def impedance(self, fp, freq):
         """Impedance function for the circuit. This is also where the program check if the standard impedance function self.diagram.Z is being overridden by the custom impedance function ecm.custom_model.
@@ -643,7 +691,7 @@ class PannableCanvas(tk.Canvas): #A canvas that can be panned and zoomed
         self.merge_mode = False
         
         #Drawing method dictionary: associating tags with drawing methods
-        self.draw_methods = {"R": self.draw_resistor, "C": self.draw_capacitor, "L": self.draw_inductor, "Q": self.draw_cpe, "O": self.draw_wopen, "S": self.draw_wshort, "G": self.draw_gerischer}
+        self.draw_methods = {"R": self.draw_resistor, "C": self.draw_capacitor, "L": self.draw_inductor, "Q": self.draw_cpe, "O": self.draw_wopen, "S": self.draw_wshort, "G": self.draw_gerischer, "H": self.draw_havriliak_negami}
         
         #Elements and their positions
         self.elements_on_canvas = {} #Keys are elements, values are coordinates
@@ -841,6 +889,23 @@ class PannableCanvas(tk.Canvas): #A canvas that can be panned and zoomed
         self.draw_box(x, y, linehighlight = highlight)
         self.create_text(x + self.horizontal_text_pad, y + 0.5*self.vertical_text_pad, anchor = self.text_anchor, font = self.font_info, text = " G ", fill = lcol)
         self.create_text(x + self.horizontal_text_pad, y - self.vertical_text_pad, anchor = self.text_anchor, font = self.font_info, text = gerischer_name, fill = lcol)
+        
+    def draw_havriliak_negami(self, x, y, havriliak_negami_name, highlight = False):
+        """Draw a Havriliak-Negami element.
+        
+        Arguments:
+        x -- horizontal coordinate
+        y -- vertical coordinate
+        gerischer_name -- name of element
+        
+        Keyword arguments:
+        highlight -- Boolean, indicates if the lines should have the normal color or the highlight color"""
+        lcol = self.line_colour
+        if highlight:
+            lcol = self.alt_highlight_colour
+        self.draw_box(x, y, linehighlight = highlight)
+        self.create_text(x + self.horizontal_text_pad, y + 0.5*self.vertical_text_pad, anchor = self.text_anchor, font = self.font_info, text = " H ", fill = lcol)
+        self.create_text(x + self.horizontal_text_pad, y - self.vertical_text_pad, anchor = self.text_anchor, font = self.font_info, text = havriliak_negami_name, fill = lcol)
         
     #Drawing functions for connections
     #This depends on the type of connection (series or parallel) and which units the elements belong to. Two functions are needed: one for elements and one for units (merge mode)
@@ -1304,7 +1369,7 @@ class CircuitDefinitionWindow(tk.Toplevel): #The window that is lauched for maki
         
         #Tracking the circuit elements and units
         self.element_idx = 0
-        self.element_numbers = {"R": 0, "C": 0, "L": 0, "Q": 0, "S": 0, "O": 0, "G": 0, "U": 0}
+        self.element_numbers = {"R": 0, "C": 0, "L": 0, "Q": 0, "S": 0, "O": 0, "G": 0, "H": 0, "U": 0}
             
         #Create a frame for the buttons and for the canvas
         self.buttonframe = tk.Frame(self)
@@ -1317,7 +1382,7 @@ class CircuitDefinitionWindow(tk.Toplevel): #The window that is lauched for maki
         self.canvas.pack(side = tk.TOP, anchor = tk.W)
         
         #New elements to choose from
-        self.new_elements = ["R: Resistor", "C: Capacitor", "L: Inductor", "Q: Constant Phase Element", "O: Warburg Open", "S: Warburg Short", "G: Gerischer Element"]
+        self.new_elements = ["R: Resistor", "C: Capacitor", "L: Inductor", "Q: Constant Phase Element", "O: Warburg Open", "S: Warburg Short", "G: Gerischer Element", "H: Havriliak-Negami Element"]
         
         #Indicate the current drawing mode
         self.active_mode = tk.StringVar()
@@ -1432,6 +1497,9 @@ class CircuitDefinitionWindow(tk.Toplevel): #The window that is lauched for maki
         if self.chosen_element.get()[0] == "G":
             new_element = GerischerElement(1, 1e-12, self.element_numbers["G"], self.element_idx, self.active_unit)
             self.element_idx += 2
+        if self.chosen_element.get()[0] == "H":
+            new_element = HavriliakNegami(1, 1e-12, 1, 1, self.element_numbers["H"], self.element_idx, self.active_unit)
+            self.element_idx += 4
         self.element_numbers[self.chosen_element.get()[0]] += 1
         self.active_unit.add_element(new_element)
             

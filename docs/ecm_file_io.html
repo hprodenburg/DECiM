@@ -1,14 +1,15 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html><head><title>Python: module ecm_file_io</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-</head><body bgcolor="#f0f0f8">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python: module ecm_file_io</title>
+</head><body>
 
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
-<tr bgcolor="#7799ee">
-<td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>ecm_file_io</strong></big></big></font></td
-></tr></table>
-    <p><tt>Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;all&nbsp;functions&nbsp;related&nbsp;to&nbsp;file&nbsp;I/O.&nbsp;Last&nbsp;modified&nbsp;18&nbsp;March&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+<table class="heading">
+<tr class="heading-text decor">
+<td class="title">&nbsp;<br><strong class="title">ecm_file_io</strong></td>
+</tr></table>
+    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;all&nbsp;functions&nbsp;related&nbsp;to&nbsp;file&nbsp;I/O.&nbsp;Last&nbsp;modified&nbsp;24&nbsp;April&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
 &nbsp;<br>
 Classes:<br>
 <a href="#DataSpecificationFile">DataSpecificationFile</a>&nbsp;--&nbsp;settings&nbsp;file&nbsp;that&nbsp;holds&nbsp;information&nbsp;about&nbsp;data&nbsp;file&nbsp;layout.<br>
@@ -20,55 +21,52 @@ parseCircuitString&nbsp;--&nbsp;parse&nbsp;a&nbsp;circuit&nbsp;string,&nbsp;retu
 assignIndicesAndValues&nbsp;--&nbsp;correct&nbsp;the&nbsp;indices&nbsp;and&nbsp;values&nbsp;obtained&nbsp;from&nbsp;a&nbsp;result&nbsp;(.recm2)&nbsp;file<br>
 parseResult&nbsp;--&nbsp;parse&nbsp;an&nbsp;RECM2&nbsp;file,&nbsp;return&nbsp;a&nbsp;Circuit,&nbsp;measured&nbsp;dataSet&nbsp;and&nbsp;list&nbsp;of&nbsp;model&nbsp;parameters<br>
 createResultFile&nbsp;--&nbsp;create&nbsp;an&nbsp;RECM2&nbsp;file&nbsp;based&nbsp;on&nbsp;the&nbsp;current&nbsp;data&nbsp;and&nbsp;model<br>
-parseCircuitPresets&nbsp;--&nbsp;validate&nbsp;the&nbsp;circuit&nbsp;definitions&nbsp;in&nbsp;the&nbsp;circuit&nbsp;presets&nbsp;(ecm_presets.decim_circuits)&nbsp;file,&nbsp;return&nbsp;a&nbsp;list&nbsp;with&nbsp;correct&nbsp;circuit&nbsp;strings</tt></p>
+parseCircuitPresets&nbsp;--&nbsp;validate&nbsp;the&nbsp;circuit&nbsp;definitions&nbsp;in&nbsp;the&nbsp;circuit&nbsp;presets&nbsp;(ecm_presets.decim_circuits)&nbsp;file,&nbsp;return&nbsp;a&nbsp;list&nbsp;with&nbsp;correct&nbsp;circuit&nbsp;strings</span></p>
 <p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#aa55cc">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+<table class="section">
+<tr class="decor pkg-content-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Modules</strong></td></tr>
     
-<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="copy.html">copy</a><br>
+<tr><td class="decor pkg-content-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><table><tr><td class="multicolumn"><a href="copy.html">copy</a><br>
 <a href="ecm_custom_models.html">ecm_custom_models</a><br>
-</td><td width="25%" valign=top><a href="tkinter.filedialog.html">tkinter.filedialog</a><br>
+</td><td class="multicolumn"><a href="tkinter.filedialog.html">tkinter.filedialog</a><br>
 <a href="numpy.html">numpy</a><br>
-</td><td width="25%" valign=top><a href="tkinter.simpledialog.html">tkinter.simpledialog</a><br>
+</td><td class="multicolumn"><a href="tkinter.simpledialog.html">tkinter.simpledialog</a><br>
 <a href="tkinter.html">tkinter</a><br>
-</td><td width="25%" valign=top><a href="tkinter.ttk.html">tkinter.ttk</a><br>
+</td><td class="multicolumn"><a href="tkinter.ttk.html">tkinter.ttk</a><br>
 </td></tr></table></td></tr></table><p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#ee77aa">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+<table class="section">
+<tr class="decor index-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Classes</strong></td></tr>
     
-<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl>
-<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
-</font></dt><dd>
+<tr><td class="decor index-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><dl>
+<dt class="heading-text"><a href="builtins.html#object">builtins.object</a>
+</dt><dd>
 <dl>
-<dt><font face="helvetica, arial"><a href="ecm_file_io.html#DataSpecificationFile">DataSpecificationFile</a>
-</font></dt></dl>
+<dt class="heading-text"><a href="ecm_file_io.html#DataSpecificationFile">DataSpecificationFile</a>
+</dt></dl>
 </dd>
-<dt><font face="helvetica, arial"><a href="tkinter.html#Toplevel">tkinter.Toplevel</a>(<a href="tkinter.html#BaseWidget">tkinter.BaseWidget</a>, <a href="tkinter.html#Wm">tkinter.Wm</a>)
-</font></dt><dd>
+<dt class="heading-text"><a href="tkinter.html#Toplevel">tkinter.Toplevel</a>(<a href="tkinter.html#BaseWidget">tkinter.BaseWidget</a>, <a href="tkinter.html#Wm">tkinter.Wm</a>)
+</dt><dd>
 <dl>
-<dt><font face="helvetica, arial"><a href="ecm_file_io.html#DataSpecificationWindow">DataSpecificationWindow</a>
-</font></dt></dl>
+<dt class="heading-text"><a href="ecm_file_io.html#DataSpecificationWindow">DataSpecificationWindow</a>
+</dt></dl>
 </dd>
 </dl>
  <p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#ffc8d8">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="DataSpecificationFile">class <strong>DataSpecificationFile</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="DataSpecificationFile">class <strong>DataSpecificationFile</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt><a href="#DataSpecificationFile">DataSpecificationFile</a>(filename)<br>
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#DataSpecificationFile">DataSpecificationFile</a>(filename)<br>
 &nbsp;<br>
-<br>&nbsp;</tt></td></tr>
+<br>&nbsp;</span></td></tr>
 <tr><td>&nbsp;</td>
-<td width="100%">Methods defined here:<br>
-<dl><dt><a name="DataSpecificationFile-__init__"><strong>__init__</strong></a>(self, filename)</dt><dd><tt>Settings&nbsp;file&nbsp;that&nbsp;specifies&nbsp;the&nbsp;layout&nbsp;of&nbsp;data&nbsp;(.txt,&nbsp;.csv,&nbsp;...)&nbsp;files.<br>
+<td class="singlecolumn">Methods defined here:<br>
+<dl><dt><a name="DataSpecificationFile-__init__"><strong>__init__</strong></a>(self, filename)</dt><dd><span class="code">Settings&nbsp;file&nbsp;that&nbsp;specifies&nbsp;the&nbsp;layout&nbsp;of&nbsp;data&nbsp;(.txt,&nbsp;.csv,&nbsp;...)&nbsp;files.<br>
 &nbsp;<br>
 Init&nbsp;arguments:<br>
 filename&nbsp;--&nbsp;name&nbsp;of&nbsp;the&nbsp;data&nbsp;specification&nbsp;file<br>
@@ -79,32 +77,31 @@ columns&nbsp;--&nbsp;list&nbsp;containing&nbsp;the&nbsp;column&nbsp;data&nbsp;ty
 &nbsp;<br>
 Methods:<br>
 read&nbsp;--&nbsp;read&nbsp;the&nbsp;data&nbsp;specification&nbsp;file&nbsp;and&nbsp;save&nbsp;its&nbsp;contents&nbsp;to&nbsp;self.<strong>columns</strong><br>
-write&nbsp;--&nbsp;write&nbsp;the&nbsp;information&nbsp;in&nbsp;the&nbsp;columns&nbsp;list&nbsp;to&nbsp;the&nbsp;data&nbsp;specification&nbsp;file</tt></dd></dl>
+write&nbsp;--&nbsp;write&nbsp;the&nbsp;information&nbsp;in&nbsp;the&nbsp;columns&nbsp;list&nbsp;to&nbsp;the&nbsp;data&nbsp;specification&nbsp;file</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationFile-read"><strong>read</strong></a>(self)</dt><dd><tt>Read&nbsp;the&nbsp;settings&nbsp;file&nbsp;and&nbsp;save&nbsp;its&nbsp;contents&nbsp;to&nbsp;self.<strong>columns</strong>.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationFile-read"><strong>read</strong></a>(self)</dt><dd><span class="code">Read&nbsp;the&nbsp;settings&nbsp;file&nbsp;and&nbsp;save&nbsp;its&nbsp;contents&nbsp;to&nbsp;self.<strong>columns</strong>.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationFile-write"><strong>write</strong></a>(self)</dt><dd><tt>Write&nbsp;self.<strong>columns</strong>&nbsp;to&nbsp;the&nbsp;settings&nbsp;file.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationFile-write"><strong>write</strong></a>(self)</dt><dd><span class="code">Write&nbsp;self.<strong>columns</strong>&nbsp;to&nbsp;the&nbsp;settings&nbsp;file.</span></dd></dl>
 
 <hr>
 Data descriptors defined here:<br>
 <dl><dt><strong>__dict__</strong></dt>
-<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
 </dl>
 <dl><dt><strong>__weakref__</strong></dt>
-<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
 </dl>
 </td></tr></table> <p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#ffc8d8">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="DataSpecificationWindow">class <strong>DataSpecificationWindow</strong></a>(<a href="tkinter.html#Toplevel">tkinter.Toplevel</a>)</font></td></tr>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="DataSpecificationWindow">class <strong>DataSpecificationWindow</strong></a>(<a href="tkinter.html#Toplevel">tkinter.Toplevel</a>)</td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt><a href="#DataSpecificationWindow">DataSpecificationWindow</a>(dataspec_filename)<br>
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#DataSpecificationWindow">DataSpecificationWindow</a>(dataspec_filename)<br>
 &nbsp;<br>
-<br>&nbsp;</tt></td></tr>
+<br>&nbsp;</span></td></tr>
 <tr><td>&nbsp;</td>
-<td width="100%"><dl><dt>Method resolution order:</dt>
+<td class="singlecolumn"><dl><dt>Method resolution order:</dt>
 <dd><a href="ecm_file_io.html#DataSpecificationWindow">DataSpecificationWindow</a></dd>
 <dd><a href="tkinter.html#Toplevel">tkinter.Toplevel</a></dd>
 <dd><a href="tkinter.html#BaseWidget">tkinter.BaseWidget</a></dd>
@@ -114,7 +111,7 @@ Data descriptors defined here:<br>
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="DataSpecificationWindow-__init__"><strong>__init__</strong></a>(self, dataspec_filename)</dt><dd><tt>Datafile&nbsp;specification&nbsp;window.&nbsp;Here,&nbsp;you&nbsp;can&nbsp;indicate&nbsp;which&nbsp;column&nbsp;of&nbsp;your&nbsp;.txt&nbsp;or&nbsp;.csv&nbsp;file&nbsp;contains&nbsp;which&nbsp;dimension&nbsp;of&nbsp;the&nbsp;impedance&nbsp;spectrum.<br>
+<dl><dt><a name="DataSpecificationWindow-__init__"><strong>__init__</strong></a>(self, dataspec_filename)</dt><dd><span class="code">Datafile&nbsp;specification&nbsp;window.&nbsp;Here,&nbsp;you&nbsp;can&nbsp;indicate&nbsp;which&nbsp;column&nbsp;of&nbsp;your&nbsp;.txt&nbsp;or&nbsp;.csv&nbsp;file&nbsp;contains&nbsp;which&nbsp;dimension&nbsp;of&nbsp;the&nbsp;impedance&nbsp;spectrum.<br>
 &nbsp;<br>
 Init&nbsp;arguments:<br>
 dataspec_filename&nbsp;--&nbsp;Name&nbsp;of&nbsp;the&nbsp;data&nbsp;specification&nbsp;file.&nbsp;Default:&nbsp;ecm_datafiles.decim_specification<br>
@@ -129,51 +126,51 @@ tags&nbsp;--&nbsp;Dictionary,&nbsp;converts&nbsp;names&nbsp;shown&nbsp;to&nbsp;t
 &nbsp;<br>
 Methods:<br>
 make_UI&nbsp;--&nbsp;make&nbsp;the&nbsp;UI<br>
-save_and_exit&nbsp;--&nbsp;write&nbsp;the&nbsp;chosen&nbsp;data&nbsp;types&nbsp;to&nbsp;the&nbsp;data&nbsp;specification&nbsp;file&nbsp;and&nbsp;close&nbsp;the&nbsp;toplevel&nbsp;window.</tt></dd></dl>
+save_and_exit&nbsp;--&nbsp;write&nbsp;the&nbsp;chosen&nbsp;data&nbsp;types&nbsp;to&nbsp;the&nbsp;data&nbsp;specification&nbsp;file&nbsp;and&nbsp;close&nbsp;the&nbsp;toplevel&nbsp;window.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-make_UI"><strong>make_UI</strong></a>(self)</dt><dd><tt>Make&nbsp;frames&nbsp;for&nbsp;the&nbsp;tk.OptionMenus&nbsp;and&nbsp;labels&nbsp;and&nbsp;pack&nbsp;them.&nbsp;Also&nbsp;make&nbsp;and&nbsp;pack&nbsp;the&nbsp;button&nbsp;to&nbsp;save&nbsp;and&nbsp;exit.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-make_UI"><strong>make_UI</strong></a>(self)</dt><dd><span class="code">Make&nbsp;frames&nbsp;for&nbsp;the&nbsp;tk.OptionMenus&nbsp;and&nbsp;labels&nbsp;and&nbsp;pack&nbsp;them.&nbsp;Also&nbsp;make&nbsp;and&nbsp;pack&nbsp;the&nbsp;button&nbsp;to&nbsp;save&nbsp;and&nbsp;exit.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-save_and_exit"><strong>save_and_exit</strong></a>(self)</dt><dd><tt>Write&nbsp;the&nbsp;file&nbsp;layout&nbsp;to&nbsp;the&nbsp;data&nbsp;specification&nbsp;file&nbsp;and&nbsp;close&nbsp;the&nbsp;toplevel&nbsp;window.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-save_and_exit"><strong>save_and_exit</strong></a>(self)</dt><dd><span class="code">Write&nbsp;the&nbsp;file&nbsp;layout&nbsp;to&nbsp;the&nbsp;data&nbsp;specification&nbsp;file&nbsp;and&nbsp;close&nbsp;the&nbsp;toplevel&nbsp;window.</span></dd></dl>
 
 <hr>
 Methods inherited from <a href="tkinter.html#BaseWidget">tkinter.BaseWidget</a>:<br>
-<dl><dt><a name="DataSpecificationWindow-destroy"><strong>destroy</strong></a>(self)</dt><dd><tt>Destroy&nbsp;this&nbsp;and&nbsp;all&nbsp;descendants&nbsp;widgets.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-destroy"><strong>destroy</strong></a>(self)</dt><dd><span class="code">Destroy&nbsp;this&nbsp;and&nbsp;all&nbsp;descendants&nbsp;widgets.</span></dd></dl>
 
 <hr>
 Methods inherited from <a href="tkinter.html#Misc">tkinter.Misc</a>:<br>
 <dl><dt><a name="DataSpecificationWindow-__getitem__"><strong>__getitem__</strong></a> = <a href="#DataSpecificationWindow-cget">cget</a>(self, key)</dt></dl>
 
-<dl><dt><a name="DataSpecificationWindow-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><span class="code">Return&nbsp;repr(self).</span></dd></dl>
 
 <dl><dt><a name="DataSpecificationWindow-__setitem__"><strong>__setitem__</strong></a>(self, key, value)</dt></dl>
 
-<dl><dt><a name="DataSpecificationWindow-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;window&nbsp;path&nbsp;name&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-__str__"><strong>__str__</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;window&nbsp;path&nbsp;name&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-after"><strong>after</strong></a>(self, ms, func=None, *args)</dt><dd><tt>Call&nbsp;function&nbsp;once&nbsp;after&nbsp;given&nbsp;time.<br>
+<dl><dt><a name="DataSpecificationWindow-after"><strong>after</strong></a>(self, ms, func=None, *args)</dt><dd><span class="code">Call&nbsp;function&nbsp;once&nbsp;after&nbsp;given&nbsp;time.<br>
 &nbsp;<br>
 MS&nbsp;specifies&nbsp;the&nbsp;time&nbsp;in&nbsp;milliseconds.&nbsp;FUNC&nbsp;gives&nbsp;the<br>
 function&nbsp;which&nbsp;shall&nbsp;be&nbsp;called.&nbsp;Additional&nbsp;parameters<br>
 are&nbsp;given&nbsp;as&nbsp;parameters&nbsp;to&nbsp;the&nbsp;function&nbsp;call.&nbsp;&nbsp;Return<br>
-identifier&nbsp;to&nbsp;cancel&nbsp;scheduling&nbsp;with&nbsp;after_cancel.</tt></dd></dl>
+identifier&nbsp;to&nbsp;cancel&nbsp;scheduling&nbsp;with&nbsp;after_cancel.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-after_cancel"><strong>after_cancel</strong></a>(self, id)</dt><dd><tt>Cancel&nbsp;scheduling&nbsp;of&nbsp;function&nbsp;identified&nbsp;with&nbsp;ID.<br>
+<dl><dt><a name="DataSpecificationWindow-after_cancel"><strong>after_cancel</strong></a>(self, id)</dt><dd><span class="code">Cancel&nbsp;scheduling&nbsp;of&nbsp;function&nbsp;identified&nbsp;with&nbsp;ID.<br>
 &nbsp;<br>
 Identifier&nbsp;returned&nbsp;by&nbsp;after&nbsp;or&nbsp;after_idle&nbsp;must&nbsp;be<br>
-given&nbsp;as&nbsp;first&nbsp;parameter.</tt></dd></dl>
+given&nbsp;as&nbsp;first&nbsp;parameter.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-after_idle"><strong>after_idle</strong></a>(self, func, *args)</dt><dd><tt>Call&nbsp;FUNC&nbsp;once&nbsp;if&nbsp;the&nbsp;Tcl&nbsp;main&nbsp;loop&nbsp;has&nbsp;no&nbsp;event&nbsp;to<br>
+<dl><dt><a name="DataSpecificationWindow-after_idle"><strong>after_idle</strong></a>(self, func, *args)</dt><dd><span class="code">Call&nbsp;FUNC&nbsp;once&nbsp;if&nbsp;the&nbsp;Tcl&nbsp;main&nbsp;loop&nbsp;has&nbsp;no&nbsp;event&nbsp;to<br>
 process.<br>
 &nbsp;<br>
 Return&nbsp;an&nbsp;identifier&nbsp;to&nbsp;cancel&nbsp;the&nbsp;scheduling&nbsp;with<br>
-after_cancel.</tt></dd></dl>
+after_cancel.</span></dd></dl>
 
 <dl><dt><a name="DataSpecificationWindow-anchor"><strong>anchor</strong></a> = <a href="#DataSpecificationWindow-grid_anchor">grid_anchor</a>(self, anchor=None)</dt></dl>
 
 <dl><dt><a name="DataSpecificationWindow-bbox"><strong>bbox</strong></a> = <a href="#DataSpecificationWindow-grid_bbox">grid_bbox</a>(self, column=None, row=None, col2=None, row2=None)</dt></dl>
 
-<dl><dt><a name="DataSpecificationWindow-bell"><strong>bell</strong></a>(self, displayof=0)</dt><dd><tt>Ring&nbsp;a&nbsp;display's&nbsp;bell.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-bell"><strong>bell</strong></a>(self, displayof=0)</dt><dd><span class="code">Ring&nbsp;a&nbsp;display's&nbsp;bell.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-bind"><strong>bind</strong></a>(self, sequence=None, func=None, add=None)</dt><dd><tt>Bind&nbsp;to&nbsp;this&nbsp;widget&nbsp;at&nbsp;event&nbsp;SEQUENCE&nbsp;a&nbsp;call&nbsp;to&nbsp;function&nbsp;FUNC.<br>
+<dl><dt><a name="DataSpecificationWindow-bind"><strong>bind</strong></a>(self, sequence=None, func=None, add=None)</dt><dd><span class="code">Bind&nbsp;to&nbsp;this&nbsp;widget&nbsp;at&nbsp;event&nbsp;SEQUENCE&nbsp;a&nbsp;call&nbsp;to&nbsp;function&nbsp;FUNC.<br>
 &nbsp;<br>
 SEQUENCE&nbsp;is&nbsp;a&nbsp;string&nbsp;of&nbsp;concatenated&nbsp;event<br>
 patterns.&nbsp;An&nbsp;event&nbsp;pattern&nbsp;is&nbsp;of&nbsp;the&nbsp;form<br>
@@ -209,41 +206,41 @@ Bind&nbsp;will&nbsp;return&nbsp;an&nbsp;identifier&nbsp;to&nbsp;allow&nbsp;delet
 unbind&nbsp;without&nbsp;memory&nbsp;leak.<br>
 &nbsp;<br>
 If&nbsp;FUNC&nbsp;or&nbsp;SEQUENCE&nbsp;is&nbsp;omitted&nbsp;the&nbsp;bound&nbsp;function&nbsp;or&nbsp;list<br>
-of&nbsp;bound&nbsp;events&nbsp;are&nbsp;returned.</tt></dd></dl>
+of&nbsp;bound&nbsp;events&nbsp;are&nbsp;returned.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-bind_all"><strong>bind_all</strong></a>(self, sequence=None, func=None, add=None)</dt><dd><tt>Bind&nbsp;to&nbsp;all&nbsp;widgets&nbsp;at&nbsp;an&nbsp;event&nbsp;SEQUENCE&nbsp;a&nbsp;call&nbsp;to&nbsp;function&nbsp;FUNC.<br>
+<dl><dt><a name="DataSpecificationWindow-bind_all"><strong>bind_all</strong></a>(self, sequence=None, func=None, add=None)</dt><dd><span class="code">Bind&nbsp;to&nbsp;all&nbsp;widgets&nbsp;at&nbsp;an&nbsp;event&nbsp;SEQUENCE&nbsp;a&nbsp;call&nbsp;to&nbsp;function&nbsp;FUNC.<br>
 An&nbsp;additional&nbsp;boolean&nbsp;parameter&nbsp;ADD&nbsp;specifies&nbsp;whether&nbsp;FUNC&nbsp;will<br>
 be&nbsp;called&nbsp;additionally&nbsp;to&nbsp;the&nbsp;other&nbsp;bound&nbsp;function&nbsp;or&nbsp;whether<br>
-it&nbsp;will&nbsp;replace&nbsp;the&nbsp;previous&nbsp;function.&nbsp;See&nbsp;bind&nbsp;for&nbsp;the&nbsp;return&nbsp;value.</tt></dd></dl>
+it&nbsp;will&nbsp;replace&nbsp;the&nbsp;previous&nbsp;function.&nbsp;See&nbsp;bind&nbsp;for&nbsp;the&nbsp;return&nbsp;value.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-bind_class"><strong>bind_class</strong></a>(self, className, sequence=None, func=None, add=None)</dt><dd><tt>Bind&nbsp;to&nbsp;widgets&nbsp;with&nbsp;bindtag&nbsp;CLASSNAME&nbsp;at&nbsp;event<br>
+<dl><dt><a name="DataSpecificationWindow-bind_class"><strong>bind_class</strong></a>(self, className, sequence=None, func=None, add=None)</dt><dd><span class="code">Bind&nbsp;to&nbsp;widgets&nbsp;with&nbsp;bindtag&nbsp;CLASSNAME&nbsp;at&nbsp;event<br>
 SEQUENCE&nbsp;a&nbsp;call&nbsp;of&nbsp;function&nbsp;FUNC.&nbsp;An&nbsp;additional<br>
 boolean&nbsp;parameter&nbsp;ADD&nbsp;specifies&nbsp;whether&nbsp;FUNC&nbsp;will&nbsp;be<br>
 called&nbsp;additionally&nbsp;to&nbsp;the&nbsp;other&nbsp;bound&nbsp;function&nbsp;or<br>
 whether&nbsp;it&nbsp;will&nbsp;replace&nbsp;the&nbsp;previous&nbsp;function.&nbsp;See&nbsp;bind&nbsp;for<br>
-the&nbsp;return&nbsp;value.</tt></dd></dl>
+the&nbsp;return&nbsp;value.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-bindtags"><strong>bindtags</strong></a>(self, tagList=None)</dt><dd><tt>Set&nbsp;or&nbsp;get&nbsp;the&nbsp;list&nbsp;of&nbsp;bindtags&nbsp;for&nbsp;this&nbsp;widget.<br>
+<dl><dt><a name="DataSpecificationWindow-bindtags"><strong>bindtags</strong></a>(self, tagList=None)</dt><dd><span class="code">Set&nbsp;or&nbsp;get&nbsp;the&nbsp;list&nbsp;of&nbsp;bindtags&nbsp;for&nbsp;this&nbsp;widget.<br>
 &nbsp;<br>
 With&nbsp;no&nbsp;argument&nbsp;return&nbsp;the&nbsp;list&nbsp;of&nbsp;all&nbsp;bindtags&nbsp;associated&nbsp;with<br>
 this&nbsp;widget.&nbsp;With&nbsp;a&nbsp;list&nbsp;of&nbsp;strings&nbsp;as&nbsp;argument&nbsp;the&nbsp;bindtags&nbsp;are<br>
 set&nbsp;to&nbsp;this&nbsp;list.&nbsp;The&nbsp;bindtags&nbsp;determine&nbsp;in&nbsp;which&nbsp;order&nbsp;events&nbsp;are<br>
-processed&nbsp;(see&nbsp;bind).</tt></dd></dl>
+processed&nbsp;(see&nbsp;bind).</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-cget"><strong>cget</strong></a>(self, key)</dt><dd><tt>Return&nbsp;the&nbsp;resource&nbsp;value&nbsp;for&nbsp;a&nbsp;KEY&nbsp;given&nbsp;as&nbsp;string.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-cget"><strong>cget</strong></a>(self, key)</dt><dd><span class="code">Return&nbsp;the&nbsp;resource&nbsp;value&nbsp;for&nbsp;a&nbsp;KEY&nbsp;given&nbsp;as&nbsp;string.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-clipboard_append"><strong>clipboard_append</strong></a>(self, string, **kw)</dt><dd><tt>Append&nbsp;STRING&nbsp;to&nbsp;the&nbsp;Tk&nbsp;clipboard.<br>
+<dl><dt><a name="DataSpecificationWindow-clipboard_append"><strong>clipboard_append</strong></a>(self, string, **kw)</dt><dd><span class="code">Append&nbsp;STRING&nbsp;to&nbsp;the&nbsp;Tk&nbsp;clipboard.<br>
 &nbsp;<br>
 A&nbsp;widget&nbsp;specified&nbsp;at&nbsp;the&nbsp;optional&nbsp;displayof&nbsp;keyword<br>
 argument&nbsp;specifies&nbsp;the&nbsp;target&nbsp;display.&nbsp;The&nbsp;clipboard<br>
-can&nbsp;be&nbsp;retrieved&nbsp;with&nbsp;selection_get.</tt></dd></dl>
+can&nbsp;be&nbsp;retrieved&nbsp;with&nbsp;selection_get.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-clipboard_clear"><strong>clipboard_clear</strong></a>(self, **kw)</dt><dd><tt>Clear&nbsp;the&nbsp;data&nbsp;in&nbsp;the&nbsp;Tk&nbsp;clipboard.<br>
+<dl><dt><a name="DataSpecificationWindow-clipboard_clear"><strong>clipboard_clear</strong></a>(self, **kw)</dt><dd><span class="code">Clear&nbsp;the&nbsp;data&nbsp;in&nbsp;the&nbsp;Tk&nbsp;clipboard.<br>
 &nbsp;<br>
 A&nbsp;widget&nbsp;specified&nbsp;for&nbsp;the&nbsp;optional&nbsp;displayof&nbsp;keyword<br>
-argument&nbsp;specifies&nbsp;the&nbsp;target&nbsp;display.</tt></dd></dl>
+argument&nbsp;specifies&nbsp;the&nbsp;target&nbsp;display.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-clipboard_get"><strong>clipboard_get</strong></a>(self, **kw)</dt><dd><tt>Retrieve&nbsp;data&nbsp;from&nbsp;the&nbsp;clipboard&nbsp;on&nbsp;window's&nbsp;display.<br>
+<dl><dt><a name="DataSpecificationWindow-clipboard_get"><strong>clipboard_get</strong></a>(self, **kw)</dt><dd><span class="code">Retrieve&nbsp;data&nbsp;from&nbsp;the&nbsp;clipboard&nbsp;on&nbsp;window's&nbsp;display.<br>
 &nbsp;<br>
 The&nbsp;window&nbsp;keyword&nbsp;defaults&nbsp;to&nbsp;the&nbsp;root&nbsp;window&nbsp;of&nbsp;the&nbsp;Tkinter<br>
 application.<br>
@@ -255,95 +252,95 @@ is&nbsp;to&nbsp;try&nbsp;UTF8_STRING&nbsp;and&nbsp;fall&nbsp;back&nbsp;to&nbsp;S
 &nbsp;<br>
 This&nbsp;command&nbsp;is&nbsp;equivalent&nbsp;to:<br>
 &nbsp;<br>
-<a href="#DataSpecificationWindow-selection_get">selection_get</a>(CLIPBOARD)</tt></dd></dl>
+<a href="#DataSpecificationWindow-selection_get">selection_get</a>(CLIPBOARD)</span></dd></dl>
 
 <dl><dt><a name="DataSpecificationWindow-columnconfigure"><strong>columnconfigure</strong></a> = <a href="#DataSpecificationWindow-grid_columnconfigure">grid_columnconfigure</a>(self, index, cnf={}, **kw)</dt></dl>
 
 <dl><dt><a name="DataSpecificationWindow-config"><strong>config</strong></a> = <a href="#DataSpecificationWindow-configure">configure</a>(self, cnf=None, **kw)</dt></dl>
 
-<dl><dt><a name="DataSpecificationWindow-configure"><strong>configure</strong></a>(self, cnf=None, **kw)</dt><dd><tt>Configure&nbsp;resources&nbsp;of&nbsp;a&nbsp;widget.<br>
+<dl><dt><a name="DataSpecificationWindow-configure"><strong>configure</strong></a>(self, cnf=None, **kw)</dt><dd><span class="code">Configure&nbsp;resources&nbsp;of&nbsp;a&nbsp;widget.<br>
 &nbsp;<br>
 The&nbsp;values&nbsp;for&nbsp;resources&nbsp;are&nbsp;specified&nbsp;as&nbsp;keyword<br>
 arguments.&nbsp;To&nbsp;get&nbsp;an&nbsp;overview&nbsp;about<br>
-the&nbsp;allowed&nbsp;keyword&nbsp;arguments&nbsp;call&nbsp;the&nbsp;method&nbsp;keys.</tt></dd></dl>
+the&nbsp;allowed&nbsp;keyword&nbsp;arguments&nbsp;call&nbsp;the&nbsp;method&nbsp;keys.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-deletecommand"><strong>deletecommand</strong></a>(self, name)</dt><dd><tt>Internal&nbsp;function.<br>
+<dl><dt><a name="DataSpecificationWindow-deletecommand"><strong>deletecommand</strong></a>(self, name)</dt><dd><span class="code">Internal&nbsp;function.<br>
 &nbsp;<br>
-Delete&nbsp;the&nbsp;Tcl&nbsp;command&nbsp;provided&nbsp;in&nbsp;NAME.</tt></dd></dl>
+Delete&nbsp;the&nbsp;Tcl&nbsp;command&nbsp;provided&nbsp;in&nbsp;NAME.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-event_add"><strong>event_add</strong></a>(self, virtual, *sequences)</dt><dd><tt>Bind&nbsp;a&nbsp;virtual&nbsp;event&nbsp;VIRTUAL&nbsp;(of&nbsp;the&nbsp;form&nbsp;&lt;&lt;Name&gt;&gt;)<br>
+<dl><dt><a name="DataSpecificationWindow-event_add"><strong>event_add</strong></a>(self, virtual, *sequences)</dt><dd><span class="code">Bind&nbsp;a&nbsp;virtual&nbsp;event&nbsp;VIRTUAL&nbsp;(of&nbsp;the&nbsp;form&nbsp;&lt;&lt;Name&gt;&gt;)<br>
 to&nbsp;an&nbsp;event&nbsp;SEQUENCE&nbsp;such&nbsp;that&nbsp;the&nbsp;virtual&nbsp;event&nbsp;is&nbsp;triggered<br>
-whenever&nbsp;SEQUENCE&nbsp;occurs.</tt></dd></dl>
+whenever&nbsp;SEQUENCE&nbsp;occurs.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-event_delete"><strong>event_delete</strong></a>(self, virtual, *sequences)</dt><dd><tt>Unbind&nbsp;a&nbsp;virtual&nbsp;event&nbsp;VIRTUAL&nbsp;from&nbsp;SEQUENCE.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-event_delete"><strong>event_delete</strong></a>(self, virtual, *sequences)</dt><dd><span class="code">Unbind&nbsp;a&nbsp;virtual&nbsp;event&nbsp;VIRTUAL&nbsp;from&nbsp;SEQUENCE.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-event_generate"><strong>event_generate</strong></a>(self, sequence, **kw)</dt><dd><tt>Generate&nbsp;an&nbsp;event&nbsp;SEQUENCE.&nbsp;Additional<br>
+<dl><dt><a name="DataSpecificationWindow-event_generate"><strong>event_generate</strong></a>(self, sequence, **kw)</dt><dd><span class="code">Generate&nbsp;an&nbsp;event&nbsp;SEQUENCE.&nbsp;Additional<br>
 keyword&nbsp;arguments&nbsp;specify&nbsp;parameter&nbsp;of&nbsp;the&nbsp;event<br>
-(e.g.&nbsp;x,&nbsp;y,&nbsp;rootx,&nbsp;rooty).</tt></dd></dl>
+(e.g.&nbsp;x,&nbsp;y,&nbsp;rootx,&nbsp;rooty).</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-event_info"><strong>event_info</strong></a>(self, virtual=None)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;virtual&nbsp;events&nbsp;or&nbsp;the&nbsp;information<br>
-about&nbsp;the&nbsp;SEQUENCE&nbsp;bound&nbsp;to&nbsp;the&nbsp;virtual&nbsp;event&nbsp;VIRTUAL.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-event_info"><strong>event_info</strong></a>(self, virtual=None)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;virtual&nbsp;events&nbsp;or&nbsp;the&nbsp;information<br>
+about&nbsp;the&nbsp;SEQUENCE&nbsp;bound&nbsp;to&nbsp;the&nbsp;virtual&nbsp;event&nbsp;VIRTUAL.</span></dd></dl>
 
 <dl><dt><a name="DataSpecificationWindow-focus"><strong>focus</strong></a> = <a href="#DataSpecificationWindow-focus_set">focus_set</a>(self)</dt></dl>
 
-<dl><dt><a name="DataSpecificationWindow-focus_displayof"><strong>focus_displayof</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;widget&nbsp;which&nbsp;has&nbsp;currently&nbsp;the&nbsp;focus&nbsp;on&nbsp;the<br>
+<dl><dt><a name="DataSpecificationWindow-focus_displayof"><strong>focus_displayof</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;widget&nbsp;which&nbsp;has&nbsp;currently&nbsp;the&nbsp;focus&nbsp;on&nbsp;the<br>
 display&nbsp;where&nbsp;this&nbsp;widget&nbsp;is&nbsp;located.<br>
 &nbsp;<br>
-Return&nbsp;None&nbsp;if&nbsp;the&nbsp;application&nbsp;does&nbsp;not&nbsp;have&nbsp;the&nbsp;focus.</tt></dd></dl>
+Return&nbsp;None&nbsp;if&nbsp;the&nbsp;application&nbsp;does&nbsp;not&nbsp;have&nbsp;the&nbsp;focus.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-focus_force"><strong>focus_force</strong></a>(self)</dt><dd><tt>Direct&nbsp;input&nbsp;focus&nbsp;to&nbsp;this&nbsp;widget&nbsp;even&nbsp;if&nbsp;the<br>
+<dl><dt><a name="DataSpecificationWindow-focus_force"><strong>focus_force</strong></a>(self)</dt><dd><span class="code">Direct&nbsp;input&nbsp;focus&nbsp;to&nbsp;this&nbsp;widget&nbsp;even&nbsp;if&nbsp;the<br>
 application&nbsp;does&nbsp;not&nbsp;have&nbsp;the&nbsp;focus.&nbsp;Use&nbsp;with<br>
-caution!</tt></dd></dl>
+caution!</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-focus_get"><strong>focus_get</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;widget&nbsp;which&nbsp;has&nbsp;currently&nbsp;the&nbsp;focus&nbsp;in&nbsp;the<br>
+<dl><dt><a name="DataSpecificationWindow-focus_get"><strong>focus_get</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;widget&nbsp;which&nbsp;has&nbsp;currently&nbsp;the&nbsp;focus&nbsp;in&nbsp;the<br>
 application.<br>
 &nbsp;<br>
 Use&nbsp;focus_displayof&nbsp;to&nbsp;allow&nbsp;working&nbsp;with&nbsp;several<br>
 displays.&nbsp;Return&nbsp;None&nbsp;if&nbsp;application&nbsp;does&nbsp;not&nbsp;have<br>
-the&nbsp;focus.</tt></dd></dl>
+the&nbsp;focus.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-focus_lastfor"><strong>focus_lastfor</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;widget&nbsp;which&nbsp;would&nbsp;have&nbsp;the&nbsp;focus&nbsp;if&nbsp;top&nbsp;level<br>
-for&nbsp;this&nbsp;widget&nbsp;gets&nbsp;the&nbsp;focus&nbsp;from&nbsp;the&nbsp;window&nbsp;manager.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-focus_lastfor"><strong>focus_lastfor</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;widget&nbsp;which&nbsp;would&nbsp;have&nbsp;the&nbsp;focus&nbsp;if&nbsp;top&nbsp;level<br>
+for&nbsp;this&nbsp;widget&nbsp;gets&nbsp;the&nbsp;focus&nbsp;from&nbsp;the&nbsp;window&nbsp;manager.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-focus_set"><strong>focus_set</strong></a>(self)</dt><dd><tt>Direct&nbsp;input&nbsp;focus&nbsp;to&nbsp;this&nbsp;widget.<br>
+<dl><dt><a name="DataSpecificationWindow-focus_set"><strong>focus_set</strong></a>(self)</dt><dd><span class="code">Direct&nbsp;input&nbsp;focus&nbsp;to&nbsp;this&nbsp;widget.<br>
 &nbsp;<br>
 If&nbsp;the&nbsp;application&nbsp;currently&nbsp;does&nbsp;not&nbsp;have&nbsp;the&nbsp;focus<br>
 this&nbsp;widget&nbsp;will&nbsp;get&nbsp;the&nbsp;focus&nbsp;if&nbsp;the&nbsp;application&nbsp;gets<br>
-the&nbsp;focus&nbsp;through&nbsp;the&nbsp;window&nbsp;manager.</tt></dd></dl>
+the&nbsp;focus&nbsp;through&nbsp;the&nbsp;window&nbsp;manager.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-getboolean"><strong>getboolean</strong></a>(self, s)</dt><dd><tt>Return&nbsp;a&nbsp;boolean&nbsp;value&nbsp;for&nbsp;Tcl&nbsp;boolean&nbsp;values&nbsp;true&nbsp;and&nbsp;false&nbsp;given&nbsp;as&nbsp;parameter.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-getboolean"><strong>getboolean</strong></a>(self, s)</dt><dd><span class="code">Return&nbsp;a&nbsp;boolean&nbsp;value&nbsp;for&nbsp;Tcl&nbsp;boolean&nbsp;values&nbsp;true&nbsp;and&nbsp;false&nbsp;given&nbsp;as&nbsp;parameter.</span></dd></dl>
 
 <dl><dt><a name="DataSpecificationWindow-getdouble"><strong>getdouble</strong></a>(self, s)</dt></dl>
 
 <dl><dt><a name="DataSpecificationWindow-getint"><strong>getint</strong></a>(self, s)</dt></dl>
 
-<dl><dt><a name="DataSpecificationWindow-getvar"><strong>getvar</strong></a>(self, name='PY_VAR')</dt><dd><tt>Return&nbsp;value&nbsp;of&nbsp;Tcl&nbsp;variable&nbsp;NAME.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-getvar"><strong>getvar</strong></a>(self, name='PY_VAR')</dt><dd><span class="code">Return&nbsp;value&nbsp;of&nbsp;Tcl&nbsp;variable&nbsp;NAME.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-grab_current"><strong>grab_current</strong></a>(self)</dt><dd><tt>Return&nbsp;widget&nbsp;which&nbsp;has&nbsp;currently&nbsp;the&nbsp;grab&nbsp;in&nbsp;this&nbsp;application<br>
-or&nbsp;None.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-grab_current"><strong>grab_current</strong></a>(self)</dt><dd><span class="code">Return&nbsp;widget&nbsp;which&nbsp;has&nbsp;currently&nbsp;the&nbsp;grab&nbsp;in&nbsp;this&nbsp;application<br>
+or&nbsp;None.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-grab_release"><strong>grab_release</strong></a>(self)</dt><dd><tt>Release&nbsp;grab&nbsp;for&nbsp;this&nbsp;widget&nbsp;if&nbsp;currently&nbsp;set.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-grab_release"><strong>grab_release</strong></a>(self)</dt><dd><span class="code">Release&nbsp;grab&nbsp;for&nbsp;this&nbsp;widget&nbsp;if&nbsp;currently&nbsp;set.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-grab_set"><strong>grab_set</strong></a>(self)</dt><dd><tt>Set&nbsp;grab&nbsp;for&nbsp;this&nbsp;widget.<br>
+<dl><dt><a name="DataSpecificationWindow-grab_set"><strong>grab_set</strong></a>(self)</dt><dd><span class="code">Set&nbsp;grab&nbsp;for&nbsp;this&nbsp;widget.<br>
 &nbsp;<br>
 A&nbsp;grab&nbsp;directs&nbsp;all&nbsp;events&nbsp;to&nbsp;this&nbsp;and&nbsp;descendant<br>
-widgets&nbsp;in&nbsp;the&nbsp;application.</tt></dd></dl>
+widgets&nbsp;in&nbsp;the&nbsp;application.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-grab_set_global"><strong>grab_set_global</strong></a>(self)</dt><dd><tt>Set&nbsp;global&nbsp;grab&nbsp;for&nbsp;this&nbsp;widget.<br>
+<dl><dt><a name="DataSpecificationWindow-grab_set_global"><strong>grab_set_global</strong></a>(self)</dt><dd><span class="code">Set&nbsp;global&nbsp;grab&nbsp;for&nbsp;this&nbsp;widget.<br>
 &nbsp;<br>
 A&nbsp;global&nbsp;grab&nbsp;directs&nbsp;all&nbsp;events&nbsp;to&nbsp;this&nbsp;and<br>
 descendant&nbsp;widgets&nbsp;on&nbsp;the&nbsp;display.&nbsp;Use&nbsp;with&nbsp;caution&nbsp;-<br>
-other&nbsp;applications&nbsp;do&nbsp;not&nbsp;get&nbsp;events&nbsp;anymore.</tt></dd></dl>
+other&nbsp;applications&nbsp;do&nbsp;not&nbsp;get&nbsp;events&nbsp;anymore.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-grab_status"><strong>grab_status</strong></a>(self)</dt><dd><tt>Return&nbsp;None,&nbsp;"local"&nbsp;or&nbsp;"global"&nbsp;if&nbsp;this&nbsp;widget&nbsp;has<br>
-no,&nbsp;a&nbsp;local&nbsp;or&nbsp;a&nbsp;global&nbsp;grab.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-grab_status"><strong>grab_status</strong></a>(self)</dt><dd><span class="code">Return&nbsp;None,&nbsp;"local"&nbsp;or&nbsp;"global"&nbsp;if&nbsp;this&nbsp;widget&nbsp;has<br>
+no,&nbsp;a&nbsp;local&nbsp;or&nbsp;a&nbsp;global&nbsp;grab.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-grid_anchor"><strong>grid_anchor</strong></a>(self, anchor=None)</dt><dd><tt>The&nbsp;anchor&nbsp;value&nbsp;controls&nbsp;how&nbsp;to&nbsp;place&nbsp;the&nbsp;grid&nbsp;within&nbsp;the<br>
+<dl><dt><a name="DataSpecificationWindow-grid_anchor"><strong>grid_anchor</strong></a>(self, anchor=None)</dt><dd><span class="code">The&nbsp;anchor&nbsp;value&nbsp;controls&nbsp;how&nbsp;to&nbsp;place&nbsp;the&nbsp;grid&nbsp;within&nbsp;the<br>
 master&nbsp;when&nbsp;no&nbsp;row/column&nbsp;has&nbsp;any&nbsp;weight.<br>
 &nbsp;<br>
-The&nbsp;default&nbsp;anchor&nbsp;is&nbsp;nw.</tt></dd></dl>
+The&nbsp;default&nbsp;anchor&nbsp;is&nbsp;nw.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-grid_bbox"><strong>grid_bbox</strong></a>(self, column=None, row=None, col2=None, row2=None)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;integer&nbsp;coordinates&nbsp;for&nbsp;the&nbsp;bounding<br>
+<dl><dt><a name="DataSpecificationWindow-grid_bbox"><strong>grid_bbox</strong></a>(self, column=None, row=None, col2=None, row2=None)</dt><dd><span class="code">Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;integer&nbsp;coordinates&nbsp;for&nbsp;the&nbsp;bounding<br>
 box&nbsp;of&nbsp;this&nbsp;widget&nbsp;controlled&nbsp;by&nbsp;the&nbsp;geometry&nbsp;manager&nbsp;grid.<br>
 &nbsp;<br>
 If&nbsp;COLUMN,&nbsp;ROW&nbsp;is&nbsp;given&nbsp;the&nbsp;bounding&nbsp;box&nbsp;applies&nbsp;from<br>
@@ -352,102 +349,104 @@ cell.&nbsp;If&nbsp;COL2&nbsp;and&nbsp;ROW2&nbsp;are&nbsp;given&nbsp;the&nbsp;bou
 starts&nbsp;at&nbsp;that&nbsp;cell.<br>
 &nbsp;<br>
 The&nbsp;returned&nbsp;integers&nbsp;specify&nbsp;the&nbsp;offset&nbsp;of&nbsp;the&nbsp;upper&nbsp;left<br>
-corner&nbsp;in&nbsp;the&nbsp;master&nbsp;widget&nbsp;and&nbsp;the&nbsp;width&nbsp;and&nbsp;height.</tt></dd></dl>
+corner&nbsp;in&nbsp;the&nbsp;master&nbsp;widget&nbsp;and&nbsp;the&nbsp;width&nbsp;and&nbsp;height.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-grid_columnconfigure"><strong>grid_columnconfigure</strong></a>(self, index, cnf={}, **kw)</dt><dd><tt>Configure&nbsp;column&nbsp;INDEX&nbsp;of&nbsp;a&nbsp;grid.<br>
+<dl><dt><a name="DataSpecificationWindow-grid_columnconfigure"><strong>grid_columnconfigure</strong></a>(self, index, cnf={}, **kw)</dt><dd><span class="code">Configure&nbsp;column&nbsp;INDEX&nbsp;of&nbsp;a&nbsp;grid.<br>
 &nbsp;<br>
 Valid&nbsp;resources&nbsp;are&nbsp;minsize&nbsp;(minimum&nbsp;size&nbsp;of&nbsp;the&nbsp;column),<br>
 weight&nbsp;(how&nbsp;much&nbsp;does&nbsp;additional&nbsp;space&nbsp;propagate&nbsp;to&nbsp;this&nbsp;column)<br>
-and&nbsp;pad&nbsp;(how&nbsp;much&nbsp;space&nbsp;to&nbsp;let&nbsp;additionally).</tt></dd></dl>
+and&nbsp;pad&nbsp;(how&nbsp;much&nbsp;space&nbsp;to&nbsp;let&nbsp;additionally).</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-grid_location"><strong>grid_location</strong></a>(self, x, y)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;column&nbsp;and&nbsp;row&nbsp;which&nbsp;identify&nbsp;the&nbsp;cell<br>
+<dl><dt><a name="DataSpecificationWindow-grid_location"><strong>grid_location</strong></a>(self, x, y)</dt><dd><span class="code">Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;column&nbsp;and&nbsp;row&nbsp;which&nbsp;identify&nbsp;the&nbsp;cell<br>
 at&nbsp;which&nbsp;the&nbsp;pixel&nbsp;at&nbsp;position&nbsp;X&nbsp;and&nbsp;Y&nbsp;inside&nbsp;the&nbsp;master<br>
-widget&nbsp;is&nbsp;located.</tt></dd></dl>
+widget&nbsp;is&nbsp;located.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-grid_propagate"><strong>grid_propagate</strong></a>(self, flag=['_noarg_'])</dt><dd><tt>Set&nbsp;or&nbsp;get&nbsp;the&nbsp;status&nbsp;for&nbsp;propagation&nbsp;of&nbsp;geometry&nbsp;information.<br>
+<dl><dt><a name="DataSpecificationWindow-grid_propagate"><strong>grid_propagate</strong></a>(self, flag=['_noarg_'])</dt><dd><span class="code">Set&nbsp;or&nbsp;get&nbsp;the&nbsp;status&nbsp;for&nbsp;propagation&nbsp;of&nbsp;geometry&nbsp;information.<br>
 &nbsp;<br>
 A&nbsp;boolean&nbsp;argument&nbsp;specifies&nbsp;whether&nbsp;the&nbsp;geometry&nbsp;information<br>
 of&nbsp;the&nbsp;slaves&nbsp;will&nbsp;determine&nbsp;the&nbsp;size&nbsp;of&nbsp;this&nbsp;widget.&nbsp;If&nbsp;no&nbsp;argument<br>
-is&nbsp;given,&nbsp;the&nbsp;current&nbsp;setting&nbsp;will&nbsp;be&nbsp;returned.</tt></dd></dl>
+is&nbsp;given,&nbsp;the&nbsp;current&nbsp;setting&nbsp;will&nbsp;be&nbsp;returned.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-grid_rowconfigure"><strong>grid_rowconfigure</strong></a>(self, index, cnf={}, **kw)</dt><dd><tt>Configure&nbsp;row&nbsp;INDEX&nbsp;of&nbsp;a&nbsp;grid.<br>
+<dl><dt><a name="DataSpecificationWindow-grid_rowconfigure"><strong>grid_rowconfigure</strong></a>(self, index, cnf={}, **kw)</dt><dd><span class="code">Configure&nbsp;row&nbsp;INDEX&nbsp;of&nbsp;a&nbsp;grid.<br>
 &nbsp;<br>
 Valid&nbsp;resources&nbsp;are&nbsp;minsize&nbsp;(minimum&nbsp;size&nbsp;of&nbsp;the&nbsp;row),<br>
 weight&nbsp;(how&nbsp;much&nbsp;does&nbsp;additional&nbsp;space&nbsp;propagate&nbsp;to&nbsp;this&nbsp;row)<br>
-and&nbsp;pad&nbsp;(how&nbsp;much&nbsp;space&nbsp;to&nbsp;let&nbsp;additionally).</tt></dd></dl>
+and&nbsp;pad&nbsp;(how&nbsp;much&nbsp;space&nbsp;to&nbsp;let&nbsp;additionally).</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-grid_size"><strong>grid_size</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;the&nbsp;number&nbsp;of&nbsp;column&nbsp;and&nbsp;rows&nbsp;in&nbsp;the&nbsp;grid.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-grid_size"><strong>grid_size</strong></a>(self)</dt><dd><span class="code">Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;the&nbsp;number&nbsp;of&nbsp;column&nbsp;and&nbsp;rows&nbsp;in&nbsp;the&nbsp;grid.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-grid_slaves"><strong>grid_slaves</strong></a>(self, row=None, column=None)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;slaves&nbsp;of&nbsp;this&nbsp;widget<br>
-in&nbsp;its&nbsp;packing&nbsp;order.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-grid_slaves"><strong>grid_slaves</strong></a>(self, row=None, column=None)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;slaves&nbsp;of&nbsp;this&nbsp;widget<br>
+in&nbsp;its&nbsp;packing&nbsp;order.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-image_names"><strong>image_names</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;existing&nbsp;image&nbsp;names.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-image_names"><strong>image_names</strong></a>(self)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;existing&nbsp;image&nbsp;names.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-image_types"><strong>image_types</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;available&nbsp;image&nbsp;types&nbsp;(e.g.&nbsp;photo&nbsp;bitmap).</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-image_types"><strong>image_types</strong></a>(self)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;available&nbsp;image&nbsp;types&nbsp;(e.g.&nbsp;photo&nbsp;bitmap).</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-keys"><strong>keys</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;resource&nbsp;names&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-info_patchlevel"><strong>info_patchlevel</strong></a>(self)</dt><dd><span class="code">Returns&nbsp;the&nbsp;exact&nbsp;version&nbsp;of&nbsp;the&nbsp;Tcl&nbsp;library.</span></dd></dl>
+
+<dl><dt><a name="DataSpecificationWindow-keys"><strong>keys</strong></a>(self)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;resource&nbsp;names&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
 <dl><dt><a name="DataSpecificationWindow-lift"><strong>lift</strong></a> = <a href="#DataSpecificationWindow-tkraise">tkraise</a>(self, aboveThis=None)</dt></dl>
 
-<dl><dt><a name="DataSpecificationWindow-lower"><strong>lower</strong></a>(self, belowThis=None)</dt><dd><tt>Lower&nbsp;this&nbsp;widget&nbsp;in&nbsp;the&nbsp;stacking&nbsp;order.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-lower"><strong>lower</strong></a>(self, belowThis=None)</dt><dd><span class="code">Lower&nbsp;this&nbsp;widget&nbsp;in&nbsp;the&nbsp;stacking&nbsp;order.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-mainloop"><strong>mainloop</strong></a>(self, n=0)</dt><dd><tt>Call&nbsp;the&nbsp;mainloop&nbsp;of&nbsp;Tk.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-mainloop"><strong>mainloop</strong></a>(self, n=0)</dt><dd><span class="code">Call&nbsp;the&nbsp;mainloop&nbsp;of&nbsp;Tk.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-nametowidget"><strong>nametowidget</strong></a>(self, name)</dt><dd><tt>Return&nbsp;the&nbsp;Tkinter&nbsp;instance&nbsp;of&nbsp;a&nbsp;widget&nbsp;identified&nbsp;by<br>
-its&nbsp;Tcl&nbsp;name&nbsp;NAME.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-nametowidget"><strong>nametowidget</strong></a>(self, name)</dt><dd><span class="code">Return&nbsp;the&nbsp;Tkinter&nbsp;instance&nbsp;of&nbsp;a&nbsp;widget&nbsp;identified&nbsp;by<br>
+its&nbsp;Tcl&nbsp;name&nbsp;NAME.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-option_add"><strong>option_add</strong></a>(self, pattern, value, priority=None)</dt><dd><tt>Set&nbsp;a&nbsp;VALUE&nbsp;(second&nbsp;parameter)&nbsp;for&nbsp;an&nbsp;option<br>
+<dl><dt><a name="DataSpecificationWindow-option_add"><strong>option_add</strong></a>(self, pattern, value, priority=None)</dt><dd><span class="code">Set&nbsp;a&nbsp;VALUE&nbsp;(second&nbsp;parameter)&nbsp;for&nbsp;an&nbsp;option<br>
 PATTERN&nbsp;(first&nbsp;parameter).<br>
 &nbsp;<br>
 An&nbsp;optional&nbsp;third&nbsp;parameter&nbsp;gives&nbsp;the&nbsp;numeric&nbsp;priority<br>
-(defaults&nbsp;to&nbsp;80).</tt></dd></dl>
+(defaults&nbsp;to&nbsp;80).</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-option_clear"><strong>option_clear</strong></a>(self)</dt><dd><tt>Clear&nbsp;the&nbsp;option&nbsp;database.<br>
+<dl><dt><a name="DataSpecificationWindow-option_clear"><strong>option_clear</strong></a>(self)</dt><dd><span class="code">Clear&nbsp;the&nbsp;option&nbsp;database.<br>
 &nbsp;<br>
-It&nbsp;will&nbsp;be&nbsp;reloaded&nbsp;if&nbsp;option_add&nbsp;is&nbsp;called.</tt></dd></dl>
+It&nbsp;will&nbsp;be&nbsp;reloaded&nbsp;if&nbsp;option_add&nbsp;is&nbsp;called.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-option_get"><strong>option_get</strong></a>(self, name, className)</dt><dd><tt>Return&nbsp;the&nbsp;value&nbsp;for&nbsp;an&nbsp;option&nbsp;NAME&nbsp;for&nbsp;this&nbsp;widget<br>
+<dl><dt><a name="DataSpecificationWindow-option_get"><strong>option_get</strong></a>(self, name, className)</dt><dd><span class="code">Return&nbsp;the&nbsp;value&nbsp;for&nbsp;an&nbsp;option&nbsp;NAME&nbsp;for&nbsp;this&nbsp;widget<br>
 with&nbsp;CLASSNAME.<br>
 &nbsp;<br>
-Values&nbsp;with&nbsp;higher&nbsp;priority&nbsp;override&nbsp;lower&nbsp;values.</tt></dd></dl>
+Values&nbsp;with&nbsp;higher&nbsp;priority&nbsp;override&nbsp;lower&nbsp;values.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-option_readfile"><strong>option_readfile</strong></a>(self, fileName, priority=None)</dt><dd><tt>Read&nbsp;file&nbsp;FILENAME&nbsp;into&nbsp;the&nbsp;option&nbsp;database.<br>
+<dl><dt><a name="DataSpecificationWindow-option_readfile"><strong>option_readfile</strong></a>(self, fileName, priority=None)</dt><dd><span class="code">Read&nbsp;file&nbsp;FILENAME&nbsp;into&nbsp;the&nbsp;option&nbsp;database.<br>
 &nbsp;<br>
 An&nbsp;optional&nbsp;second&nbsp;parameter&nbsp;gives&nbsp;the&nbsp;numeric<br>
-priority.</tt></dd></dl>
+priority.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-pack_propagate"><strong>pack_propagate</strong></a>(self, flag=['_noarg_'])</dt><dd><tt>Set&nbsp;or&nbsp;get&nbsp;the&nbsp;status&nbsp;for&nbsp;propagation&nbsp;of&nbsp;geometry&nbsp;information.<br>
+<dl><dt><a name="DataSpecificationWindow-pack_propagate"><strong>pack_propagate</strong></a>(self, flag=['_noarg_'])</dt><dd><span class="code">Set&nbsp;or&nbsp;get&nbsp;the&nbsp;status&nbsp;for&nbsp;propagation&nbsp;of&nbsp;geometry&nbsp;information.<br>
 &nbsp;<br>
 A&nbsp;boolean&nbsp;argument&nbsp;specifies&nbsp;whether&nbsp;the&nbsp;geometry&nbsp;information<br>
 of&nbsp;the&nbsp;slaves&nbsp;will&nbsp;determine&nbsp;the&nbsp;size&nbsp;of&nbsp;this&nbsp;widget.&nbsp;If&nbsp;no&nbsp;argument<br>
-is&nbsp;given&nbsp;the&nbsp;current&nbsp;setting&nbsp;will&nbsp;be&nbsp;returned.</tt></dd></dl>
+is&nbsp;given&nbsp;the&nbsp;current&nbsp;setting&nbsp;will&nbsp;be&nbsp;returned.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-pack_slaves"><strong>pack_slaves</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;slaves&nbsp;of&nbsp;this&nbsp;widget<br>
-in&nbsp;its&nbsp;packing&nbsp;order.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-pack_slaves"><strong>pack_slaves</strong></a>(self)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;slaves&nbsp;of&nbsp;this&nbsp;widget<br>
+in&nbsp;its&nbsp;packing&nbsp;order.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-place_slaves"><strong>place_slaves</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;slaves&nbsp;of&nbsp;this&nbsp;widget<br>
-in&nbsp;its&nbsp;packing&nbsp;order.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-place_slaves"><strong>place_slaves</strong></a>(self)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;slaves&nbsp;of&nbsp;this&nbsp;widget<br>
+in&nbsp;its&nbsp;packing&nbsp;order.</span></dd></dl>
 
 <dl><dt><a name="DataSpecificationWindow-propagate"><strong>propagate</strong></a> = <a href="#DataSpecificationWindow-pack_propagate">pack_propagate</a>(self, flag=['_noarg_'])</dt></dl>
 
-<dl><dt><a name="DataSpecificationWindow-quit"><strong>quit</strong></a>(self)</dt><dd><tt>Quit&nbsp;the&nbsp;Tcl&nbsp;interpreter.&nbsp;All&nbsp;widgets&nbsp;will&nbsp;be&nbsp;destroyed.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-quit"><strong>quit</strong></a>(self)</dt><dd><span class="code">Quit&nbsp;the&nbsp;Tcl&nbsp;interpreter.&nbsp;All&nbsp;widgets&nbsp;will&nbsp;be&nbsp;destroyed.</span></dd></dl>
 
 <dl><dt><a name="DataSpecificationWindow-register"><strong>register</strong></a> = <a href="#DataSpecificationWindow-_register">_register</a>(self, func, subst=None, needcleanup=1)</dt></dl>
 
 <dl><dt><a name="DataSpecificationWindow-rowconfigure"><strong>rowconfigure</strong></a> = <a href="#DataSpecificationWindow-grid_rowconfigure">grid_rowconfigure</a>(self, index, cnf={}, **kw)</dt></dl>
 
-<dl><dt><a name="DataSpecificationWindow-selection_clear"><strong>selection_clear</strong></a>(self, **kw)</dt><dd><tt>Clear&nbsp;the&nbsp;current&nbsp;X&nbsp;selection.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-selection_clear"><strong>selection_clear</strong></a>(self, **kw)</dt><dd><span class="code">Clear&nbsp;the&nbsp;current&nbsp;X&nbsp;selection.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-selection_get"><strong>selection_get</strong></a>(self, **kw)</dt><dd><tt>Return&nbsp;the&nbsp;contents&nbsp;of&nbsp;the&nbsp;current&nbsp;X&nbsp;selection.<br>
+<dl><dt><a name="DataSpecificationWindow-selection_get"><strong>selection_get</strong></a>(self, **kw)</dt><dd><span class="code">Return&nbsp;the&nbsp;contents&nbsp;of&nbsp;the&nbsp;current&nbsp;X&nbsp;selection.<br>
 &nbsp;<br>
 A&nbsp;keyword&nbsp;parameter&nbsp;selection&nbsp;specifies&nbsp;the&nbsp;name&nbsp;of<br>
 the&nbsp;selection&nbsp;and&nbsp;defaults&nbsp;to&nbsp;PRIMARY.&nbsp;&nbsp;A&nbsp;keyword<br>
 parameter&nbsp;displayof&nbsp;specifies&nbsp;a&nbsp;widget&nbsp;on&nbsp;the&nbsp;display<br>
 to&nbsp;use.&nbsp;A&nbsp;keyword&nbsp;parameter&nbsp;type&nbsp;specifies&nbsp;the&nbsp;form&nbsp;of&nbsp;data&nbsp;to&nbsp;be<br>
 fetched,&nbsp;defaulting&nbsp;to&nbsp;STRING&nbsp;except&nbsp;on&nbsp;X11,&nbsp;where&nbsp;UTF8_STRING&nbsp;is&nbsp;tried<br>
-before&nbsp;STRING.</tt></dd></dl>
+before&nbsp;STRING.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-selection_handle"><strong>selection_handle</strong></a>(self, command, **kw)</dt><dd><tt>Specify&nbsp;a&nbsp;function&nbsp;COMMAND&nbsp;to&nbsp;call&nbsp;if&nbsp;the&nbsp;X<br>
+<dl><dt><a name="DataSpecificationWindow-selection_handle"><strong>selection_handle</strong></a>(self, command, **kw)</dt><dd><span class="code">Specify&nbsp;a&nbsp;function&nbsp;COMMAND&nbsp;to&nbsp;call&nbsp;if&nbsp;the&nbsp;X<br>
 selection&nbsp;owned&nbsp;by&nbsp;this&nbsp;widget&nbsp;is&nbsp;queried&nbsp;by&nbsp;another<br>
 application.<br>
 &nbsp;<br>
@@ -457,45 +456,45 @@ arguments&nbsp;OFFSET&nbsp;and&nbsp;LENGTH&nbsp;which&nbsp;allows&nbsp;the&nbsp;
 of&nbsp;very&nbsp;long&nbsp;selections.&nbsp;The&nbsp;following&nbsp;keyword<br>
 parameters&nbsp;can&nbsp;be&nbsp;provided:<br>
 selection&nbsp;-&nbsp;name&nbsp;of&nbsp;the&nbsp;selection&nbsp;(default&nbsp;PRIMARY),<br>
-type&nbsp;-&nbsp;type&nbsp;of&nbsp;the&nbsp;selection&nbsp;(e.g.&nbsp;STRING,&nbsp;FILE_NAME).</tt></dd></dl>
+type&nbsp;-&nbsp;type&nbsp;of&nbsp;the&nbsp;selection&nbsp;(e.g.&nbsp;STRING,&nbsp;FILE_NAME).</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-selection_own"><strong>selection_own</strong></a>(self, **kw)</dt><dd><tt>Become&nbsp;owner&nbsp;of&nbsp;X&nbsp;selection.<br>
+<dl><dt><a name="DataSpecificationWindow-selection_own"><strong>selection_own</strong></a>(self, **kw)</dt><dd><span class="code">Become&nbsp;owner&nbsp;of&nbsp;X&nbsp;selection.<br>
 &nbsp;<br>
 A&nbsp;keyword&nbsp;parameter&nbsp;selection&nbsp;specifies&nbsp;the&nbsp;name&nbsp;of<br>
-the&nbsp;selection&nbsp;(default&nbsp;PRIMARY).</tt></dd></dl>
+the&nbsp;selection&nbsp;(default&nbsp;PRIMARY).</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-selection_own_get"><strong>selection_own_get</strong></a>(self, **kw)</dt><dd><tt>Return&nbsp;owner&nbsp;of&nbsp;X&nbsp;selection.<br>
+<dl><dt><a name="DataSpecificationWindow-selection_own_get"><strong>selection_own_get</strong></a>(self, **kw)</dt><dd><span class="code">Return&nbsp;owner&nbsp;of&nbsp;X&nbsp;selection.<br>
 &nbsp;<br>
 The&nbsp;following&nbsp;keyword&nbsp;parameter&nbsp;can<br>
 be&nbsp;provided:<br>
 selection&nbsp;-&nbsp;name&nbsp;of&nbsp;the&nbsp;selection&nbsp;(default&nbsp;PRIMARY),<br>
-type&nbsp;-&nbsp;type&nbsp;of&nbsp;the&nbsp;selection&nbsp;(e.g.&nbsp;STRING,&nbsp;FILE_NAME).</tt></dd></dl>
+type&nbsp;-&nbsp;type&nbsp;of&nbsp;the&nbsp;selection&nbsp;(e.g.&nbsp;STRING,&nbsp;FILE_NAME).</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-send"><strong>send</strong></a>(self, interp, cmd, *args)</dt><dd><tt>Send&nbsp;Tcl&nbsp;command&nbsp;CMD&nbsp;to&nbsp;different&nbsp;interpreter&nbsp;INTERP&nbsp;to&nbsp;be&nbsp;executed.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-send"><strong>send</strong></a>(self, interp, cmd, *args)</dt><dd><span class="code">Send&nbsp;Tcl&nbsp;command&nbsp;CMD&nbsp;to&nbsp;different&nbsp;interpreter&nbsp;INTERP&nbsp;to&nbsp;be&nbsp;executed.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-setvar"><strong>setvar</strong></a>(self, name='PY_VAR', value='1')</dt><dd><tt>Set&nbsp;Tcl&nbsp;variable&nbsp;NAME&nbsp;to&nbsp;VALUE.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-setvar"><strong>setvar</strong></a>(self, name='PY_VAR', value='1')</dt><dd><span class="code">Set&nbsp;Tcl&nbsp;variable&nbsp;NAME&nbsp;to&nbsp;VALUE.</span></dd></dl>
 
 <dl><dt><a name="DataSpecificationWindow-size"><strong>size</strong></a> = <a href="#DataSpecificationWindow-grid_size">grid_size</a>(self)</dt></dl>
 
 <dl><dt><a name="DataSpecificationWindow-slaves"><strong>slaves</strong></a> = <a href="#DataSpecificationWindow-pack_slaves">pack_slaves</a>(self)</dt></dl>
 
-<dl><dt><a name="DataSpecificationWindow-tk_bisque"><strong>tk_bisque</strong></a>(self)</dt><dd><tt>Change&nbsp;the&nbsp;color&nbsp;scheme&nbsp;to&nbsp;light&nbsp;brown&nbsp;as&nbsp;used&nbsp;in&nbsp;Tk&nbsp;3.6&nbsp;and&nbsp;before.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-tk_bisque"><strong>tk_bisque</strong></a>(self)</dt><dd><span class="code">Change&nbsp;the&nbsp;color&nbsp;scheme&nbsp;to&nbsp;light&nbsp;brown&nbsp;as&nbsp;used&nbsp;in&nbsp;Tk&nbsp;3.6&nbsp;and&nbsp;before.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-tk_focusFollowsMouse"><strong>tk_focusFollowsMouse</strong></a>(self)</dt><dd><tt>The&nbsp;widget&nbsp;under&nbsp;mouse&nbsp;will&nbsp;get&nbsp;automatically&nbsp;focus.&nbsp;Can&nbsp;not<br>
-be&nbsp;disabled&nbsp;easily.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-tk_focusFollowsMouse"><strong>tk_focusFollowsMouse</strong></a>(self)</dt><dd><span class="code">The&nbsp;widget&nbsp;under&nbsp;mouse&nbsp;will&nbsp;get&nbsp;automatically&nbsp;focus.&nbsp;Can&nbsp;not<br>
+be&nbsp;disabled&nbsp;easily.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-tk_focusNext"><strong>tk_focusNext</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;next&nbsp;widget&nbsp;in&nbsp;the&nbsp;focus&nbsp;order&nbsp;which&nbsp;follows<br>
+<dl><dt><a name="DataSpecificationWindow-tk_focusNext"><strong>tk_focusNext</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;next&nbsp;widget&nbsp;in&nbsp;the&nbsp;focus&nbsp;order&nbsp;which&nbsp;follows<br>
 widget&nbsp;which&nbsp;has&nbsp;currently&nbsp;the&nbsp;focus.<br>
 &nbsp;<br>
 The&nbsp;focus&nbsp;order&nbsp;first&nbsp;goes&nbsp;to&nbsp;the&nbsp;next&nbsp;child,&nbsp;then&nbsp;to<br>
 the&nbsp;children&nbsp;of&nbsp;the&nbsp;child&nbsp;recursively&nbsp;and&nbsp;then&nbsp;to&nbsp;the<br>
 next&nbsp;sibling&nbsp;which&nbsp;is&nbsp;higher&nbsp;in&nbsp;the&nbsp;stacking&nbsp;order.&nbsp;&nbsp;A<br>
 widget&nbsp;is&nbsp;omitted&nbsp;if&nbsp;it&nbsp;has&nbsp;the&nbsp;takefocus&nbsp;resource&nbsp;set<br>
-to&nbsp;0.</tt></dd></dl>
+to&nbsp;0.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-tk_focusPrev"><strong>tk_focusPrev</strong></a>(self)</dt><dd><tt>Return&nbsp;previous&nbsp;widget&nbsp;in&nbsp;the&nbsp;focus&nbsp;order.&nbsp;See&nbsp;tk_focusNext&nbsp;for&nbsp;details.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-tk_focusPrev"><strong>tk_focusPrev</strong></a>(self)</dt><dd><span class="code">Return&nbsp;previous&nbsp;widget&nbsp;in&nbsp;the&nbsp;focus&nbsp;order.&nbsp;See&nbsp;tk_focusNext&nbsp;for&nbsp;details.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-tk_setPalette"><strong>tk_setPalette</strong></a>(self, *args, **kw)</dt><dd><tt>Set&nbsp;a&nbsp;new&nbsp;color&nbsp;scheme&nbsp;for&nbsp;all&nbsp;widget&nbsp;elements.<br>
+<dl><dt><a name="DataSpecificationWindow-tk_setPalette"><strong>tk_setPalette</strong></a>(self, *args, **kw)</dt><dd><span class="code">Set&nbsp;a&nbsp;new&nbsp;color&nbsp;scheme&nbsp;for&nbsp;all&nbsp;widget&nbsp;elements.<br>
 &nbsp;<br>
 A&nbsp;single&nbsp;color&nbsp;as&nbsp;argument&nbsp;will&nbsp;cause&nbsp;that&nbsp;all&nbsp;colors&nbsp;of&nbsp;Tk<br>
 widget&nbsp;elements&nbsp;are&nbsp;derived&nbsp;from&nbsp;this.<br>
@@ -504,178 +503,183 @@ colors&nbsp;can&nbsp;be&nbsp;given.&nbsp;The&nbsp;following&nbsp;keywords&nbsp;a
 activeBackground,&nbsp;foreground,&nbsp;selectColor,<br>
 activeForeground,&nbsp;highlightBackground,&nbsp;selectBackground,<br>
 background,&nbsp;highlightColor,&nbsp;selectForeground,<br>
-disabledForeground,&nbsp;insertBackground,&nbsp;troughColor.</tt></dd></dl>
+disabledForeground,&nbsp;insertBackground,&nbsp;troughColor.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-tk_strictMotif"><strong>tk_strictMotif</strong></a>(self, boolean=None)</dt><dd><tt>Set&nbsp;Tcl&nbsp;internal&nbsp;variable,&nbsp;whether&nbsp;the&nbsp;look&nbsp;and&nbsp;feel<br>
+<dl><dt><a name="DataSpecificationWindow-tk_strictMotif"><strong>tk_strictMotif</strong></a>(self, boolean=None)</dt><dd><span class="code">Set&nbsp;Tcl&nbsp;internal&nbsp;variable,&nbsp;whether&nbsp;the&nbsp;look&nbsp;and&nbsp;feel<br>
 should&nbsp;adhere&nbsp;to&nbsp;Motif.<br>
 &nbsp;<br>
 A&nbsp;parameter&nbsp;of&nbsp;1&nbsp;means&nbsp;adhere&nbsp;to&nbsp;Motif&nbsp;(e.g.&nbsp;no&nbsp;color<br>
 change&nbsp;if&nbsp;mouse&nbsp;passes&nbsp;over&nbsp;slider).<br>
-Returns&nbsp;the&nbsp;set&nbsp;value.</tt></dd></dl>
+Returns&nbsp;the&nbsp;set&nbsp;value.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-tkraise"><strong>tkraise</strong></a>(self, aboveThis=None)</dt><dd><tt>Raise&nbsp;this&nbsp;widget&nbsp;in&nbsp;the&nbsp;stacking&nbsp;order.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-tkraise"><strong>tkraise</strong></a>(self, aboveThis=None)</dt><dd><span class="code">Raise&nbsp;this&nbsp;widget&nbsp;in&nbsp;the&nbsp;stacking&nbsp;order.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-unbind"><strong>unbind</strong></a>(self, sequence, funcid=None)</dt><dd><tt>Unbind&nbsp;for&nbsp;this&nbsp;widget&nbsp;for&nbsp;event&nbsp;SEQUENCE&nbsp;&nbsp;the<br>
-function&nbsp;identified&nbsp;with&nbsp;FUNCID.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-unbind"><strong>unbind</strong></a>(self, sequence, funcid=None)</dt><dd><span class="code">Unbind&nbsp;for&nbsp;this&nbsp;widget&nbsp;the&nbsp;event&nbsp;SEQUENCE.<br>
+&nbsp;<br>
+If&nbsp;FUNCID&nbsp;is&nbsp;given,&nbsp;only&nbsp;unbind&nbsp;the&nbsp;function&nbsp;identified&nbsp;with&nbsp;FUNCID<br>
+and&nbsp;also&nbsp;delete&nbsp;the&nbsp;corresponding&nbsp;Tcl&nbsp;command.<br>
+&nbsp;<br>
+Otherwise&nbsp;destroy&nbsp;the&nbsp;current&nbsp;binding&nbsp;for&nbsp;SEQUENCE,&nbsp;leaving&nbsp;SEQUENCE<br>
+unbound.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-unbind_all"><strong>unbind_all</strong></a>(self, sequence)</dt><dd><tt>Unbind&nbsp;for&nbsp;all&nbsp;widgets&nbsp;for&nbsp;event&nbsp;SEQUENCE&nbsp;all&nbsp;functions.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-unbind_all"><strong>unbind_all</strong></a>(self, sequence)</dt><dd><span class="code">Unbind&nbsp;for&nbsp;all&nbsp;widgets&nbsp;for&nbsp;event&nbsp;SEQUENCE&nbsp;all&nbsp;functions.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-unbind_class"><strong>unbind_class</strong></a>(self, className, sequence)</dt><dd><tt>Unbind&nbsp;for&nbsp;all&nbsp;widgets&nbsp;with&nbsp;bindtag&nbsp;CLASSNAME&nbsp;for&nbsp;event&nbsp;SEQUENCE<br>
-all&nbsp;functions.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-unbind_class"><strong>unbind_class</strong></a>(self, className, sequence)</dt><dd><span class="code">Unbind&nbsp;for&nbsp;all&nbsp;widgets&nbsp;with&nbsp;bindtag&nbsp;CLASSNAME&nbsp;for&nbsp;event&nbsp;SEQUENCE<br>
+all&nbsp;functions.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-update"><strong>update</strong></a>(self)</dt><dd><tt>Enter&nbsp;event&nbsp;loop&nbsp;until&nbsp;all&nbsp;pending&nbsp;events&nbsp;have&nbsp;been&nbsp;processed&nbsp;by&nbsp;Tcl.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-update"><strong>update</strong></a>(self)</dt><dd><span class="code">Enter&nbsp;event&nbsp;loop&nbsp;until&nbsp;all&nbsp;pending&nbsp;events&nbsp;have&nbsp;been&nbsp;processed&nbsp;by&nbsp;Tcl.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-update_idletasks"><strong>update_idletasks</strong></a>(self)</dt><dd><tt>Enter&nbsp;event&nbsp;loop&nbsp;until&nbsp;all&nbsp;idle&nbsp;callbacks&nbsp;have&nbsp;been&nbsp;called.&nbsp;This<br>
+<dl><dt><a name="DataSpecificationWindow-update_idletasks"><strong>update_idletasks</strong></a>(self)</dt><dd><span class="code">Enter&nbsp;event&nbsp;loop&nbsp;until&nbsp;all&nbsp;idle&nbsp;callbacks&nbsp;have&nbsp;been&nbsp;called.&nbsp;This<br>
 will&nbsp;update&nbsp;the&nbsp;display&nbsp;of&nbsp;windows&nbsp;but&nbsp;not&nbsp;process&nbsp;events&nbsp;caused&nbsp;by<br>
-the&nbsp;user.</tt></dd></dl>
+the&nbsp;user.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wait_variable"><strong>wait_variable</strong></a>(self, name='PY_VAR')</dt><dd><tt>Wait&nbsp;until&nbsp;the&nbsp;variable&nbsp;is&nbsp;modified.<br>
+<dl><dt><a name="DataSpecificationWindow-wait_variable"><strong>wait_variable</strong></a>(self, name='PY_VAR')</dt><dd><span class="code">Wait&nbsp;until&nbsp;the&nbsp;variable&nbsp;is&nbsp;modified.<br>
 &nbsp;<br>
 A&nbsp;parameter&nbsp;of&nbsp;type&nbsp;IntVar,&nbsp;StringVar,&nbsp;DoubleVar&nbsp;or<br>
-BooleanVar&nbsp;must&nbsp;be&nbsp;given.</tt></dd></dl>
+BooleanVar&nbsp;must&nbsp;be&nbsp;given.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wait_visibility"><strong>wait_visibility</strong></a>(self, window=None)</dt><dd><tt>Wait&nbsp;until&nbsp;the&nbsp;visibility&nbsp;of&nbsp;a&nbsp;WIDGET&nbsp;changes<br>
+<dl><dt><a name="DataSpecificationWindow-wait_visibility"><strong>wait_visibility</strong></a>(self, window=None)</dt><dd><span class="code">Wait&nbsp;until&nbsp;the&nbsp;visibility&nbsp;of&nbsp;a&nbsp;WIDGET&nbsp;changes<br>
 (e.g.&nbsp;it&nbsp;appears).<br>
 &nbsp;<br>
-If&nbsp;no&nbsp;parameter&nbsp;is&nbsp;given&nbsp;self&nbsp;is&nbsp;used.</tt></dd></dl>
+If&nbsp;no&nbsp;parameter&nbsp;is&nbsp;given&nbsp;self&nbsp;is&nbsp;used.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wait_window"><strong>wait_window</strong></a>(self, window=None)</dt><dd><tt>Wait&nbsp;until&nbsp;a&nbsp;WIDGET&nbsp;is&nbsp;destroyed.<br>
+<dl><dt><a name="DataSpecificationWindow-wait_window"><strong>wait_window</strong></a>(self, window=None)</dt><dd><span class="code">Wait&nbsp;until&nbsp;a&nbsp;WIDGET&nbsp;is&nbsp;destroyed.<br>
 &nbsp;<br>
-If&nbsp;no&nbsp;parameter&nbsp;is&nbsp;given&nbsp;self&nbsp;is&nbsp;used.</tt></dd></dl>
+If&nbsp;no&nbsp;parameter&nbsp;is&nbsp;given&nbsp;self&nbsp;is&nbsp;used.</span></dd></dl>
 
 <dl><dt><a name="DataSpecificationWindow-waitvar"><strong>waitvar</strong></a> = <a href="#DataSpecificationWindow-wait_variable">wait_variable</a>(self, name='PY_VAR')</dt></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_atom"><strong>winfo_atom</strong></a>(self, name, displayof=0)</dt><dd><tt>Return&nbsp;integer&nbsp;which&nbsp;represents&nbsp;atom&nbsp;NAME.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_atom"><strong>winfo_atom</strong></a>(self, name, displayof=0)</dt><dd><span class="code">Return&nbsp;integer&nbsp;which&nbsp;represents&nbsp;atom&nbsp;NAME.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_atomname"><strong>winfo_atomname</strong></a>(self, id, displayof=0)</dt><dd><tt>Return&nbsp;name&nbsp;of&nbsp;atom&nbsp;with&nbsp;identifier&nbsp;ID.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_atomname"><strong>winfo_atomname</strong></a>(self, id, displayof=0)</dt><dd><span class="code">Return&nbsp;name&nbsp;of&nbsp;atom&nbsp;with&nbsp;identifier&nbsp;ID.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_cells"><strong>winfo_cells</strong></a>(self)</dt><dd><tt>Return&nbsp;number&nbsp;of&nbsp;cells&nbsp;in&nbsp;the&nbsp;colormap&nbsp;for&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_cells"><strong>winfo_cells</strong></a>(self)</dt><dd><span class="code">Return&nbsp;number&nbsp;of&nbsp;cells&nbsp;in&nbsp;the&nbsp;colormap&nbsp;for&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_children"><strong>winfo_children</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;widgets&nbsp;which&nbsp;are&nbsp;children&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_children"><strong>winfo_children</strong></a>(self)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;widgets&nbsp;which&nbsp;are&nbsp;children&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_class"><strong>winfo_class</strong></a>(self)</dt><dd><tt>Return&nbsp;window&nbsp;class&nbsp;name&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_class"><strong>winfo_class</strong></a>(self)</dt><dd><span class="code">Return&nbsp;window&nbsp;class&nbsp;name&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_colormapfull"><strong>winfo_colormapfull</strong></a>(self)</dt><dd><tt>Return&nbsp;True&nbsp;if&nbsp;at&nbsp;the&nbsp;last&nbsp;color&nbsp;request&nbsp;the&nbsp;colormap&nbsp;was&nbsp;full.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_colormapfull"><strong>winfo_colormapfull</strong></a>(self)</dt><dd><span class="code">Return&nbsp;True&nbsp;if&nbsp;at&nbsp;the&nbsp;last&nbsp;color&nbsp;request&nbsp;the&nbsp;colormap&nbsp;was&nbsp;full.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_containing"><strong>winfo_containing</strong></a>(self, rootX, rootY, displayof=0)</dt><dd><tt>Return&nbsp;the&nbsp;widget&nbsp;which&nbsp;is&nbsp;at&nbsp;the&nbsp;root&nbsp;coordinates&nbsp;ROOTX,&nbsp;ROOTY.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_containing"><strong>winfo_containing</strong></a>(self, rootX, rootY, displayof=0)</dt><dd><span class="code">Return&nbsp;the&nbsp;widget&nbsp;which&nbsp;is&nbsp;at&nbsp;the&nbsp;root&nbsp;coordinates&nbsp;ROOTX,&nbsp;ROOTY.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_depth"><strong>winfo_depth</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;bits&nbsp;per&nbsp;pixel.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_depth"><strong>winfo_depth</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;number&nbsp;of&nbsp;bits&nbsp;per&nbsp;pixel.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_exists"><strong>winfo_exists</strong></a>(self)</dt><dd><tt>Return&nbsp;true&nbsp;if&nbsp;this&nbsp;widget&nbsp;exists.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_exists"><strong>winfo_exists</strong></a>(self)</dt><dd><span class="code">Return&nbsp;true&nbsp;if&nbsp;this&nbsp;widget&nbsp;exists.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_fpixels"><strong>winfo_fpixels</strong></a>(self, number)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;for&nbsp;the&nbsp;given&nbsp;distance&nbsp;NUMBER<br>
-(e.g.&nbsp;"3c")&nbsp;as&nbsp;float.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_fpixels"><strong>winfo_fpixels</strong></a>(self, number)</dt><dd><span class="code">Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;for&nbsp;the&nbsp;given&nbsp;distance&nbsp;NUMBER<br>
+(e.g.&nbsp;"3c")&nbsp;as&nbsp;float.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_geometry"><strong>winfo_geometry</strong></a>(self)</dt><dd><tt>Return&nbsp;geometry&nbsp;string&nbsp;for&nbsp;this&nbsp;widget&nbsp;in&nbsp;the&nbsp;form&nbsp;"widthxheight+X+Y".</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_geometry"><strong>winfo_geometry</strong></a>(self)</dt><dd><span class="code">Return&nbsp;geometry&nbsp;string&nbsp;for&nbsp;this&nbsp;widget&nbsp;in&nbsp;the&nbsp;form&nbsp;"widthxheight+X+Y".</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_height"><strong>winfo_height</strong></a>(self)</dt><dd><tt>Return&nbsp;height&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_height"><strong>winfo_height</strong></a>(self)</dt><dd><span class="code">Return&nbsp;height&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_id"><strong>winfo_id</strong></a>(self)</dt><dd><tt>Return&nbsp;identifier&nbsp;ID&nbsp;for&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_id"><strong>winfo_id</strong></a>(self)</dt><dd><span class="code">Return&nbsp;identifier&nbsp;ID&nbsp;for&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_interps"><strong>winfo_interps</strong></a>(self, displayof=0)</dt><dd><tt>Return&nbsp;the&nbsp;name&nbsp;of&nbsp;all&nbsp;Tcl&nbsp;interpreters&nbsp;for&nbsp;this&nbsp;display.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_interps"><strong>winfo_interps</strong></a>(self, displayof=0)</dt><dd><span class="code">Return&nbsp;the&nbsp;name&nbsp;of&nbsp;all&nbsp;Tcl&nbsp;interpreters&nbsp;for&nbsp;this&nbsp;display.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_ismapped"><strong>winfo_ismapped</strong></a>(self)</dt><dd><tt>Return&nbsp;true&nbsp;if&nbsp;this&nbsp;widget&nbsp;is&nbsp;mapped.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_ismapped"><strong>winfo_ismapped</strong></a>(self)</dt><dd><span class="code">Return&nbsp;true&nbsp;if&nbsp;this&nbsp;widget&nbsp;is&nbsp;mapped.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_manager"><strong>winfo_manager</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;window&nbsp;manager&nbsp;name&nbsp;for&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_manager"><strong>winfo_manager</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;window&nbsp;manager&nbsp;name&nbsp;for&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_name"><strong>winfo_name</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;name&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_name"><strong>winfo_name</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;name&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_parent"><strong>winfo_parent</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;parent&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_parent"><strong>winfo_parent</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;parent&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_pathname"><strong>winfo_pathname</strong></a>(self, id, displayof=0)</dt><dd><tt>Return&nbsp;the&nbsp;pathname&nbsp;of&nbsp;the&nbsp;widget&nbsp;given&nbsp;by&nbsp;ID.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_pathname"><strong>winfo_pathname</strong></a>(self, id, displayof=0)</dt><dd><span class="code">Return&nbsp;the&nbsp;pathname&nbsp;of&nbsp;the&nbsp;widget&nbsp;given&nbsp;by&nbsp;ID.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_pixels"><strong>winfo_pixels</strong></a>(self, number)</dt><dd><tt>Rounded&nbsp;integer&nbsp;value&nbsp;of&nbsp;winfo_fpixels.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_pixels"><strong>winfo_pixels</strong></a>(self, number)</dt><dd><span class="code">Rounded&nbsp;integer&nbsp;value&nbsp;of&nbsp;winfo_fpixels.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_pointerx"><strong>winfo_pointerx</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;x&nbsp;coordinate&nbsp;of&nbsp;the&nbsp;pointer&nbsp;on&nbsp;the&nbsp;root&nbsp;window.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_pointerx"><strong>winfo_pointerx</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;x&nbsp;coordinate&nbsp;of&nbsp;the&nbsp;pointer&nbsp;on&nbsp;the&nbsp;root&nbsp;window.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_pointerxy"><strong>winfo_pointerxy</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;x&nbsp;and&nbsp;y&nbsp;coordinates&nbsp;of&nbsp;the&nbsp;pointer&nbsp;on&nbsp;the&nbsp;root&nbsp;window.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_pointerxy"><strong>winfo_pointerxy</strong></a>(self)</dt><dd><span class="code">Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;x&nbsp;and&nbsp;y&nbsp;coordinates&nbsp;of&nbsp;the&nbsp;pointer&nbsp;on&nbsp;the&nbsp;root&nbsp;window.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_pointery"><strong>winfo_pointery</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;y&nbsp;coordinate&nbsp;of&nbsp;the&nbsp;pointer&nbsp;on&nbsp;the&nbsp;root&nbsp;window.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_pointery"><strong>winfo_pointery</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;y&nbsp;coordinate&nbsp;of&nbsp;the&nbsp;pointer&nbsp;on&nbsp;the&nbsp;root&nbsp;window.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_reqheight"><strong>winfo_reqheight</strong></a>(self)</dt><dd><tt>Return&nbsp;requested&nbsp;height&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_reqheight"><strong>winfo_reqheight</strong></a>(self)</dt><dd><span class="code">Return&nbsp;requested&nbsp;height&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_reqwidth"><strong>winfo_reqwidth</strong></a>(self)</dt><dd><tt>Return&nbsp;requested&nbsp;width&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_reqwidth"><strong>winfo_reqwidth</strong></a>(self)</dt><dd><span class="code">Return&nbsp;requested&nbsp;width&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_rgb"><strong>winfo_rgb</strong></a>(self, color)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;integer&nbsp;RGB&nbsp;values&nbsp;in&nbsp;range(65536)&nbsp;for&nbsp;color&nbsp;in&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_rgb"><strong>winfo_rgb</strong></a>(self, color)</dt><dd><span class="code">Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;integer&nbsp;RGB&nbsp;values&nbsp;in&nbsp;range(65536)&nbsp;for&nbsp;color&nbsp;in&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_rootx"><strong>winfo_rootx</strong></a>(self)</dt><dd><tt>Return&nbsp;x&nbsp;coordinate&nbsp;of&nbsp;upper&nbsp;left&nbsp;corner&nbsp;of&nbsp;this&nbsp;widget&nbsp;on&nbsp;the<br>
-root&nbsp;window.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_rootx"><strong>winfo_rootx</strong></a>(self)</dt><dd><span class="code">Return&nbsp;x&nbsp;coordinate&nbsp;of&nbsp;upper&nbsp;left&nbsp;corner&nbsp;of&nbsp;this&nbsp;widget&nbsp;on&nbsp;the<br>
+root&nbsp;window.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_rooty"><strong>winfo_rooty</strong></a>(self)</dt><dd><tt>Return&nbsp;y&nbsp;coordinate&nbsp;of&nbsp;upper&nbsp;left&nbsp;corner&nbsp;of&nbsp;this&nbsp;widget&nbsp;on&nbsp;the<br>
-root&nbsp;window.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_rooty"><strong>winfo_rooty</strong></a>(self)</dt><dd><span class="code">Return&nbsp;y&nbsp;coordinate&nbsp;of&nbsp;upper&nbsp;left&nbsp;corner&nbsp;of&nbsp;this&nbsp;widget&nbsp;on&nbsp;the<br>
+root&nbsp;window.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_screen"><strong>winfo_screen</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;screen&nbsp;name&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_screen"><strong>winfo_screen</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;screen&nbsp;name&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_screencells"><strong>winfo_screencells</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;cells&nbsp;in&nbsp;the&nbsp;colormap&nbsp;of&nbsp;the&nbsp;screen<br>
-of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_screencells"><strong>winfo_screencells</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;cells&nbsp;in&nbsp;the&nbsp;colormap&nbsp;of&nbsp;the&nbsp;screen<br>
+of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_screendepth"><strong>winfo_screendepth</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;bits&nbsp;per&nbsp;pixel&nbsp;of&nbsp;the&nbsp;root&nbsp;window&nbsp;of&nbsp;the<br>
-screen&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_screendepth"><strong>winfo_screendepth</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;number&nbsp;of&nbsp;bits&nbsp;per&nbsp;pixel&nbsp;of&nbsp;the&nbsp;root&nbsp;window&nbsp;of&nbsp;the<br>
+screen&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_screenheight"><strong>winfo_screenheight</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;of&nbsp;the&nbsp;height&nbsp;of&nbsp;the&nbsp;screen&nbsp;of&nbsp;this&nbsp;widget<br>
-in&nbsp;pixel.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_screenheight"><strong>winfo_screenheight</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;of&nbsp;the&nbsp;height&nbsp;of&nbsp;the&nbsp;screen&nbsp;of&nbsp;this&nbsp;widget<br>
+in&nbsp;pixel.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_screenmmheight"><strong>winfo_screenmmheight</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;of&nbsp;the&nbsp;height&nbsp;of&nbsp;the&nbsp;screen&nbsp;of<br>
-this&nbsp;widget&nbsp;in&nbsp;mm.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_screenmmheight"><strong>winfo_screenmmheight</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;of&nbsp;the&nbsp;height&nbsp;of&nbsp;the&nbsp;screen&nbsp;of<br>
+this&nbsp;widget&nbsp;in&nbsp;mm.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_screenmmwidth"><strong>winfo_screenmmwidth</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;of&nbsp;the&nbsp;width&nbsp;of&nbsp;the&nbsp;screen&nbsp;of<br>
-this&nbsp;widget&nbsp;in&nbsp;mm.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_screenmmwidth"><strong>winfo_screenmmwidth</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;of&nbsp;the&nbsp;width&nbsp;of&nbsp;the&nbsp;screen&nbsp;of<br>
+this&nbsp;widget&nbsp;in&nbsp;mm.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_screenvisual"><strong>winfo_screenvisual</strong></a>(self)</dt><dd><tt>Return&nbsp;one&nbsp;of&nbsp;the&nbsp;strings&nbsp;directcolor,&nbsp;grayscale,&nbsp;pseudocolor,<br>
+<dl><dt><a name="DataSpecificationWindow-winfo_screenvisual"><strong>winfo_screenvisual</strong></a>(self)</dt><dd><span class="code">Return&nbsp;one&nbsp;of&nbsp;the&nbsp;strings&nbsp;directcolor,&nbsp;grayscale,&nbsp;pseudocolor,<br>
 staticcolor,&nbsp;staticgray,&nbsp;or&nbsp;truecolor&nbsp;for&nbsp;the&nbsp;default<br>
-colormodel&nbsp;of&nbsp;this&nbsp;screen.</tt></dd></dl>
+colormodel&nbsp;of&nbsp;this&nbsp;screen.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_screenwidth"><strong>winfo_screenwidth</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;of&nbsp;the&nbsp;width&nbsp;of&nbsp;the&nbsp;screen&nbsp;of<br>
-this&nbsp;widget&nbsp;in&nbsp;pixel.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_screenwidth"><strong>winfo_screenwidth</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;number&nbsp;of&nbsp;pixels&nbsp;of&nbsp;the&nbsp;width&nbsp;of&nbsp;the&nbsp;screen&nbsp;of<br>
+this&nbsp;widget&nbsp;in&nbsp;pixel.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_server"><strong>winfo_server</strong></a>(self)</dt><dd><tt>Return&nbsp;information&nbsp;of&nbsp;the&nbsp;X-Server&nbsp;of&nbsp;the&nbsp;screen&nbsp;of&nbsp;this&nbsp;widget&nbsp;in<br>
-the&nbsp;form&nbsp;"XmajorRminor&nbsp;vendor&nbsp;vendorVersion".</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_server"><strong>winfo_server</strong></a>(self)</dt><dd><span class="code">Return&nbsp;information&nbsp;of&nbsp;the&nbsp;X-Server&nbsp;of&nbsp;the&nbsp;screen&nbsp;of&nbsp;this&nbsp;widget&nbsp;in<br>
+the&nbsp;form&nbsp;"XmajorRminor&nbsp;vendor&nbsp;vendorVersion".</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_toplevel"><strong>winfo_toplevel</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;toplevel&nbsp;widget&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_toplevel"><strong>winfo_toplevel</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;toplevel&nbsp;widget&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_viewable"><strong>winfo_viewable</strong></a>(self)</dt><dd><tt>Return&nbsp;true&nbsp;if&nbsp;the&nbsp;widget&nbsp;and&nbsp;all&nbsp;its&nbsp;higher&nbsp;ancestors&nbsp;are&nbsp;mapped.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_viewable"><strong>winfo_viewable</strong></a>(self)</dt><dd><span class="code">Return&nbsp;true&nbsp;if&nbsp;the&nbsp;widget&nbsp;and&nbsp;all&nbsp;its&nbsp;higher&nbsp;ancestors&nbsp;are&nbsp;mapped.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_visual"><strong>winfo_visual</strong></a>(self)</dt><dd><tt>Return&nbsp;one&nbsp;of&nbsp;the&nbsp;strings&nbsp;directcolor,&nbsp;grayscale,&nbsp;pseudocolor,<br>
+<dl><dt><a name="DataSpecificationWindow-winfo_visual"><strong>winfo_visual</strong></a>(self)</dt><dd><span class="code">Return&nbsp;one&nbsp;of&nbsp;the&nbsp;strings&nbsp;directcolor,&nbsp;grayscale,&nbsp;pseudocolor,<br>
 staticcolor,&nbsp;staticgray,&nbsp;or&nbsp;truecolor&nbsp;for&nbsp;the<br>
-colormodel&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+colormodel&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_visualid"><strong>winfo_visualid</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;X&nbsp;identifier&nbsp;for&nbsp;the&nbsp;visual&nbsp;for&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_visualid"><strong>winfo_visualid</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;X&nbsp;identifier&nbsp;for&nbsp;the&nbsp;visual&nbsp;for&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_visualsavailable"><strong>winfo_visualsavailable</strong></a>(self, includeids=False)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;visuals&nbsp;available&nbsp;for&nbsp;the&nbsp;screen<br>
+<dl><dt><a name="DataSpecificationWindow-winfo_visualsavailable"><strong>winfo_visualsavailable</strong></a>(self, includeids=False)</dt><dd><span class="code">Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;visuals&nbsp;available&nbsp;for&nbsp;the&nbsp;screen<br>
 of&nbsp;this&nbsp;widget.<br>
 &nbsp;<br>
 Each&nbsp;item&nbsp;in&nbsp;the&nbsp;list&nbsp;consists&nbsp;of&nbsp;a&nbsp;visual&nbsp;name&nbsp;(see&nbsp;winfo_visual),&nbsp;a<br>
-depth&nbsp;and&nbsp;if&nbsp;includeids&nbsp;is&nbsp;true&nbsp;is&nbsp;given&nbsp;also&nbsp;the&nbsp;X&nbsp;identifier.</tt></dd></dl>
+depth&nbsp;and&nbsp;if&nbsp;includeids&nbsp;is&nbsp;true&nbsp;is&nbsp;given&nbsp;also&nbsp;the&nbsp;X&nbsp;identifier.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_vrootheight"><strong>winfo_vrootheight</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;height&nbsp;of&nbsp;the&nbsp;virtual&nbsp;root&nbsp;window&nbsp;associated&nbsp;with&nbsp;this<br>
+<dl><dt><a name="DataSpecificationWindow-winfo_vrootheight"><strong>winfo_vrootheight</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;height&nbsp;of&nbsp;the&nbsp;virtual&nbsp;root&nbsp;window&nbsp;associated&nbsp;with&nbsp;this<br>
 widget&nbsp;in&nbsp;pixels.&nbsp;If&nbsp;there&nbsp;is&nbsp;no&nbsp;virtual&nbsp;root&nbsp;window&nbsp;return&nbsp;the<br>
-height&nbsp;of&nbsp;the&nbsp;screen.</tt></dd></dl>
+height&nbsp;of&nbsp;the&nbsp;screen.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_vrootwidth"><strong>winfo_vrootwidth</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;width&nbsp;of&nbsp;the&nbsp;virtual&nbsp;root&nbsp;window&nbsp;associated&nbsp;with&nbsp;this<br>
+<dl><dt><a name="DataSpecificationWindow-winfo_vrootwidth"><strong>winfo_vrootwidth</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;width&nbsp;of&nbsp;the&nbsp;virtual&nbsp;root&nbsp;window&nbsp;associated&nbsp;with&nbsp;this<br>
 widget&nbsp;in&nbsp;pixel.&nbsp;If&nbsp;there&nbsp;is&nbsp;no&nbsp;virtual&nbsp;root&nbsp;window&nbsp;return&nbsp;the<br>
-width&nbsp;of&nbsp;the&nbsp;screen.</tt></dd></dl>
+width&nbsp;of&nbsp;the&nbsp;screen.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_vrootx"><strong>winfo_vrootx</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;x&nbsp;offset&nbsp;of&nbsp;the&nbsp;virtual&nbsp;root&nbsp;relative&nbsp;to&nbsp;the&nbsp;root<br>
-window&nbsp;of&nbsp;the&nbsp;screen&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_vrootx"><strong>winfo_vrootx</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;x&nbsp;offset&nbsp;of&nbsp;the&nbsp;virtual&nbsp;root&nbsp;relative&nbsp;to&nbsp;the&nbsp;root<br>
+window&nbsp;of&nbsp;the&nbsp;screen&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_vrooty"><strong>winfo_vrooty</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;y&nbsp;offset&nbsp;of&nbsp;the&nbsp;virtual&nbsp;root&nbsp;relative&nbsp;to&nbsp;the&nbsp;root<br>
-window&nbsp;of&nbsp;the&nbsp;screen&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_vrooty"><strong>winfo_vrooty</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;y&nbsp;offset&nbsp;of&nbsp;the&nbsp;virtual&nbsp;root&nbsp;relative&nbsp;to&nbsp;the&nbsp;root<br>
+window&nbsp;of&nbsp;the&nbsp;screen&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_width"><strong>winfo_width</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;width&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_width"><strong>winfo_width</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;width&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_x"><strong>winfo_x</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;x&nbsp;coordinate&nbsp;of&nbsp;the&nbsp;upper&nbsp;left&nbsp;corner&nbsp;of&nbsp;this&nbsp;widget<br>
-in&nbsp;the&nbsp;parent.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_x"><strong>winfo_x</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;x&nbsp;coordinate&nbsp;of&nbsp;the&nbsp;upper&nbsp;left&nbsp;corner&nbsp;of&nbsp;this&nbsp;widget<br>
+in&nbsp;the&nbsp;parent.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-winfo_y"><strong>winfo_y</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;y&nbsp;coordinate&nbsp;of&nbsp;the&nbsp;upper&nbsp;left&nbsp;corner&nbsp;of&nbsp;this&nbsp;widget<br>
-in&nbsp;the&nbsp;parent.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-winfo_y"><strong>winfo_y</strong></a>(self)</dt><dd><span class="code">Return&nbsp;the&nbsp;y&nbsp;coordinate&nbsp;of&nbsp;the&nbsp;upper&nbsp;left&nbsp;corner&nbsp;of&nbsp;this&nbsp;widget<br>
+in&nbsp;the&nbsp;parent.</span></dd></dl>
 
 <hr>
 Data descriptors inherited from <a href="tkinter.html#Misc">tkinter.Misc</a>:<br>
 <dl><dt><strong>__dict__</strong></dt>
-<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
 </dl>
 <dl><dt><strong>__weakref__</strong></dt>
-<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
 </dl>
 <hr>
 Methods inherited from <a href="tkinter.html#Wm">tkinter.Wm</a>:<br>
@@ -741,11 +745,11 @@ Methods inherited from <a href="tkinter.html#Wm">tkinter.Wm</a>:<br>
 
 <dl><dt><a name="DataSpecificationWindow-withdraw"><strong>withdraw</strong></a> = <a href="#DataSpecificationWindow-wm_withdraw">wm_withdraw</a>(self)</dt></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_aspect"><strong>wm_aspect</strong></a>(self, minNumer=None, minDenom=None, maxNumer=None, maxDenom=None)</dt><dd><tt>Instruct&nbsp;the&nbsp;window&nbsp;manager&nbsp;to&nbsp;set&nbsp;the&nbsp;aspect&nbsp;ratio&nbsp;(width/height)<br>
+<dl><dt><a name="DataSpecificationWindow-wm_aspect"><strong>wm_aspect</strong></a>(self, minNumer=None, minDenom=None, maxNumer=None, maxDenom=None)</dt><dd><span class="code">Instruct&nbsp;the&nbsp;window&nbsp;manager&nbsp;to&nbsp;set&nbsp;the&nbsp;aspect&nbsp;ratio&nbsp;(width/height)<br>
 of&nbsp;this&nbsp;widget&nbsp;to&nbsp;be&nbsp;between&nbsp;MINNUMER/MINDENOM&nbsp;and&nbsp;MAXNUMER/MAXDENOM.&nbsp;Return&nbsp;a&nbsp;tuple<br>
-of&nbsp;the&nbsp;actual&nbsp;values&nbsp;if&nbsp;no&nbsp;argument&nbsp;is&nbsp;given.</tt></dd></dl>
+of&nbsp;the&nbsp;actual&nbsp;values&nbsp;if&nbsp;no&nbsp;argument&nbsp;is&nbsp;given.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_attributes"><strong>wm_attributes</strong></a>(self, *args)</dt><dd><tt>This&nbsp;subcommand&nbsp;returns&nbsp;or&nbsp;sets&nbsp;platform&nbsp;specific&nbsp;attributes<br>
+<dl><dt><a name="DataSpecificationWindow-wm_attributes"><strong>wm_attributes</strong></a>(self, *args)</dt><dd><span class="code">This&nbsp;subcommand&nbsp;returns&nbsp;or&nbsp;sets&nbsp;platform&nbsp;specific&nbsp;attributes<br>
 &nbsp;<br>
 The&nbsp;first&nbsp;form&nbsp;returns&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;platform&nbsp;specific&nbsp;flags&nbsp;and<br>
 their&nbsp;values.&nbsp;The&nbsp;second&nbsp;form&nbsp;returns&nbsp;the&nbsp;value&nbsp;for&nbsp;the&nbsp;specific<br>
@@ -760,63 +764,63 @@ windows).<br>
 &nbsp;<br>
 On&nbsp;Macintosh,&nbsp;XXXXX<br>
 &nbsp;<br>
-On&nbsp;Unix,&nbsp;there&nbsp;are&nbsp;currently&nbsp;no&nbsp;special&nbsp;attribute&nbsp;values.</tt></dd></dl>
+On&nbsp;Unix,&nbsp;there&nbsp;are&nbsp;currently&nbsp;no&nbsp;special&nbsp;attribute&nbsp;values.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_client"><strong>wm_client</strong></a>(self, name=None)</dt><dd><tt>Store&nbsp;NAME&nbsp;in&nbsp;WM_CLIENT_MACHINE&nbsp;property&nbsp;of&nbsp;this&nbsp;widget.&nbsp;Return<br>
-current&nbsp;value.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-wm_client"><strong>wm_client</strong></a>(self, name=None)</dt><dd><span class="code">Store&nbsp;NAME&nbsp;in&nbsp;WM_CLIENT_MACHINE&nbsp;property&nbsp;of&nbsp;this&nbsp;widget.&nbsp;Return<br>
+current&nbsp;value.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_colormapwindows"><strong>wm_colormapwindows</strong></a>(self, *wlist)</dt><dd><tt>Store&nbsp;list&nbsp;of&nbsp;window&nbsp;names&nbsp;(WLIST)&nbsp;into&nbsp;WM_COLORMAPWINDOWS&nbsp;property<br>
+<dl><dt><a name="DataSpecificationWindow-wm_colormapwindows"><strong>wm_colormapwindows</strong></a>(self, *wlist)</dt><dd><span class="code">Store&nbsp;list&nbsp;of&nbsp;window&nbsp;names&nbsp;(WLIST)&nbsp;into&nbsp;WM_COLORMAPWINDOWS&nbsp;property<br>
 of&nbsp;this&nbsp;widget.&nbsp;This&nbsp;list&nbsp;contains&nbsp;windows&nbsp;whose&nbsp;colormaps&nbsp;differ&nbsp;from&nbsp;their<br>
-parents.&nbsp;Return&nbsp;current&nbsp;list&nbsp;of&nbsp;widgets&nbsp;if&nbsp;WLIST&nbsp;is&nbsp;empty.</tt></dd></dl>
+parents.&nbsp;Return&nbsp;current&nbsp;list&nbsp;of&nbsp;widgets&nbsp;if&nbsp;WLIST&nbsp;is&nbsp;empty.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_command"><strong>wm_command</strong></a>(self, value=None)</dt><dd><tt>Store&nbsp;VALUE&nbsp;in&nbsp;WM_COMMAND&nbsp;property.&nbsp;It&nbsp;is&nbsp;the&nbsp;command<br>
+<dl><dt><a name="DataSpecificationWindow-wm_command"><strong>wm_command</strong></a>(self, value=None)</dt><dd><span class="code">Store&nbsp;VALUE&nbsp;in&nbsp;WM_COMMAND&nbsp;property.&nbsp;It&nbsp;is&nbsp;the&nbsp;command<br>
 which&nbsp;shall&nbsp;be&nbsp;used&nbsp;to&nbsp;invoke&nbsp;the&nbsp;application.&nbsp;Return&nbsp;current<br>
-command&nbsp;if&nbsp;VALUE&nbsp;is&nbsp;None.</tt></dd></dl>
+command&nbsp;if&nbsp;VALUE&nbsp;is&nbsp;None.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_deiconify"><strong>wm_deiconify</strong></a>(self)</dt><dd><tt>Deiconify&nbsp;this&nbsp;widget.&nbsp;If&nbsp;it&nbsp;was&nbsp;never&nbsp;mapped&nbsp;it&nbsp;will&nbsp;not&nbsp;be&nbsp;mapped.<br>
-On&nbsp;Windows&nbsp;it&nbsp;will&nbsp;raise&nbsp;this&nbsp;widget&nbsp;and&nbsp;give&nbsp;it&nbsp;the&nbsp;focus.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-wm_deiconify"><strong>wm_deiconify</strong></a>(self)</dt><dd><span class="code">Deiconify&nbsp;this&nbsp;widget.&nbsp;If&nbsp;it&nbsp;was&nbsp;never&nbsp;mapped&nbsp;it&nbsp;will&nbsp;not&nbsp;be&nbsp;mapped.<br>
+On&nbsp;Windows&nbsp;it&nbsp;will&nbsp;raise&nbsp;this&nbsp;widget&nbsp;and&nbsp;give&nbsp;it&nbsp;the&nbsp;focus.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_focusmodel"><strong>wm_focusmodel</strong></a>(self, model=None)</dt><dd><tt>Set&nbsp;focus&nbsp;model&nbsp;to&nbsp;MODEL.&nbsp;"active"&nbsp;means&nbsp;that&nbsp;this&nbsp;widget&nbsp;will&nbsp;claim<br>
+<dl><dt><a name="DataSpecificationWindow-wm_focusmodel"><strong>wm_focusmodel</strong></a>(self, model=None)</dt><dd><span class="code">Set&nbsp;focus&nbsp;model&nbsp;to&nbsp;MODEL.&nbsp;"active"&nbsp;means&nbsp;that&nbsp;this&nbsp;widget&nbsp;will&nbsp;claim<br>
 the&nbsp;focus&nbsp;itself,&nbsp;"passive"&nbsp;means&nbsp;that&nbsp;the&nbsp;window&nbsp;manager&nbsp;shall&nbsp;give<br>
-the&nbsp;focus.&nbsp;Return&nbsp;current&nbsp;focus&nbsp;model&nbsp;if&nbsp;MODEL&nbsp;is&nbsp;None.</tt></dd></dl>
+the&nbsp;focus.&nbsp;Return&nbsp;current&nbsp;focus&nbsp;model&nbsp;if&nbsp;MODEL&nbsp;is&nbsp;None.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_forget"><strong>wm_forget</strong></a>(self, window)</dt><dd><tt>The&nbsp;window&nbsp;will&nbsp;be&nbsp;unmapped&nbsp;from&nbsp;the&nbsp;screen&nbsp;and&nbsp;will&nbsp;no&nbsp;longer<br>
+<dl><dt><a name="DataSpecificationWindow-wm_forget"><strong>wm_forget</strong></a>(self, window)</dt><dd><span class="code">The&nbsp;window&nbsp;will&nbsp;be&nbsp;unmapped&nbsp;from&nbsp;the&nbsp;screen&nbsp;and&nbsp;will&nbsp;no&nbsp;longer<br>
 be&nbsp;managed&nbsp;by&nbsp;wm.&nbsp;toplevel&nbsp;windows&nbsp;will&nbsp;be&nbsp;treated&nbsp;like&nbsp;frame<br>
 windows&nbsp;once&nbsp;they&nbsp;are&nbsp;no&nbsp;longer&nbsp;managed&nbsp;by&nbsp;wm,&nbsp;however,&nbsp;the&nbsp;menu<br>
 option&nbsp;configuration&nbsp;will&nbsp;be&nbsp;remembered&nbsp;and&nbsp;the&nbsp;menus&nbsp;will&nbsp;return<br>
-once&nbsp;the&nbsp;widget&nbsp;is&nbsp;managed&nbsp;again.</tt></dd></dl>
+once&nbsp;the&nbsp;widget&nbsp;is&nbsp;managed&nbsp;again.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_frame"><strong>wm_frame</strong></a>(self)</dt><dd><tt>Return&nbsp;identifier&nbsp;for&nbsp;decorative&nbsp;frame&nbsp;of&nbsp;this&nbsp;widget&nbsp;if&nbsp;present.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-wm_frame"><strong>wm_frame</strong></a>(self)</dt><dd><span class="code">Return&nbsp;identifier&nbsp;for&nbsp;decorative&nbsp;frame&nbsp;of&nbsp;this&nbsp;widget&nbsp;if&nbsp;present.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_geometry"><strong>wm_geometry</strong></a>(self, newGeometry=None)</dt><dd><tt>Set&nbsp;geometry&nbsp;to&nbsp;NEWGEOMETRY&nbsp;of&nbsp;the&nbsp;form&nbsp;=widthxheight+x+y.&nbsp;Return<br>
-current&nbsp;value&nbsp;if&nbsp;None&nbsp;is&nbsp;given.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-wm_geometry"><strong>wm_geometry</strong></a>(self, newGeometry=None)</dt><dd><span class="code">Set&nbsp;geometry&nbsp;to&nbsp;NEWGEOMETRY&nbsp;of&nbsp;the&nbsp;form&nbsp;=widthxheight+x+y.&nbsp;Return<br>
+current&nbsp;value&nbsp;if&nbsp;None&nbsp;is&nbsp;given.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_grid"><strong>wm_grid</strong></a>(self, baseWidth=None, baseHeight=None, widthInc=None, heightInc=None)</dt><dd><tt>Instruct&nbsp;the&nbsp;window&nbsp;manager&nbsp;that&nbsp;this&nbsp;widget&nbsp;shall&nbsp;only&nbsp;be<br>
+<dl><dt><a name="DataSpecificationWindow-wm_grid"><strong>wm_grid</strong></a>(self, baseWidth=None, baseHeight=None, widthInc=None, heightInc=None)</dt><dd><span class="code">Instruct&nbsp;the&nbsp;window&nbsp;manager&nbsp;that&nbsp;this&nbsp;widget&nbsp;shall&nbsp;only&nbsp;be<br>
 resized&nbsp;on&nbsp;grid&nbsp;boundaries.&nbsp;WIDTHINC&nbsp;and&nbsp;HEIGHTINC&nbsp;are&nbsp;the&nbsp;width&nbsp;and<br>
 height&nbsp;of&nbsp;a&nbsp;grid&nbsp;unit&nbsp;in&nbsp;pixels.&nbsp;BASEWIDTH&nbsp;and&nbsp;BASEHEIGHT&nbsp;are&nbsp;the<br>
-number&nbsp;of&nbsp;grid&nbsp;units&nbsp;requested&nbsp;in&nbsp;Tk_GeometryRequest.</tt></dd></dl>
+number&nbsp;of&nbsp;grid&nbsp;units&nbsp;requested&nbsp;in&nbsp;Tk_GeometryRequest.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_group"><strong>wm_group</strong></a>(self, pathName=None)</dt><dd><tt>Set&nbsp;the&nbsp;group&nbsp;leader&nbsp;widgets&nbsp;for&nbsp;related&nbsp;widgets&nbsp;to&nbsp;PATHNAME.&nbsp;Return<br>
-the&nbsp;group&nbsp;leader&nbsp;of&nbsp;this&nbsp;widget&nbsp;if&nbsp;None&nbsp;is&nbsp;given.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-wm_group"><strong>wm_group</strong></a>(self, pathName=None)</dt><dd><span class="code">Set&nbsp;the&nbsp;group&nbsp;leader&nbsp;widgets&nbsp;for&nbsp;related&nbsp;widgets&nbsp;to&nbsp;PATHNAME.&nbsp;Return<br>
+the&nbsp;group&nbsp;leader&nbsp;of&nbsp;this&nbsp;widget&nbsp;if&nbsp;None&nbsp;is&nbsp;given.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_iconbitmap"><strong>wm_iconbitmap</strong></a>(self, bitmap=None, default=None)</dt><dd><tt>Set&nbsp;bitmap&nbsp;for&nbsp;the&nbsp;iconified&nbsp;widget&nbsp;to&nbsp;BITMAP.&nbsp;Return<br>
+<dl><dt><a name="DataSpecificationWindow-wm_iconbitmap"><strong>wm_iconbitmap</strong></a>(self, bitmap=None, default=None)</dt><dd><span class="code">Set&nbsp;bitmap&nbsp;for&nbsp;the&nbsp;iconified&nbsp;widget&nbsp;to&nbsp;BITMAP.&nbsp;Return<br>
 the&nbsp;bitmap&nbsp;if&nbsp;None&nbsp;is&nbsp;given.<br>
 &nbsp;<br>
 Under&nbsp;Windows,&nbsp;the&nbsp;DEFAULT&nbsp;parameter&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;set&nbsp;the&nbsp;icon<br>
 for&nbsp;the&nbsp;widget&nbsp;and&nbsp;any&nbsp;descendants&nbsp;that&nbsp;don't&nbsp;have&nbsp;an&nbsp;icon&nbsp;set<br>
 explicitly.&nbsp;&nbsp;DEFAULT&nbsp;can&nbsp;be&nbsp;the&nbsp;relative&nbsp;path&nbsp;to&nbsp;a&nbsp;.ico&nbsp;file<br>
 (example:&nbsp;root.<a href="#DataSpecificationWindow-iconbitmap">iconbitmap</a>(default='myicon.ico')&nbsp;).&nbsp;&nbsp;See&nbsp;Tk<br>
-documentation&nbsp;for&nbsp;more&nbsp;information.</tt></dd></dl>
+documentation&nbsp;for&nbsp;more&nbsp;information.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_iconify"><strong>wm_iconify</strong></a>(self)</dt><dd><tt>Display&nbsp;widget&nbsp;as&nbsp;icon.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-wm_iconify"><strong>wm_iconify</strong></a>(self)</dt><dd><span class="code">Display&nbsp;widget&nbsp;as&nbsp;icon.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_iconmask"><strong>wm_iconmask</strong></a>(self, bitmap=None)</dt><dd><tt>Set&nbsp;mask&nbsp;for&nbsp;the&nbsp;icon&nbsp;bitmap&nbsp;of&nbsp;this&nbsp;widget.&nbsp;Return&nbsp;the<br>
-mask&nbsp;if&nbsp;None&nbsp;is&nbsp;given.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-wm_iconmask"><strong>wm_iconmask</strong></a>(self, bitmap=None)</dt><dd><span class="code">Set&nbsp;mask&nbsp;for&nbsp;the&nbsp;icon&nbsp;bitmap&nbsp;of&nbsp;this&nbsp;widget.&nbsp;Return&nbsp;the<br>
+mask&nbsp;if&nbsp;None&nbsp;is&nbsp;given.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_iconname"><strong>wm_iconname</strong></a>(self, newName=None)</dt><dd><tt>Set&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;icon&nbsp;for&nbsp;this&nbsp;widget.&nbsp;Return&nbsp;the&nbsp;name&nbsp;if<br>
-None&nbsp;is&nbsp;given.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-wm_iconname"><strong>wm_iconname</strong></a>(self, newName=None)</dt><dd><span class="code">Set&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;icon&nbsp;for&nbsp;this&nbsp;widget.&nbsp;Return&nbsp;the&nbsp;name&nbsp;if<br>
+None&nbsp;is&nbsp;given.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_iconphoto"><strong>wm_iconphoto</strong></a>(self, default=False, *args)</dt><dd><tt>Sets&nbsp;the&nbsp;titlebar&nbsp;icon&nbsp;for&nbsp;this&nbsp;window&nbsp;based&nbsp;on&nbsp;the&nbsp;named&nbsp;photo<br>
+<dl><dt><a name="DataSpecificationWindow-wm_iconphoto"><strong>wm_iconphoto</strong></a>(self, default=False, *args)</dt><dd><span class="code">Sets&nbsp;the&nbsp;titlebar&nbsp;icon&nbsp;for&nbsp;this&nbsp;window&nbsp;based&nbsp;on&nbsp;the&nbsp;named&nbsp;photo<br>
 images&nbsp;passed&nbsp;through&nbsp;args.&nbsp;If&nbsp;default&nbsp;is&nbsp;True,&nbsp;this&nbsp;is&nbsp;applied&nbsp;to<br>
 all&nbsp;future&nbsp;created&nbsp;toplevels&nbsp;as&nbsp;well.<br>
 &nbsp;<br>
@@ -834,72 +838,71 @@ On&nbsp;X,&nbsp;the&nbsp;images&nbsp;are&nbsp;arranged&nbsp;into&nbsp;the&nbsp;_
 which&nbsp;most&nbsp;modern&nbsp;window&nbsp;managers&nbsp;support.&nbsp;An&nbsp;icon&nbsp;specified&nbsp;by<br>
 wm_iconbitmap&nbsp;may&nbsp;exist&nbsp;simultaneously.<br>
 &nbsp;<br>
-On&nbsp;Macintosh,&nbsp;this&nbsp;currently&nbsp;does&nbsp;nothing.</tt></dd></dl>
+On&nbsp;Macintosh,&nbsp;this&nbsp;currently&nbsp;does&nbsp;nothing.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_iconposition"><strong>wm_iconposition</strong></a>(self, x=None, y=None)</dt><dd><tt>Set&nbsp;the&nbsp;position&nbsp;of&nbsp;the&nbsp;icon&nbsp;of&nbsp;this&nbsp;widget&nbsp;to&nbsp;X&nbsp;and&nbsp;Y.&nbsp;Return<br>
-a&nbsp;tuple&nbsp;of&nbsp;the&nbsp;current&nbsp;values&nbsp;of&nbsp;X&nbsp;and&nbsp;X&nbsp;if&nbsp;None&nbsp;is&nbsp;given.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-wm_iconposition"><strong>wm_iconposition</strong></a>(self, x=None, y=None)</dt><dd><span class="code">Set&nbsp;the&nbsp;position&nbsp;of&nbsp;the&nbsp;icon&nbsp;of&nbsp;this&nbsp;widget&nbsp;to&nbsp;X&nbsp;and&nbsp;Y.&nbsp;Return<br>
+a&nbsp;tuple&nbsp;of&nbsp;the&nbsp;current&nbsp;values&nbsp;of&nbsp;X&nbsp;and&nbsp;X&nbsp;if&nbsp;None&nbsp;is&nbsp;given.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_iconwindow"><strong>wm_iconwindow</strong></a>(self, pathName=None)</dt><dd><tt>Set&nbsp;widget&nbsp;PATHNAME&nbsp;to&nbsp;be&nbsp;displayed&nbsp;instead&nbsp;of&nbsp;icon.&nbsp;Return&nbsp;the&nbsp;current<br>
-value&nbsp;if&nbsp;None&nbsp;is&nbsp;given.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-wm_iconwindow"><strong>wm_iconwindow</strong></a>(self, pathName=None)</dt><dd><span class="code">Set&nbsp;widget&nbsp;PATHNAME&nbsp;to&nbsp;be&nbsp;displayed&nbsp;instead&nbsp;of&nbsp;icon.&nbsp;Return&nbsp;the&nbsp;current<br>
+value&nbsp;if&nbsp;None&nbsp;is&nbsp;given.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_manage"><strong>wm_manage</strong></a>(self, widget)</dt><dd><tt>The&nbsp;widget&nbsp;specified&nbsp;will&nbsp;become&nbsp;a&nbsp;stand&nbsp;alone&nbsp;top-level&nbsp;window.<br>
+<dl><dt><a name="DataSpecificationWindow-wm_manage"><strong>wm_manage</strong></a>(self, widget)</dt><dd><span class="code">The&nbsp;widget&nbsp;specified&nbsp;will&nbsp;become&nbsp;a&nbsp;stand&nbsp;alone&nbsp;top-level&nbsp;window.<br>
 The&nbsp;window&nbsp;will&nbsp;be&nbsp;decorated&nbsp;with&nbsp;the&nbsp;window&nbsp;managers&nbsp;title&nbsp;bar,<br>
-etc.</tt></dd></dl>
+etc.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_maxsize"><strong>wm_maxsize</strong></a>(self, width=None, height=None)</dt><dd><tt>Set&nbsp;max&nbsp;WIDTH&nbsp;and&nbsp;HEIGHT&nbsp;for&nbsp;this&nbsp;widget.&nbsp;If&nbsp;the&nbsp;window&nbsp;is&nbsp;gridded<br>
+<dl><dt><a name="DataSpecificationWindow-wm_maxsize"><strong>wm_maxsize</strong></a>(self, width=None, height=None)</dt><dd><span class="code">Set&nbsp;max&nbsp;WIDTH&nbsp;and&nbsp;HEIGHT&nbsp;for&nbsp;this&nbsp;widget.&nbsp;If&nbsp;the&nbsp;window&nbsp;is&nbsp;gridded<br>
 the&nbsp;values&nbsp;are&nbsp;given&nbsp;in&nbsp;grid&nbsp;units.&nbsp;Return&nbsp;the&nbsp;current&nbsp;values&nbsp;if&nbsp;None<br>
-is&nbsp;given.</tt></dd></dl>
+is&nbsp;given.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_minsize"><strong>wm_minsize</strong></a>(self, width=None, height=None)</dt><dd><tt>Set&nbsp;min&nbsp;WIDTH&nbsp;and&nbsp;HEIGHT&nbsp;for&nbsp;this&nbsp;widget.&nbsp;If&nbsp;the&nbsp;window&nbsp;is&nbsp;gridded<br>
+<dl><dt><a name="DataSpecificationWindow-wm_minsize"><strong>wm_minsize</strong></a>(self, width=None, height=None)</dt><dd><span class="code">Set&nbsp;min&nbsp;WIDTH&nbsp;and&nbsp;HEIGHT&nbsp;for&nbsp;this&nbsp;widget.&nbsp;If&nbsp;the&nbsp;window&nbsp;is&nbsp;gridded<br>
 the&nbsp;values&nbsp;are&nbsp;given&nbsp;in&nbsp;grid&nbsp;units.&nbsp;Return&nbsp;the&nbsp;current&nbsp;values&nbsp;if&nbsp;None<br>
-is&nbsp;given.</tt></dd></dl>
+is&nbsp;given.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_overrideredirect"><strong>wm_overrideredirect</strong></a>(self, boolean=None)</dt><dd><tt>Instruct&nbsp;the&nbsp;window&nbsp;manager&nbsp;to&nbsp;ignore&nbsp;this&nbsp;widget<br>
+<dl><dt><a name="DataSpecificationWindow-wm_overrideredirect"><strong>wm_overrideredirect</strong></a>(self, boolean=None)</dt><dd><span class="code">Instruct&nbsp;the&nbsp;window&nbsp;manager&nbsp;to&nbsp;ignore&nbsp;this&nbsp;widget<br>
 if&nbsp;BOOLEAN&nbsp;is&nbsp;given&nbsp;with&nbsp;1.&nbsp;Return&nbsp;the&nbsp;current&nbsp;value&nbsp;if&nbsp;None<br>
-is&nbsp;given.</tt></dd></dl>
+is&nbsp;given.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_positionfrom"><strong>wm_positionfrom</strong></a>(self, who=None)</dt><dd><tt>Instruct&nbsp;the&nbsp;window&nbsp;manager&nbsp;that&nbsp;the&nbsp;position&nbsp;of&nbsp;this&nbsp;widget&nbsp;shall<br>
+<dl><dt><a name="DataSpecificationWindow-wm_positionfrom"><strong>wm_positionfrom</strong></a>(self, who=None)</dt><dd><span class="code">Instruct&nbsp;the&nbsp;window&nbsp;manager&nbsp;that&nbsp;the&nbsp;position&nbsp;of&nbsp;this&nbsp;widget&nbsp;shall<br>
 be&nbsp;defined&nbsp;by&nbsp;the&nbsp;user&nbsp;if&nbsp;WHO&nbsp;is&nbsp;"user",&nbsp;and&nbsp;by&nbsp;its&nbsp;own&nbsp;policy&nbsp;if&nbsp;WHO&nbsp;is<br>
-"program".</tt></dd></dl>
+"program".</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_protocol"><strong>wm_protocol</strong></a>(self, name=None, func=None)</dt><dd><tt>Bind&nbsp;function&nbsp;FUNC&nbsp;to&nbsp;command&nbsp;NAME&nbsp;for&nbsp;this&nbsp;widget.<br>
+<dl><dt><a name="DataSpecificationWindow-wm_protocol"><strong>wm_protocol</strong></a>(self, name=None, func=None)</dt><dd><span class="code">Bind&nbsp;function&nbsp;FUNC&nbsp;to&nbsp;command&nbsp;NAME&nbsp;for&nbsp;this&nbsp;widget.<br>
 Return&nbsp;the&nbsp;function&nbsp;bound&nbsp;to&nbsp;NAME&nbsp;if&nbsp;None&nbsp;is&nbsp;given.&nbsp;NAME&nbsp;could&nbsp;be<br>
-e.g.&nbsp;"WM_SAVE_YOURSELF"&nbsp;or&nbsp;"WM_DELETE_WINDOW".</tt></dd></dl>
+e.g.&nbsp;"WM_SAVE_YOURSELF"&nbsp;or&nbsp;"WM_DELETE_WINDOW".</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_resizable"><strong>wm_resizable</strong></a>(self, width=None, height=None)</dt><dd><tt>Instruct&nbsp;the&nbsp;window&nbsp;manager&nbsp;whether&nbsp;this&nbsp;width&nbsp;can&nbsp;be&nbsp;resized<br>
-in&nbsp;WIDTH&nbsp;or&nbsp;HEIGHT.&nbsp;Both&nbsp;values&nbsp;are&nbsp;boolean&nbsp;values.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-wm_resizable"><strong>wm_resizable</strong></a>(self, width=None, height=None)</dt><dd><span class="code">Instruct&nbsp;the&nbsp;window&nbsp;manager&nbsp;whether&nbsp;this&nbsp;width&nbsp;can&nbsp;be&nbsp;resized<br>
+in&nbsp;WIDTH&nbsp;or&nbsp;HEIGHT.&nbsp;Both&nbsp;values&nbsp;are&nbsp;boolean&nbsp;values.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_sizefrom"><strong>wm_sizefrom</strong></a>(self, who=None)</dt><dd><tt>Instruct&nbsp;the&nbsp;window&nbsp;manager&nbsp;that&nbsp;the&nbsp;size&nbsp;of&nbsp;this&nbsp;widget&nbsp;shall<br>
+<dl><dt><a name="DataSpecificationWindow-wm_sizefrom"><strong>wm_sizefrom</strong></a>(self, who=None)</dt><dd><span class="code">Instruct&nbsp;the&nbsp;window&nbsp;manager&nbsp;that&nbsp;the&nbsp;size&nbsp;of&nbsp;this&nbsp;widget&nbsp;shall<br>
 be&nbsp;defined&nbsp;by&nbsp;the&nbsp;user&nbsp;if&nbsp;WHO&nbsp;is&nbsp;"user",&nbsp;and&nbsp;by&nbsp;its&nbsp;own&nbsp;policy&nbsp;if&nbsp;WHO&nbsp;is<br>
-"program".</tt></dd></dl>
+"program".</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_state"><strong>wm_state</strong></a>(self, newstate=None)</dt><dd><tt>Query&nbsp;or&nbsp;set&nbsp;the&nbsp;state&nbsp;of&nbsp;this&nbsp;widget&nbsp;as&nbsp;one&nbsp;of&nbsp;normal,&nbsp;icon,<br>
-iconic&nbsp;(see&nbsp;wm_iconwindow),&nbsp;withdrawn,&nbsp;or&nbsp;zoomed&nbsp;(Windows&nbsp;only).</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-wm_state"><strong>wm_state</strong></a>(self, newstate=None)</dt><dd><span class="code">Query&nbsp;or&nbsp;set&nbsp;the&nbsp;state&nbsp;of&nbsp;this&nbsp;widget&nbsp;as&nbsp;one&nbsp;of&nbsp;normal,&nbsp;icon,<br>
+iconic&nbsp;(see&nbsp;wm_iconwindow),&nbsp;withdrawn,&nbsp;or&nbsp;zoomed&nbsp;(Windows&nbsp;only).</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_title"><strong>wm_title</strong></a>(self, string=None)</dt><dd><tt>Set&nbsp;the&nbsp;title&nbsp;of&nbsp;this&nbsp;widget.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-wm_title"><strong>wm_title</strong></a>(self, string=None)</dt><dd><span class="code">Set&nbsp;the&nbsp;title&nbsp;of&nbsp;this&nbsp;widget.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_transient"><strong>wm_transient</strong></a>(self, master=None)</dt><dd><tt>Instruct&nbsp;the&nbsp;window&nbsp;manager&nbsp;that&nbsp;this&nbsp;widget&nbsp;is&nbsp;transient<br>
-with&nbsp;regard&nbsp;to&nbsp;widget&nbsp;MASTER.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-wm_transient"><strong>wm_transient</strong></a>(self, master=None)</dt><dd><span class="code">Instruct&nbsp;the&nbsp;window&nbsp;manager&nbsp;that&nbsp;this&nbsp;widget&nbsp;is&nbsp;transient<br>
+with&nbsp;regard&nbsp;to&nbsp;widget&nbsp;MASTER.</span></dd></dl>
 
-<dl><dt><a name="DataSpecificationWindow-wm_withdraw"><strong>wm_withdraw</strong></a>(self)</dt><dd><tt>Withdraw&nbsp;this&nbsp;widget&nbsp;from&nbsp;the&nbsp;screen&nbsp;such&nbsp;that&nbsp;it&nbsp;is&nbsp;unmapped<br>
-and&nbsp;forgotten&nbsp;by&nbsp;the&nbsp;window&nbsp;manager.&nbsp;Re-draw&nbsp;it&nbsp;with&nbsp;wm_deiconify.</tt></dd></dl>
+<dl><dt><a name="DataSpecificationWindow-wm_withdraw"><strong>wm_withdraw</strong></a>(self)</dt><dd><span class="code">Withdraw&nbsp;this&nbsp;widget&nbsp;from&nbsp;the&nbsp;screen&nbsp;such&nbsp;that&nbsp;it&nbsp;is&nbsp;unmapped<br>
+and&nbsp;forgotten&nbsp;by&nbsp;the&nbsp;window&nbsp;manager.&nbsp;Re-draw&nbsp;it&nbsp;with&nbsp;wm_deiconify.</span></dd></dl>
 
 </td></tr></table></td></tr></table><p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#eeaa77">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+<table class="section">
+<tr class="decor functions-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Functions</strong></td></tr>
     
-<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-assignIndicesAndValues"><strong>assignIndicesAndValues</strong></a>(specification_lines, raw_units)</dt><dd><tt>Change&nbsp;the&nbsp;indices&nbsp;and&nbsp;values&nbsp;of&nbsp;circuit&nbsp;elements&nbsp;based&nbsp;on&nbsp;input&nbsp;from&nbsp;an&nbsp;RECM2&nbsp;file&nbsp;and&nbsp;return&nbsp;fit&nbsp;parameters&nbsp;that&nbsp;can&nbsp;be&nbsp;accessed&nbsp;by&nbsp;all&nbsp;parts&nbsp;of&nbsp;DECiM.<br>
+<tr><td class="decor functions-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><dl><dt><a name="-assignIndicesAndValues"><strong>assignIndicesAndValues</strong></a>(specification_lines, raw_units)</dt><dd><span class="code">Change&nbsp;the&nbsp;indices&nbsp;and&nbsp;values&nbsp;of&nbsp;circuit&nbsp;elements&nbsp;based&nbsp;on&nbsp;input&nbsp;from&nbsp;an&nbsp;RECM2&nbsp;file&nbsp;and&nbsp;return&nbsp;fit&nbsp;parameters&nbsp;that&nbsp;can&nbsp;be&nbsp;accessed&nbsp;by&nbsp;all&nbsp;parts&nbsp;of&nbsp;DECiM.<br>
 &nbsp;<br>
 Arguments:<br>
 specification_lines&nbsp;--&nbsp;part&nbsp;of&nbsp;the&nbsp;RECM2&nbsp;file&nbsp;that&nbsp;contains&nbsp;information&nbsp;about&nbsp;the&nbsp;individual&nbsp;circuit&nbsp;elements<br>
 raw_units&nbsp;--&nbsp;ecm_circuits.Circuit&nbsp;<a href="builtins.html#object">object</a>&nbsp;whose&nbsp;elements'&nbsp;values&nbsp;and&nbsp;indices&nbsp;must&nbsp;be&nbsp;corrected<br>
 &nbsp;<br>
 Returns:<br>
-fit_parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;fit&nbsp;parameters</tt></dd></dl>
- <dl><dt><a name="-createResultFile"><strong>createResultFile</strong></a>(circuit, parameters, e_dataset, m_dataset, default_filename='')</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;result&nbsp;file.<br>
+fit_parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;fit&nbsp;parameters</span></dd></dl>
+ <dl><dt><a name="-createResultFile"><strong>createResultFile</strong></a>(circuit, parameters, e_dataset, m_dataset, default_filename='')</dt><dd><span class="code">Create&nbsp;a&nbsp;new&nbsp;result&nbsp;file.<br>
 &nbsp;<br>
 Arguments:<br>
 circuit&nbsp;--&nbsp;ecm_circuits.Circuit&nbsp;<a href="builtins.html#object">object</a><br>
@@ -910,22 +913,22 @@ m_dataset&nbsp;--&nbsp;dataSet&nbsp;of&nbsp;model&nbsp;curve<br>
 Keyword&nbsp;arguments:<br>
 default_filename&nbsp;--&nbsp;initial&nbsp;file&nbsp;name,&nbsp;will&nbsp;normally&nbsp;be&nbsp;changed&nbsp;by&nbsp;the&nbsp;user<br>
 &nbsp;<br>
-No&nbsp;return&nbsp;value.&nbsp;The&nbsp;function&nbsp;ends&nbsp;with&nbsp;closing&nbsp;the&nbsp;output&nbsp;RECM2&nbsp;file.</tt></dd></dl>
- <dl><dt><a name="-parseCircuitPresets"><strong>parseCircuitPresets</strong></a>(filename)</dt><dd><tt>Parse&nbsp;the&nbsp;ecm_presets.decim_circuits&nbsp;file.<br>
+No&nbsp;return&nbsp;value.&nbsp;The&nbsp;function&nbsp;ends&nbsp;with&nbsp;closing&nbsp;the&nbsp;output&nbsp;RECM2&nbsp;file.</span></dd></dl>
+ <dl><dt><a name="-parseCircuitPresets"><strong>parseCircuitPresets</strong></a>(filename)</dt><dd><span class="code">Parse&nbsp;the&nbsp;ecm_presets.decim_circuits&nbsp;file.<br>
 &nbsp;<br>
 Arguments:<br>
 filename&nbsp;--&nbsp;name&nbsp;of&nbsp;the&nbsp;presets&nbsp;file,&nbsp;should&nbsp;be&nbsp;ecm_presets.decim_circuits<br>
 &nbsp;<br>
 Returns:<br>
-valid_circuit_definitions&nbsp;--&nbsp;list&nbsp;of&nbsp;all&nbsp;correct&nbsp;circuit&nbsp;strings&nbsp;extracted&nbsp;from&nbsp;the&nbsp;file</tt></dd></dl>
- <dl><dt><a name="-parseCircuitString"><strong>parseCircuitString</strong></a>(circuit_string)</dt><dd><tt>Parse&nbsp;a&nbsp;circuit&nbsp;string&nbsp;[such&nbsp;as&nbsp;(R0Q0)].<br>
+valid_circuit_definitions&nbsp;--&nbsp;list&nbsp;of&nbsp;all&nbsp;correct&nbsp;circuit&nbsp;strings&nbsp;extracted&nbsp;from&nbsp;the&nbsp;file</span></dd></dl>
+ <dl><dt><a name="-parseCircuitString"><strong>parseCircuitString</strong></a>(circuit_string)</dt><dd><span class="code">Parse&nbsp;a&nbsp;circuit&nbsp;string&nbsp;[such&nbsp;as&nbsp;(R0Q0)].<br>
 &nbsp;<br>
 Arguments:<br>
 circuit_string&nbsp;--&nbsp;the&nbsp;string&nbsp;defining&nbsp;a&nbsp;circuit<br>
 &nbsp;<br>
 Returns:<br>
-ecm_circuits.Circuit&nbsp;<a href="builtins.html#object">object</a>&nbsp;whose&nbsp;diagram&nbsp;matches&nbsp;the&nbsp;one&nbsp;described&nbsp;by&nbsp;the&nbsp;circuit&nbsp;string.</tt></dd></dl>
- <dl><dt><a name="-parseData"><strong>parseData</strong></a>(filename, dataspec_filename='ecm_datafiles.decim_specification', reverse=True)</dt><dd><tt>Read&nbsp;a&nbsp;data&nbsp;file.&nbsp;The&nbsp;assumed&nbsp;structure&nbsp;is&nbsp;three&nbsp;columns:&nbsp;linear&nbsp;frequency&nbsp;(Hz),&nbsp;real&nbsp;part&nbsp;of&nbsp;impedance&nbsp;(Ohm),&nbsp;imaginary&nbsp;part&nbsp;of&nbsp;impedance&nbsp;(Ohm).<br>
+ecm_circuits.Circuit&nbsp;<a href="builtins.html#object">object</a>&nbsp;whose&nbsp;diagram&nbsp;matches&nbsp;the&nbsp;one&nbsp;described&nbsp;by&nbsp;the&nbsp;circuit&nbsp;string.</span></dd></dl>
+ <dl><dt><a name="-parseData"><strong>parseData</strong></a>(filename, dataspec_filename='ecm_datafiles.decim_specification', reverse=True)</dt><dd><span class="code">Read&nbsp;a&nbsp;data&nbsp;file.&nbsp;The&nbsp;assumed&nbsp;structure&nbsp;is&nbsp;three&nbsp;columns:&nbsp;linear&nbsp;frequency&nbsp;(Hz),&nbsp;real&nbsp;part&nbsp;of&nbsp;impedance&nbsp;(Ohm),&nbsp;imaginary&nbsp;part&nbsp;of&nbsp;impedance&nbsp;(Ohm).<br>
 &nbsp;<br>
 Non-keyword&nbsp;arguments:<br>
 filename&nbsp;--&nbsp;relative&nbsp;path&nbsp;to&nbsp;file&nbsp;and&nbsp;name&nbsp;of&nbsp;file<br>
@@ -935,8 +938,8 @@ dataspec_filename&nbsp;--&nbsp;Name&nbsp;of&nbsp;file&nbsp;that&nbsp;specificies
 reverse&nbsp;--&nbsp;Boolean,&nbsp;reverse&nbsp;the&nbsp;order&nbsp;of&nbsp;the&nbsp;imported&nbsp;data&nbsp;if&nbsp;True.&nbsp;Default&nbsp;is&nbsp;True.&nbsp;Should&nbsp;be&nbsp;True&nbsp;if&nbsp;the&nbsp;input&nbsp;file&nbsp;begins&nbsp;with&nbsp;the&nbsp;highest&nbsp;frequencies,&nbsp;otherwise&nbsp;it&nbsp;should&nbsp;be&nbsp;False.<br>
 &nbsp;<br>
 Returns:<br>
-dataSet&nbsp;<a href="builtins.html#object">object</a></tt></dd></dl>
- <dl><dt><a name="-parseResult"><strong>parseResult</strong></a>(filename)</dt><dd><tt>Parse&nbsp;a&nbsp;result&nbsp;(.recm2)&nbsp;file.<br>
+dataSet&nbsp;<a href="builtins.html#object">object</a></span></dd></dl>
+ <dl><dt><a name="-parseResult"><strong>parseResult</strong></a>(filename)</dt><dd><span class="code">Parse&nbsp;a&nbsp;result&nbsp;(.recm2)&nbsp;file.<br>
 &nbsp;<br>
 Arguments:<br>
 filename&nbsp;--&nbsp;Path&nbsp;to&nbsp;and&nbsp;name&nbsp;of&nbsp;the&nbsp;.recm2&nbsp;file&nbsp;to&nbsp;be&nbsp;parsed<br>
@@ -944,6 +947,6 @@ filename&nbsp;--&nbsp;Path&nbsp;to&nbsp;and&nbsp;name&nbsp;of&nbsp;the&nbsp;.rec
 Returns&nbsp;tuple&nbsp;of:<br>
 circuit_input&nbsp;--&nbsp;ecm_circuits.Circuit&nbsp;<a href="builtins.html#object">object</a><br>
 dataSet&nbsp;<a href="builtins.html#object">object</a>&nbsp;containing&nbsp;measured&nbsp;data<br>
-list&nbsp;of&nbsp;model&nbsp;parameters</tt></dd></dl>
+list&nbsp;of&nbsp;model&nbsp;parameters</span></dd></dl>
 </td></tr></table>
 </body></html>

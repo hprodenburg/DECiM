@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the interactive elements code. Last modified 8 December 2023 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the interactive elements code. Last modified 24 April 2024 by Henrik Rodenburg.
 
 Classes:
 InteractionFrame -- contains all the controls for manual adjustment of fitting parameters"""
@@ -12,7 +12,7 @@ import numpy as np
 import tkinter as tk
 import tkinter.ttk as ttk
 
-from ecm_circuits import Circuit, Unit, Resistor, Capacitor, Inductor, ConstantPhaseElement, WarburgOpen, WarburgShort, GerischerElement
+from ecm_circuits import Circuit, Unit, Resistor, Capacitor, Inductor, ConstantPhaseElement, WarburgOpen, WarburgShort, HavriliakNegami, GerischerElement
 
 ###########################
 ##INTERACTIVE FRAME CLASS##
@@ -154,6 +154,10 @@ class InteractionFrame(ttk.Frame):
                 self.parameter_dropdown["menu"].add_command(label = "l" + str(element.number), command = tk._setit(self.chosen_parameter, "l" + str(element.number)))
             if element.tag == "G":
                 self.parameter_dropdown["menu"].add_command(label = "m" + str(element.number), command = tk._setit(self.chosen_parameter, "m" + str(element.number)))
+            if element.tag == "H":
+                self.parameter_dropdown["menu"].add_command(label = "t" + str(element.number), command = tk._setit(self.chosen_parameter, "t" + str(element.number)))
+                self.parameter_dropdown["menu"].add_command(label = "b" + str(element.number), command = tk._setit(self.chosen_parameter, "b" + str(element.number)))
+                self.parameter_dropdown["menu"].add_command(label = "g" + str(element.number), command = tk._setit(self.chosen_parameter, "g" + str(element.number)))
     
     def update_label(self, new_value):
         """Update the label below the slider with the (new) parameter name, value and units.
@@ -162,7 +166,7 @@ class InteractionFrame(ttk.Frame):
         self
         new_value -- new value of the chosen parameter"""
         parameter_name = self.chosen_parameter.get()
-        if parameter_name[0] in ["R", "O", "S", "G"]:
+        if parameter_name[0] in ["R", "O", "S", "G", "H"]:
             self.parameter_value.set(parameter_name + " = {:5g} ".format(new_value) + " Ω")
         if parameter_name[0] == "C":
             self.parameter_value.set(parameter_name + " = {:5g} ".format(new_value) + " F")
@@ -170,8 +174,10 @@ class InteractionFrame(ttk.Frame):
             self.parameter_value.set(parameter_name + " = {:5g} ".format(new_value) + " H")
         if parameter_name[0] == "Q":
             self.parameter_value.set(parameter_name + " = {:5g} ".format(new_value) + " Fs^(n-1)")
-        if parameter_name[0] == "n":
+        if parameter_name[0] in "nbg":
             self.parameter_value.set(parameter_name + " = {:5g} ".format(new_value))
+        if parameter_name[0] == "t":
+            self.parameter_value.set(parameter_name + " = {:5g} ".format(new_value) + "s^(b*g)")
         if parameter_name[0] in "klm":
             self.parameter_value.set(parameter_name + " = {:5g} ".format(new_value) + " s^(1/2)")
     
@@ -181,14 +187,20 @@ class InteractionFrame(ttk.Frame):
         for element in self.circuit.diagram.list_elements():
             if element.name == parameter_name: #R, C, L, Q, O, S, G: Parameter name matches element name. Can simply look for a match and return idx.
                 return element.idx
-            if element.tag == "Q" and parameter_name[0] == "n" and str(element.number) == parameter_name[1]: #n: Find Q with the same number and return idx2
+            if element.tag == "Q" and parameter_name[0] == "n" and str(element.number) == parameter_name[1:]: #n: Find Q with the same number and return idx2
                 return element.idx2
-            if element.tag == "O" and parameter_name[0] == "k" and str(element.number) == parameter_name[1]: #k: Find O, S, G with the same number and return idx2
+            if element.tag == "O" and parameter_name[0] == "k" and str(element.number) == parameter_name[1:]: #k: Find O with the same number and return idx2
                 return element.idx2
-            if element.tag == "S" and parameter_name[0] == "l" and str(element.number) == parameter_name[1]: #k: Find O, S, G with the same number and return idx2
+            if element.tag == "S" and parameter_name[0] == "l" and str(element.number) == parameter_name[1:]: #l: Find S with the same number and return idx2
                 return element.idx2
-            if element.tag == "G" and parameter_name[0] == "m" and str(element.number) == parameter_name[1]: #k: Find O, S, G with the same number and return idx2
+            if element.tag == "G" and parameter_name[0] == "m" and str(element.number) == parameter_name[1:]: #m: Find G with the same number and return idx2
                 return element.idx2
+            if element.tag == "H" and parameter_name[0] == "t" and str(element.number) == parameter_name[1:]: #t: Find H with the same number and return idx2
+                return element.idx2
+            if element.tag == "H" and parameter_name[0] == "b" and str(element.number) == parameter_name[1:]: #t: Find H with the same number and return idx3
+                return element.idx3
+            if element.tag == "H" and parameter_name[0] == "g" and str(element.number) == parameter_name[1:]: #t: Find H with the same number and return idx4
+                return element.idx4
     
     def slider_set_parameter(self, event):
         """Convert the slider value to a parameter value, then update the parameter value and the parameter value label."""
@@ -227,27 +239,19 @@ class InteractionFrame(ttk.Frame):
         #Check what kind of parameter we're dealing with
         parameter_name = self.chosen_parameter.get()
         #Set the controls to logical values for the parameter type
-        if parameter_name[0] in ["R", "O", "S", "G"]:
+        if parameter_name[0] in ["R", "O", "S", "G", "H"]:
             self.lower_limit.set("0")
             self.upper_limit.set("1e10")
             self.slider_scaling.set("logarithmic")
-        if parameter_name[0] == "C":
+        if parameter_name[0] in ["C", "Q", "L", "m", "t"]:
             self.lower_limit.set("0")
             self.upper_limit.set("1e-12")
             self.slider_scaling.set("logarithmic")
-        if parameter_name[0] == "L":
-            self.lower_limit.set("0")
-            self.upper_limit.set("1e-12")
-            self.slider_scaling.set("logarithmic")
-        if parameter_name[0] == "Q":
-            self.lower_limit.set("0")
-            self.upper_limit.set("1e-12")
-            self.slider_scaling.set("logarithmic")
-        if parameter_name[0] == "n":
+        if parameter_name[0] in ["n", "b", "g"]:
             self.lower_limit.set("0")
             self.upper_limit.set("1")
             self.slider_scaling.set("linear")
-        if parameter_name[0] in ["k", "l", "m"]:
+        if parameter_name[0] in ["k", "l"]:
             self.lower_limit.set("0")
             self.upper_limit.set("1e6")
             self.slider_scaling.set("logarithmic")

@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the fitting classes. Last modified 8 December 2023 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the fitting classes. Last modified 24 April 2024 by Henrik Rodenburg.
 
 Classes:
 RefinementEngine -- class for the simple refinement
@@ -140,7 +140,7 @@ class RefinementWindow(tk.Toplevel):
         for p in self.element_list: #Tie parameter names to parameter array indices and count the parameters
             self.parameter_dict[p.name] = p.idx
             indices.append(p.idx)
-            if p.tag in "QSOG":
+            if p.tag in "QSOGH":
                 indices.append(p.idx2)
                 if p.tag == "Q":
                     self.parameter_dict["n" + str(p.number)] = p.idx2
@@ -150,6 +150,12 @@ class RefinementWindow(tk.Toplevel):
                     self.parameter_dict["l" + str(p.number)] = p.idx2
                 if p.tag == "G":
                     self.parameter_dict["m" + str(p.number)] = p.idx2
+                if p.tag == "H":
+                    indices.append(p.idx3)
+                    indices.append(p.idx4)
+                    self.parameter_dict["t" + str(p.number)] = p.idx2
+                    self.parameter_dict["b" + str(p.number)] = p.idx3
+                    self.parameter_dict["g" + str(p.number)] = p.idx4
         parcount = max(indices) + 1
         self.parameter_list = list(np.zeros(parcount))
         for p in self.parameter_dict:
@@ -217,7 +223,7 @@ class RefinementWindow(tk.Toplevel):
             self.tick_boxes.append(tk.Checkbutton(self.tick_box_frame, text = param, variable = self.tick_states[-1]))
             self.parameter_values.append(tk.StringVar(self))
             self.parameter_labels.append(tk.Label(self.tick_label_frame, textvariable = self.parameter_values[-1]))
-            if str(param)[0] in "RLCQnOSGklm": #Only pack real, meaningful parameters.
+            if str(param)[0] in "RLCQnOSGklmHtbg": #Only pack real, meaningful parameters.
                 self.tick_boxes[-1].pack(side = tk.TOP, anchor = tk.W, padx = 30)
                 self.parameter_labels[-1].pack(side = tk.TOP, anchor = tk.E)
         self.set_param_labels()
@@ -294,8 +300,8 @@ class RefinementWindow(tk.Toplevel):
     def set_param_labels(self):
         """Set the labels of the parameters on the tick_frame."""
         for p in self.parameter_dict:
-            units = "" #Stays this way for n
-            if str(p)[0] in ["R", "O", "S", "G"]:
+            units = "" #Stays this way for n, b, g
+            if str(p)[0] in ["R", "O", "S", "G", "H"]:
                 units = " Ohm"
             if str(p)[0] == "C":
                 units = " F"
@@ -305,6 +311,8 @@ class RefinementWindow(tk.Toplevel):
                 units = " H"
             if str(p)[0] in ["k", "l", "m"]:
                 units = " s^(1/2)"
+            if str(p)[0] == "t":
+                units = "s^(beta*gamma)"
             if str(p)[0] in "RLCQnOSGklm":
                 self.parameter_values[self.parameter_dict[p]].set(p + " = {:5g}".format(self.refined_parameters[self.parameter_dict[p]]) + units)
     
@@ -339,6 +347,8 @@ class RefinementWindow(tk.Toplevel):
         self.bode_phase.set_ylabel("$\phi$ ($^\circ)$")
         self.bode_phase.yaxis.label.set_color("#229950")
         self.bode_phase.tick_params(axis = "y", colors = "#229950")
+        self.bode_phase.yaxis.tick_right()
+        self.bode_phase.yaxis.set_label_position("right")
         #Compute solution
         d_solution = self.function_to_fit(self.refined_parameters, self.data.freq)
         #Plot the residuals

@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains all functions related to file I/O. Last modified 19 March 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains all functions related to file I/O. Last modified 24 April 2024 by Henrik Rodenburg.
 
 Classes:
 DataSpecificationFile -- settings file that holds information about data file layout.
@@ -24,7 +24,7 @@ import tkinter.simpledialog as sdiag
 import tkinter.filedialog as fdiag
 
 from ecm_datastructure import dataSet
-from ecm_circuits import Circuit, Unit, Resistor, Capacitor, Inductor, ConstantPhaseElement, WarburgOpen, WarburgShort, GerischerElement
+from ecm_circuits import Circuit, Unit, Resistor, Capacitor, Inductor, ConstantPhaseElement, WarburgOpen, WarburgShort, GerischerElement, HavriliakNegami
 import ecm_custom_models as ecmcm
 
 #######################
@@ -191,8 +191,8 @@ def parseCircuitString(circuit_string):
     if circuit_string[0] != "{" and circuit_string[-1] != "}" and circuit_string[0] != "(" and circuit_string[-1] != ")": #Fix circuits with no surrounding matching brackets by assuming they are series units
         circuit_string = "{" + circuit_string + "}"
     mode_signs = {"(": "parallel", "{": "series"} #Linking of brackets to modes. Needed to correctly initialize new units when brackets are read.
-    counts = {"R": 0, "C": 0, "L": 0, "Q": 0, "O": 0, "S": 0, "G": 0, "U": 0} #Keeping track of how many of each element there are.
-    elements = {"R": Resistor, "C": Capacitor, "L": Inductor, "Q": ConstantPhaseElement, "O": WarburgOpen, "S": WarburgShort, "G": GerischerElement} #Classes associated with the letters in the string.
+    counts = {"R": 0, "C": 0, "L": 0, "Q": 0, "O": 0, "S": 0, "G": 0, "H": 0, "U": 0} #Keeping track of how many of each element there are.
+    elements = {"R": Resistor, "C": Capacitor, "L": Inductor, "Q": ConstantPhaseElement, "O": WarburgOpen, "S": WarburgShort, "G": GerischerElement, "H": HavriliakNegami} #Classes associated with the letters in the string.
     level = 0 #The 'depth' of the current unit in the circuit. Basically how many open brackets it finds itself behind.
     eidx = 0 #The index in the parameter list associated with the element. This is incorrectly handled in this function, because further specification beyond the circuit string is needed to do it right. This is what the assignIndicesAndValues function handles.
     units = [] #Units. Units the elements are in.
@@ -233,6 +233,17 @@ def parseCircuitString(circuit_string):
                     break
             counts[c] += 1 #The count for the type of element is updated.
             eidx += 2 #The index is also updated (although it is wrong -- again, this is fixed by the assignIndicesAndValues function)
+        elif c == "H": #H requires separate treatment, since it has 4 parameters.
+            enum = counts[c] #By default, the element's number is equal to the current count of its type of element.
+            if len(circuit_string) > pos: #However, if the circuit string contains element numbers, the element number in the string is used instead.
+                if circuit_string[pos + 1] in "012345789":
+                    enum = int(circuit_string[pos + 1])
+            for k in reversed(list(unit_merges.keys())):
+                if unit_merges[k][1]:
+                    unit_merges[k][0].add_element(elements[c](1, 1, 1, 1, enum, eidx, units[-1])) #Add element to most recently added, still open unit. The actual value of the resistor, capacitor or inductor is set to 1. It will be changed later, by the assignIndicesAndValues function.
+                    break
+            counts[c] += 1 #The count for the type of element is updated.
+            eidx += 4 #The index is also updated (although it is wrong -- again, this is fixed by the assignIndicesAndValues function)
         elif c in [")", "}"]:
             open_unit_numbers = [] #Merging, part 2: closing units. First, collect the numbers of all still-open units
             for u in unit_merges: #Loop over all unit numbers in the merge dictionary
@@ -260,6 +271,10 @@ def assignIndicesAndValues(specification_lines, raw_units): #Take the specificat
     Returns:
     fit_parameters -- list of fit parameters"""
     fit_parameters = list(np.zeros(100) + 1) #List of model parameters; returned by this function
+    indices = []
+    for spec_line in specification_lines:
+        halves = list(spec_line.split("|")) #First split each line into the value half and the index half
+        indices.append(int(halves[1]))
     for spec_line in specification_lines:
         halves = list(spec_line.split("|")) #First split each line into the value half and the index half
         parameter_details = list(halves[0].split()) #Get the parameter name and value, and unit if the parameter is not a CPE exponent.
@@ -270,7 +285,7 @@ def assignIndicesAndValues(specification_lines, raw_units): #Take the specificat
         else:
             raise ValueError("Incorrect parameter line.")
         parameter_value = float(parameter_value) #Convert parameter value to float
-        parameter_index = int(halves[1]) #Get the index and convert it to an integer
+        parameter_index = int(halves[1]) - min(indices) #Get the index and convert it to an integer
         fit_parameters[parameter_index] = parameter_value #Update the parameter list
         for element in raw_units.diagram.list_elements(): #Now check to which element the parameter under investigation belongs
             if element.name == parameter_name: #If the parameter name is equal to an element name (can happen for R, C, L, Q, G):
@@ -289,17 +304,25 @@ def assignIndicesAndValues(specification_lines, raw_units): #Take the specificat
                     element.S = parameter_value
                 if element.tag == "G":
                     element.G = parameter_value
+                if element.tag == "H":
+                    element.G = parameter_value
             if element.tag == "Q" and parameter_name[0] == "n" and int(parameter_name[1]) == element.number: #If the parameter is a CPE exponent
                 element.idx2 = parameter_index #Set the secondary index equal to the parameter index
                 element.n = parameter_value #Set the value
-            if element.tag in ["O", "S", "G"] and parameter_name[0] in ["k", "l", "m"] and int(parameter_name[1]) == element.number: #If the parameter is a CPE exponent
+            if element.tag in ["O", "S", "G", "H"] and parameter_name[0] in ["k", "l", "m", "t"] and int(parameter_name[1]) == element.number: #If the parameter is a timescale
                 element.idx2 = parameter_index #Set the secondary index equal to the parameter index
                 if element.tag == "O":
                     element.k = parameter_value
                 if element.tag == "S":
                     element.l = parameter_value
-                if element.tag == "G":
+                if element.tag in "GH":
                     element.m = parameter_value
+            if element.tag == "H" and parameter_name[0] == "b" and int(parameter_name[1]) == element.number:
+                element.idx3 = parameter_index
+                element.beta = parameter_value
+            if element.tag == "H" and parameter_name[0] == "g" and int(parameter_name[1]) == element.number:
+                element.idx4 = parameter_index
+                element.gamma = parameter_value
     return fit_parameters
 
 def parseResult(filename):
@@ -396,7 +419,7 @@ def createResultFile(circuit, parameters, e_dataset, m_dataset, default_filename
     else:
         outfile.write(circuit.diagram.generate_circuit_string(verbose = True) + "\n\n")
     #Model parameter section
-    e_units = {"R": "Ohm", "L": "H", "C": "F", "Q": "Fs^(n-1)", "n": "", "O": "Ohm", "S": "Ohm", "G": "Ohm", "k": "s^{1/2}", "l": "s^{1/2}", "m": "s^{1/2}"}
+    e_units = {"R": "Ohm", "L": "H", "C": "F", "Q": "Fs^(n-1)", "n": "", "b": "", "g": "", "O": "Ohm", "S": "Ohm", "G": "Ohm", "H": "Ohm", "k": "s^{1/2}", "l": "s^{1/2}", "m": "s^{1/2}", "t": "s^{b*g}"}
     outfile.write(">MODEL PARAMETERS\n")
     for e in circuit.diagram.list_elements():
         outfile.write(e.name + ": " + str(parameters[e.idx]) + " " + e_units[e.tag] + " | " + str(e.idx) + "\n")
@@ -407,7 +430,11 @@ def createResultFile(circuit, parameters, e_dataset, m_dataset, default_filename
         if e.tag == "S":
             outfile.write("l" + str(e.number) + ": " + str(parameters[e.idx2]) + " " + e_units["l"] + " | " + str(e.idx2) + "\n")
         if e.tag == "G":
-            outfile.write("," + str(e.number) + ": " + str(parameters[e.idx2]) + " " + e_units["m"] + " | " + str(e.idx2) + "\n")
+            outfile.write("m" + str(e.number) + ": " + str(parameters[e.idx2]) + " " + e_units["m"] + " | " + str(e.idx2) + "\n")
+        if e.tag == "H":
+            outfile.write("t" + str(e.number) + ": " + str(parameters[e.idx2]) + " " + e_units["t"] + " | " + str(e.idx2) + "\n")
+            outfile.write("b" + str(e.number) + ": " + str(parameters[e.idx3]) + " " + e_units["b"] + " | " + str(e.idx3) + "\n")
+            outfile.write("g" + str(e.number) + ": " + str(parameters[e.idx4]) + " " + e_units["g"] + " | " + str(e.idx4) + "\n")
     outfile.write("\n")
     #Statistics section
     outfile.write(">STATISTICAL DATA\n")
@@ -417,6 +444,8 @@ def createResultFile(circuit, parameters, e_dataset, m_dataset, default_filename
             parct += 1
         elif c in "QSOG":
             parct += 2
+        elif c == "H":
+            parct += 4
     outfile.write("Number of parameters: " + str(parct) + "\n")
     outfile.write("Number of frequencies N_f: " + str(len(e_dataset.freq)) + "\n")
     dof, opr = 2*len(e_dataset.freq) - parct, 2*len(e_dataset.freq)/parct
@@ -464,7 +493,7 @@ def parseCircuitPresets(filename):
         if charcounts["("] != charcounts[")"] or charcounts["{"] != charcounts["}"]:
             continue
         #Check if at least one element has been defined
-        if "R" not in ctext and "C" not in ctext and "L" not in ctext and "Q" not in ctext and "O" not in ctext and "S" not in ctext and "G" not in ctext:
+        if "R" not in ctext and "C" not in ctext and "L" not in ctext and "Q" not in ctext and "O" not in ctext and "S" not in ctext and "G" not in ctext and "H" not in ctext:
             continue
         #If the iteration has not been skipped at this point, the circuit string is valid -- or at least interpretable
         valid_circuit_definitions.append(ctext)
