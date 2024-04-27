@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the interactive elements code. Last modified 24 April 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the interactive elements code. Last modified 27 April 2024 by Henrik Rodenburg.
 
 Classes:
 InteractionFrame -- contains all the controls for manual adjustment of fitting parameters"""
@@ -42,6 +42,7 @@ class InteractionFrame(ttk.Frame):
         parameter_frame, choice_label, parameter_dropdown -- frame, description label and tk.OptionMenu for choosing a parameter
         adjust_button -- button to automatically adjust slider_scaling, lower_limit and upper_limit based on parameter name
         response_frame, response_label, response_dropdown -- frame, description label and tk.OptionMenu for choosing the slider scaling mode
+        error_label, error_frame, error_text -- label, frame and string for slider errors (controlled via DECiM core)
         low_lim_frame, low_lim_label, low_lim_box -- frame, description label and tk.Entry widget for choosing the lower frequency limit
         high_lim_frame, high_lim_label, high_lim_box -- frame, description label and tk.Entry widget for choosing the upper frequency limit
         slider_frame, slider, parameter_label -- frame, tk.Scale for setting the parameter value and a label to display the parameter name and value
@@ -96,6 +97,13 @@ class InteractionFrame(ttk.Frame):
         self.response_dropdown = tk.OptionMenu(self.response_frame, self.slider_scaling, "logarithmic", "linear")
         self.response_dropdown.pack(side = tk.TOP, anchor = tk.CENTER)
         self.response_frame.pack(side = tk.LEFT, anchor = tk.E, fill = tk.X, expand = True)
+        
+        #Error label
+        self.error_frame = ttk.Frame(self)
+        self.error_label = tk.Label(self.response_frame, text = "Calculation error!", fg = "#c00", disabledforeground = "SystemButtonFace")
+        self.error_label.configure(state = "disabled")
+        self.error_label.pack(side = tk.TOP, anchor = tk.CENTER)
+        self.error_frame.pack(side = tk.LEFT, anchor = tk.E, fill = tk.X, expand = True)
         
         #Slider lower limit input
         self.low_lim_frame = ttk.Frame(self)

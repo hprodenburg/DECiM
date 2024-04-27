@@ -9,7 +9,7 @@
 <tr class="heading-text decor">
 <td class="title">&nbsp;<br><strong class="title">ecm_user_input</strong></td>
 </tr></table>
-    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;interactive&nbsp;elements&nbsp;code.&nbsp;Last&nbsp;modified&nbsp;24&nbsp;April&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;interactive&nbsp;elements&nbsp;code.&nbsp;Last&nbsp;modified&nbsp;27&nbsp;April&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
 &nbsp;<br>
 Classes:<br>
 <a href="#InteractionFrame">InteractionFrame</a>&nbsp;--&nbsp;contains&nbsp;all&nbsp;the&nbsp;controls&nbsp;for&nbsp;manual&nbsp;adjustment&nbsp;of&nbsp;fitting&nbsp;parameters</span></p>
@@ -82,6 +82,7 @@ override_parameter_value&nbsp;--&nbsp;tk.StringVar&nbsp;holding&nbsp;the&nbsp;cu
 parameter_frame,&nbsp;choice_label,&nbsp;parameter_dropdown&nbsp;--&nbsp;frame,&nbsp;description&nbsp;label&nbsp;and&nbsp;tk.OptionMenu&nbsp;for&nbsp;choosing&nbsp;a&nbsp;parameter<br>
 adjust_button&nbsp;--&nbsp;button&nbsp;to&nbsp;automatically&nbsp;adjust&nbsp;slider_scaling,&nbsp;lower_limit&nbsp;and&nbsp;upper_limit&nbsp;based&nbsp;on&nbsp;parameter&nbsp;name<br>
 response_frame,&nbsp;response_label,&nbsp;response_dropdown&nbsp;--&nbsp;frame,&nbsp;description&nbsp;label&nbsp;and&nbsp;tk.OptionMenu&nbsp;for&nbsp;choosing&nbsp;the&nbsp;slider&nbsp;scaling&nbsp;mode<br>
+error_label,&nbsp;error_frame,&nbsp;error_text&nbsp;--&nbsp;label,&nbsp;frame&nbsp;and&nbsp;string&nbsp;for&nbsp;slider&nbsp;errors&nbsp;(controlled&nbsp;via&nbsp;DECiM&nbsp;core)<br>
 low_lim_frame,&nbsp;low_lim_label,&nbsp;low_lim_box&nbsp;--&nbsp;frame,&nbsp;description&nbsp;label&nbsp;and&nbsp;tk.Entry&nbsp;widget&nbsp;for&nbsp;choosing&nbsp;the&nbsp;lower&nbsp;frequency&nbsp;limit<br>
 high_lim_frame,&nbsp;high_lim_label,&nbsp;high_lim_box&nbsp;--&nbsp;frame,&nbsp;description&nbsp;label&nbsp;and&nbsp;tk.Entry&nbsp;widget&nbsp;for&nbsp;choosing&nbsp;the&nbsp;upper&nbsp;frequency&nbsp;limit<br>
 slider_frame,&nbsp;slider,&nbsp;parameter_label&nbsp;--&nbsp;frame,&nbsp;tk.Scale&nbsp;for&nbsp;setting&nbsp;the&nbsp;parameter&nbsp;value&nbsp;and&nbsp;a&nbsp;label&nbsp;to&nbsp;display&nbsp;the&nbsp;parameter&nbsp;name&nbsp;and&nbsp;value<br>

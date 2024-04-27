@@ -1,6 +1,6 @@
 """DECiM (Determination of Equivalent Circuit Models) is an equivalent circuit model fitting program for impedance data. It is a GUI-based program.
 Much of the source code is spread over other python source files, all of which must be in the same folder as DECiM.py to ensure that the program works correctly.
-DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.5, 24 April 2024.
+DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.6, 27 April 2024.
 
 This is the core module -- when launched, DECiM starts. This module also defines the Window class."""
 
@@ -526,14 +526,21 @@ class Window(ttk.Frame):
         webbrowser.open_new(r'file://' + manual_path) #See https://stackoverflow.com/questions/19453338/opening-pdf-file
 
     def generateFit(self):
-        """Generate the model dataset from the model parameters, circuit model and a logarithmically spaced NumPy array of frequencies."""
+        """Generate the model dataset from the model parameters, circuit model and a logarithmically spaced NumPy array of frequencies.
+        Alternatively, update the error label in case the model generation fails."""
         xdt = 10**np.linspace(np.log10(min(self.data.freq)), np.log10(max(self.data.freq)), 500)
-        imp = xdt, self.interactive.circuit.impedance(self.interactive.parameters, xdt)
-        self.model.freq = xdt
-        self.model.real = np.real(imp[1])
-        self.model.imag = np.imag(imp[1])
-        self.model.phase = np.angle(imp[1])
-        self.model.amplitude = np.absolute(imp[1])
+        self.interactive.error_label.configure(state = "disabled")
+        np.seterr(all = "raise")
+        try:
+            imp = xdt, self.interactive.circuit.impedance(self.interactive.parameters, xdt)
+            self.model.freq = xdt
+            self.model.real = np.real(imp[1])
+            self.model.imag = np.imag(imp[1])
+            self.model.phase = np.angle(imp[1])
+            self.model.amplitude = np.absolute(imp[1])
+        except FloatingPointError:
+            self.interactive.error_label.configure(state = "normal")
+        np.seterr(all = "print")
 
     def getMaxima(self):
         """Using the model curve, get the maxima of the complex plane plot, then launch a window with a Text widget in which the frequencies at the maxima are displayed."""
