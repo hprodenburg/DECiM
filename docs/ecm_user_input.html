@@ -9,10 +9,11 @@
 <tr class="heading-text decor">
 <td class="title">&nbsp;<br><strong class="title">ecm_user_input</strong></td>
 </tr></table>
-    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;interactive&nbsp;elements&nbsp;code.&nbsp;Last&nbsp;modified&nbsp;27&nbsp;April&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;interactive&nbsp;elements&nbsp;code.&nbsp;Last&nbsp;modified&nbsp;29&nbsp;April&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
 &nbsp;<br>
 Classes:<br>
-<a href="#InteractionFrame">InteractionFrame</a>&nbsp;--&nbsp;contains&nbsp;all&nbsp;the&nbsp;controls&nbsp;for&nbsp;manual&nbsp;adjustment&nbsp;of&nbsp;fitting&nbsp;parameters</span></p>
+<a href="#InteractionFrame">InteractionFrame</a>&nbsp;--&nbsp;contains&nbsp;all&nbsp;the&nbsp;controls&nbsp;for&nbsp;manual&nbsp;adjustment&nbsp;of&nbsp;fitting&nbsp;parameters<br>
+<a href="#ScrollableListbox">ScrollableListbox</a>&nbsp;--&nbsp;combination&nbsp;of&nbsp;tk.Listbox&nbsp;and&nbsp;tk.Scrollbar,&nbsp;used&nbsp;for&nbsp;selecting&nbsp;parameters</span></p>
 <p>
 <table class="section">
 <tr class="decor pkg-content-decor heading-text">
@@ -29,6 +30,12 @@ Classes:<br>
     
 <tr><td class="decor index-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
 <td class="singlecolumn"><dl>
+<dt class="heading-text"><a href="builtins.html#object">builtins.object</a>
+</dt><dd>
+<dl>
+<dt class="heading-text"><a href="ecm_user_input.html#ScrollableListbox">ScrollableListbox</a>
+</dt></dl>
+</dd>
 <dt class="heading-text"><a href="tkinter.ttk.html#Frame">tkinter.ttk.Frame</a>(<a href="tkinter.ttk.html#Widget">tkinter.ttk.Widget</a>)
 </dt><dd>
 <dl>
@@ -64,13 +71,14 @@ Methods defined here:<br>
 Also&nbsp;includes&nbsp;a&nbsp;slider,&nbsp;an&nbsp;input&nbsp;field&nbsp;that&nbsp;overrides&nbsp;it&nbsp;and&nbsp;a&nbsp;CLEAR&nbsp;button&nbsp;to&nbsp;clear&nbsp;said&nbsp;input&nbsp;field.<br>
 &nbsp;<br>
 Init&nbsp;arguments:<br>
-circuit&nbsp;--&nbsp;ecm_circuits.Circuit&nbsp;object&nbsp;being&nbsp;used&nbsp;by&nbsp;DECiM&nbsp;core<br>
+circuit&nbsp;--&nbsp;ecm_circuits.Circuit&nbsp;<a href="builtins.html#object">object</a>&nbsp;being&nbsp;used&nbsp;by&nbsp;DECiM&nbsp;core<br>
 parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;fit&nbsp;parameters<br>
 update_cmd&nbsp;--&nbsp;canvasUpdate&nbsp;method&nbsp;from&nbsp;DECiM&nbsp;core<br>
 &nbsp;<br>
 Attributes:<br>
-circuit&nbsp;--&nbsp;ecm_circuits.Circuit&nbsp;object&nbsp;being&nbsp;used&nbsp;by&nbsp;DECiM&nbsp;core<br>
+circuit&nbsp;--&nbsp;ecm_circuits.Circuit&nbsp;<a href="builtins.html#object">object</a>&nbsp;being&nbsp;used&nbsp;by&nbsp;DECiM&nbsp;core<br>
 parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;fit&nbsp;parameters<br>
+listbox_indices&nbsp;--&nbsp;list&nbsp;of&nbsp;parameter&nbsp;indices&nbsp;in&nbsp;self.<strong>parameter_listbox</strong><br>
 &nbsp;<br>
 chosen_parameter&nbsp;--&nbsp;tk.StringVar&nbsp;representing&nbsp;the&nbsp;parameter&nbsp;being&nbsp;modified&nbsp;by&nbsp;the&nbsp;slider<br>
 slider_scaling&nbsp;--&nbsp;tk.StringVar&nbsp;representing&nbsp;the&nbsp;slider&nbsp;scaling&nbsp;mode&nbsp;(linear,&nbsp;logarithmic)<br>
@@ -79,7 +87,7 @@ upper_limit&nbsp;--&nbsp;tk.StringVar&nbsp;representing&nbsp;the&nbsp;slider&nbs
 parameter_value&nbsp;--&nbsp;tk.StringVar&nbsp;holding&nbsp;the&nbsp;current&nbsp;parameter&nbsp;value<br>
 override_parameter_value&nbsp;--&nbsp;tk.StringVar&nbsp;holding&nbsp;the&nbsp;current&nbsp;value&nbsp;in&nbsp;the&nbsp;Entry&nbsp;widget<br>
 &nbsp;<br>
-parameter_frame,&nbsp;choice_label,&nbsp;parameter_dropdown&nbsp;--&nbsp;frame,&nbsp;description&nbsp;label&nbsp;and&nbsp;tk.OptionMenu&nbsp;for&nbsp;choosing&nbsp;a&nbsp;parameter<br>
+parameter_frame,&nbsp;choice_label,&nbsp;parameter_listbox&nbsp;--&nbsp;frame,&nbsp;description&nbsp;label&nbsp;and&nbsp;<a href="#ScrollableListbox">ScrollableListbox</a>&nbsp;for&nbsp;choosing&nbsp;a&nbsp;parameter<br>
 adjust_button&nbsp;--&nbsp;button&nbsp;to&nbsp;automatically&nbsp;adjust&nbsp;slider_scaling,&nbsp;lower_limit&nbsp;and&nbsp;upper_limit&nbsp;based&nbsp;on&nbsp;parameter&nbsp;name<br>
 response_frame,&nbsp;response_label,&nbsp;response_dropdown&nbsp;--&nbsp;frame,&nbsp;description&nbsp;label&nbsp;and&nbsp;tk.OptionMenu&nbsp;for&nbsp;choosing&nbsp;the&nbsp;slider&nbsp;scaling&nbsp;mode<br>
 error_label,&nbsp;error_frame,&nbsp;error_text&nbsp;--&nbsp;label,&nbsp;frame&nbsp;and&nbsp;string&nbsp;for&nbsp;slider&nbsp;errors&nbsp;(controlled&nbsp;via&nbsp;DECiM&nbsp;core)<br>
@@ -90,7 +98,8 @@ override_field_frame,&nbsp;override_label,&nbsp;override_box,&nbsp;override_butt
 &nbsp;<br>
 Methods:<br>
 update_cmd&nbsp;--&nbsp;canvasUpdate&nbsp;method&nbsp;from&nbsp;DECiM&nbsp;core<br>
-reset_parameter_dropdown&nbsp;--&nbsp;clear&nbsp;the&nbsp;list&nbsp;of&nbsp;parameters&nbsp;in&nbsp;the&nbsp;dropdown&nbsp;and&nbsp;fill&nbsp;it&nbsp;again<br>
+reset_parameter_listbox&nbsp;--&nbsp;clear&nbsp;the&nbsp;list&nbsp;of&nbsp;parameters&nbsp;in&nbsp;the&nbsp;<a href="#ScrollableListbox">ScrollableListbox</a>&nbsp;and&nbsp;fill&nbsp;it&nbsp;again<br>
+select_parameter&nbsp;--&nbsp;retrieve&nbsp;the&nbsp;currently&nbsp;selected&nbsp;parameter&nbsp;in&nbsp;self.<strong>parameter_listbox</strong>&nbsp;(when&nbsp;the&nbsp;user&nbsp;clicks)<br>
 update_label&nbsp;--&nbsp;update&nbsp;the&nbsp;parameter_value&nbsp;label<br>
 parameter_index&nbsp;--&nbsp;get&nbsp;the&nbsp;index&nbsp;in&nbsp;the&nbsp;fit&nbsp;parameter&nbsp;list&nbsp;of&nbsp;the&nbsp;chosen_parameter<br>
 slider_set_parameter&nbsp;--&nbsp;convert&nbsp;the&nbsp;slider&nbsp;value&nbsp;to&nbsp;a&nbsp;parameter&nbsp;value,&nbsp;then&nbsp;update&nbsp;the&nbsp;value&nbsp;of&nbsp;the&nbsp;parameter&nbsp;being&nbsp;modified<br>
@@ -101,9 +110,18 @@ adjust_controls&nbsp;--&nbsp;automatically&nbsp;adjust&nbsp;slider_scaling,&nbsp
 
 <dl><dt><a name="InteractionFrame-override"><strong>override</strong></a>(self)</dt><dd><span class="code">When&nbsp;pressing&nbsp;the&nbsp;'set'&nbsp;button,&nbsp;set&nbsp;the&nbsp;parameter&nbsp;value&nbsp;and&nbsp;label.</span></dd></dl>
 
-<dl><dt><a name="InteractionFrame-parameter_index"><strong>parameter_index</strong></a>(self)</dt><dd><span class="code">Get&nbsp;the&nbsp;index&nbsp;in&nbsp;parameters&nbsp;of&nbsp;the&nbsp;currently&nbsp;chosen&nbsp;parameter.</span></dd></dl>
+<dl><dt><a name="InteractionFrame-parameter_index"><strong>parameter_index</strong></a>(self, parameter_name)</dt><dd><span class="code">Get&nbsp;the&nbsp;index&nbsp;in&nbsp;parameters&nbsp;of&nbsp;the&nbsp;currently&nbsp;chosen&nbsp;parameter.</span></dd></dl>
 
-<dl><dt><a name="InteractionFrame-reset_parameter_dropdown"><strong>reset_parameter_dropdown</strong></a>(self)</dt><dd><span class="code">Clears&nbsp;the&nbsp;parameter&nbsp;selection&nbsp;tk.OptionMenu&nbsp;and&nbsp;fills&nbsp;it&nbsp;again&nbsp;with&nbsp;new&nbsp;options&nbsp;based&nbsp;on&nbsp;the&nbsp;circuit&nbsp;diagram.</span></dd></dl>
+<dl><dt><a name="InteractionFrame-reset_parameter_listbox"><strong>reset_parameter_listbox</strong></a>(self)</dt><dd><span class="code">Clears&nbsp;the&nbsp;parameter&nbsp;selection&nbsp;<a href="#ScrollableListbox">ScrollableListbox</a>&nbsp;and&nbsp;fills&nbsp;it&nbsp;again&nbsp;with&nbsp;new&nbsp;options&nbsp;based&nbsp;on&nbsp;the&nbsp;circuit&nbsp;diagram.<br>
+&nbsp;<br>
+Arguments:<br>
+self</span></dd></dl>
+
+<dl><dt><a name="InteractionFrame-select_parameter"><strong>select_parameter</strong></a>(self, event)</dt><dd><span class="code">Select&nbsp;a&nbsp;parameter&nbsp;from&nbsp;self.<strong>parameter_listbox</strong>.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+event&nbsp;--&nbsp;The&nbsp;user's&nbsp;action&nbsp;of&nbsp;clicking&nbsp;on&nbsp;the&nbsp;listbox.</span></dd></dl>
 
 <dl><dt><a name="InteractionFrame-slider_set_parameter"><strong>slider_set_parameter</strong></a>(self, event)</dt><dd><span class="code">Convert&nbsp;the&nbsp;slider&nbsp;value&nbsp;to&nbsp;a&nbsp;parameter&nbsp;value,&nbsp;then&nbsp;update&nbsp;the&nbsp;parameter&nbsp;value&nbsp;and&nbsp;the&nbsp;parameter&nbsp;value&nbsp;label.</span></dd></dl>
 
@@ -768,5 +786,71 @@ for&nbsp;positioning&nbsp;this&nbsp;widget&nbsp;in&nbsp;a&nbsp;grid.</span></dd>
 
 <dl><dt><a name="InteractionFrame-location"><strong>location</strong></a> = <a href="#InteractionFrame-grid_location">grid_location</a>(self, x, y)</dt></dl>
 
+</td></tr></table> <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="ScrollableListbox">class <strong>ScrollableListbox</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#ScrollableListbox">ScrollableListbox</a>(master)<br>
+&nbsp;<br>
+<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn">Methods defined here:<br>
+<dl><dt><a name="ScrollableListbox-__init__"><strong>__init__</strong></a>(self, master)</dt><dd><span class="code">Listbox-scrollbar&nbsp;combination.<br>
+&nbsp;<br>
+Init&nbsp;arguments:<br>
+self<br>
+master&nbsp;--&nbsp;ttk.<a href="tkinter.ttk.html#Frame">Frame</a>&nbsp;or&nbsp;tk.<a href="tkinter.ttk.html#Frame">Frame</a>&nbsp;on&nbsp;which&nbsp;to&nbsp;place&nbsp;the&nbsp;<a href="#ScrollableListbox">ScrollableListbox</a><br>
+&nbsp;<br>
+Attributes:<br>
+listbox&nbsp;--&nbsp;tk.Listbox<br>
+scrollbar&nbsp;--&nbsp;tk.Scrollbar<br>
+&nbsp;<br>
+Methods:<br>
+insert&nbsp;--&nbsp;insert&nbsp;value&nbsp;into&nbsp;self.<strong>listbox</strong><br>
+get&nbsp;--&nbsp;get&nbsp;the&nbsp;currently&nbsp;selected&nbsp;option&nbsp;in&nbsp;self.<strong>listbox</strong><br>
+pack&nbsp;--&nbsp;pack&nbsp;self.<strong>listbox</strong>&nbsp;and&nbsp;self.<strong>scrollbar</strong>&nbsp;and&nbsp;configure&nbsp;the&nbsp;two&nbsp;to&nbsp;work&nbsp;together<br>
+bind_select&nbsp;--&nbsp;bind&nbsp;a&nbsp;function&nbsp;to&nbsp;element&nbsp;selection<br>
+itemconfig&nbsp;--&nbsp;self.<strong>listbox</strong>.itemconfig</span></dd></dl>
+
+<dl><dt><a name="ScrollableListbox-bind_select"><strong>bind_select</strong></a>(self, function)</dt><dd><span class="code">Bind&nbsp;a&nbsp;function&nbsp;to&nbsp;self.listbox("&lt;&lt;ListboxSelect&gt;&gt;")<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+function&nbsp;--&nbsp;Function&nbsp;to&nbsp;bind</span></dd></dl>
+
+<dl><dt><a name="ScrollableListbox-clear"><strong>clear</strong></a>(self)</dt><dd><span class="code">Delete&nbsp;all&nbsp;values&nbsp;in&nbsp;self.<strong>listbox</strong>.</span></dd></dl>
+
+<dl><dt><a name="ScrollableListbox-get"><strong>get</strong></a>(self)</dt><dd><span class="code">Get&nbsp;the&nbsp;selected&nbsp;value&nbsp;in&nbsp;self.<strong>listbox</strong>.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+&nbsp;<br>
+Returns:<br>
+Currently&nbsp;selected&nbsp;value&nbsp;in&nbsp;self.<strong>listbox</strong>.</span></dd></dl>
+
+<dl><dt><a name="ScrollableListbox-insert"><strong>insert</strong></a>(self, value)</dt><dd><span class="code">Put&nbsp;a&nbsp;value&nbsp;(string)&nbsp;into&nbsp;self.<strong>listbox</strong>.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+value&nbsp;--&nbsp;String,&nbsp;to&nbsp;be&nbsp;added&nbsp;to&nbsp;listbox</span></dd></dl>
+
+<dl><dt><a name="ScrollableListbox-pack"><strong>pack</strong></a>(self, side='right', fill='none', anchor='w')</dt><dd><span class="code">Pack&nbsp;self&nbsp;on&nbsp;master&nbsp;and&nbsp;configure&nbsp;self.<strong>scrollbar</strong>&nbsp;to&nbsp;scroll&nbsp;through&nbsp;self.<strong>listbox</strong>.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+side&nbsp;--&nbsp;side&nbsp;on&nbsp;which&nbsp;to&nbsp;pack&nbsp;self<br>
+fill&nbsp;--&nbsp;which&nbsp;directions&nbsp;to&nbsp;fill&nbsp;on&nbsp;master<br>
+anchor&nbsp;--&nbsp;packing&nbsp;anchor</span></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
 </td></tr></table></td></tr></table>
 </body></html>
