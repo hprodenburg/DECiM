@@ -1,6 +1,6 @@
 """DECiM (Determination of Equivalent Circuit Models) is an equivalent circuit model fitting program for impedance data. It is a GUI-based program.
 Much of the source code is spread over other python source files, all of which must be in the same folder as DECiM.py to ensure that the program works correctly.
-DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.6, 27 April 2024.
+DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.7, 29 April 2024.
 
 This is the core module -- when launched, DECiM starts. This module also defines the Window class."""
 
@@ -260,8 +260,8 @@ class Window(ttk.Frame):
         """Create the button which launches the circuit drawing window."""
         self.circop = tk.StringVar(self)
         self.circop.set(self.circuit_manager.circuit.diagram.generate_circuit_string(verbose = True))
-        self.selector_launcher = tk.Button(self, textvariable = self.circop, command = self.selectCircuit)
-        self.selector_launcher.pack(side = tk.TOP, anchor = tk.N)
+        self.selector_launcher = tk.Button(self.interactive.slider_frame, textvariable = self.circop, command = self.selectCircuit)
+        self.selector_launcher.pack(side = tk.BOTTOM, anchor = tk.S)
 
     def on_screen(self):
         """Scale the window to the dimensionms of the screen and finish the UI initialization."""
@@ -472,7 +472,7 @@ class Window(ttk.Frame):
         self.circuit_manager.circuit = circuit_model
         self.interactive.circuit = circuit_model
         self.circop.set(circuit_model.diagram.generate_circuit_string(verbose = True))
-        self.interactive.reset_parameter_dropdown()
+        self.interactive.reset_parameter_listbox()
         
     def setCustomModel(self, circuit_model, impedance_function_name):
         """Change the circuit model to a new circuit with a custom impedance function.
@@ -487,7 +487,7 @@ class Window(ttk.Frame):
         self.circuit_manager.circuit = circuit_model
         self.interactive.circuit = circuit_model
         self.circop.set(impedance_function_name)
-        self.interactive.reset_parameter_dropdown()
+        self.interactive.reset_parameter_listbox()
 
     def selectCircuit(self):
         """Open a circuit drawing window and wait for it to be closed to obtain a new circuit. Then set the model circuit to the obtained circuit."""

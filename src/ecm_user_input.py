@@ -1,7 +1,8 @@
-"""Part of DECiM. This file contains the interactive elements code. Last modified 27 April 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the interactive elements code. Last modified 29 April 2024 by Henrik Rodenburg.
 
 Classes:
-InteractionFrame -- contains all the controls for manual adjustment of fitting parameters"""
+InteractionFrame -- contains all the controls for manual adjustment of fitting parameters
+ScrollableListbox -- combination of tk.Listbox and tk.Scrollbar, used for selecting parameters"""
 
 ###########
 ##IMPORTS##
@@ -31,6 +32,7 @@ class InteractionFrame(ttk.Frame):
         Attributes:
         circuit -- ecm_circuits.Circuit object being used by DECiM core
         parameters -- list of fit parameters
+        listbox_indices -- list of parameter indices in self.parameter_listbox
         
         chosen_parameter -- tk.StringVar representing the parameter being modified by the slider
         slider_scaling -- tk.StringVar representing the slider scaling mode (linear, logarithmic)
@@ -39,7 +41,7 @@ class InteractionFrame(ttk.Frame):
         parameter_value -- tk.StringVar holding the current parameter value
         override_parameter_value -- tk.StringVar holding the current value in the Entry widget
         
-        parameter_frame, choice_label, parameter_dropdown -- frame, description label and tk.OptionMenu for choosing a parameter
+        parameter_frame, choice_label, parameter_listbox -- frame, description label and ScrollableListbox for choosing a parameter
         adjust_button -- button to automatically adjust slider_scaling, lower_limit and upper_limit based on parameter name
         response_frame, response_label, response_dropdown -- frame, description label and tk.OptionMenu for choosing the slider scaling mode
         error_label, error_frame, error_text -- label, frame and string for slider errors (controlled via DECiM core)
@@ -50,7 +52,8 @@ class InteractionFrame(ttk.Frame):
         
         Methods:
         update_cmd -- canvasUpdate method from DECiM core
-        reset_parameter_dropdown -- clear the list of parameters in the dropdown and fill it again
+        reset_parameter_listbox -- clear the list of parameters in the ScrollableListbox and fill it again
+        select_parameter -- retrieve the currently selected parameter in self.parameter_listbox (when the user clicks)
         update_label -- update the parameter_value label
         parameter_index -- get the index in the fit parameter list of the chosen_parameter
         slider_set_parameter -- convert the slider value to a parameter value, then update the value of the parameter being modified
@@ -75,22 +78,27 @@ class InteractionFrame(ttk.Frame):
         
         #Create the different elements and pack them to the left
         
-        #Parameter dropdown
+        #Parameter dropdown -- to be replaced with ScrollableListbox -- need to change self.chosen_parameter to have information on parameter value
         self.parameter_frame = ttk.Frame(self)
         self.choice_label = tk.Label(self.parameter_frame, text = "Parameter")
         self.choice_label.pack(side = tk.TOP, anchor = tk.CENTER)
-        self.chosen_parameter.set("R0")
-        self.parameter_dropdown = tk.OptionMenu(self.parameter_frame, self.chosen_parameter, "R0")
-        self.parameter_dropdown.pack(side = tk.TOP, anchor = tk.CENTER)
-        self.reset_parameter_dropdown()
+        self.chosen_parameter.set("R0: 1")
+        #self.parameter_dropdown = tk.OptionMenu(self.parameter_frame, self.chosen_parameter, "R0")
+        #self.parameter_dropdown.pack(side = tk.TOP, anchor = tk.CENTER)
+        #self.reset_parameter_dropdown()
+        self.parameter_listbox = ScrollableListbox(self.parameter_frame)
+        self.parameter_listbox.bind_select(self.select_parameter)
+        self.parameter_listbox.pack(side = tk.TOP, anchor = tk.CENTER)
+        self.listbox_indices = {}
+        self.reset_parameter_listbox()
         
         #Update button
-        self.adjust_button = tk.Button(self.parameter_frame, text = "Adjust controls", command = self.adjust_controls)
+        self.response_frame = ttk.Frame(self)
+        self.adjust_button = tk.Button(self.response_frame, text = "Adjust controls", command = self.adjust_controls)
         self.adjust_button.pack(side = tk.BOTTOM, anchor = tk.CENTER)
         self.parameter_frame.pack(side = tk.LEFT, anchor = tk.E, fill = tk.X, expand = True)
         
         #Response dropdown
-        self.response_frame = ttk.Frame(self)
         self.response_label = tk.Label(self.response_frame, text = "Response")
         self.response_label.pack(side = tk.TOP, anchor = tk.CENTER)
         self.slider_scaling.set("logarithmic")
@@ -122,7 +130,7 @@ class InteractionFrame(ttk.Frame):
         
         #Label
         self.parameter_label = tk.Label(self.slider_frame, textvariable = self.parameter_value)
-        self.parameter_label.pack(side = tk.BOTTOM, anchor = tk.CENTER)
+        self.parameter_label.pack(side = tk.TOP, anchor = tk.CENTER)
         self.slider_frame.pack(side = tk.LEFT, anchor = tk.E, fill = tk.X, expand = True)
         
         #Slider upper limit input
@@ -144,36 +152,63 @@ class InteractionFrame(ttk.Frame):
         self.override_button = tk.Button(self.override_field_frame, text = "Set", command = self.override)
         self.override_button.pack(side = tk.BOTTOM, anchor = tk.CENTER)
         self.override_field_frame.pack(side = tk.LEFT, anchor = tk.E, fill = tk.X, expand = True)
-    
-    def reset_parameter_dropdown(self):
-        """Clears the parameter selection tk.OptionMenu and fills it again with new options based on the circuit diagram."""
-        #From https://stackoverflow.com/questions/17580218/changing-the-options-of-a-optionmenu-when-clicking-a-button
-        #Reset self.chosen_parameter and clear the dropdown
-        self.chosen_parameter.set("")
-        self.parameter_dropdown["menu"].delete(0, tk.END)
+                
+    def reset_parameter_listbox(self):
+        """Clears the parameter selection ScrollableListbox and fills it again with new options based on the circuit diagram.
+        
+        Arguments:
+        self"""
+        self.parameter_listbox.clear()
+        i = 0
         #Couple the new circuit elements to self.chosen_parameter
         for element in self.circuit.diagram.list_elements():
-            self.parameter_dropdown["menu"].add_command(label = element.name, command = tk._setit(self.chosen_parameter, element.name))
+            self.parameter_listbox.insert(element.name + ": {:5g}".format(self.parameters[self.parameter_index(element.name)]))
+            self.listbox_indices[element.name] = i
+            i += 1
             if element.tag == "Q":
-                self.parameter_dropdown["menu"].add_command(label = "n" + str(element.number), command = tk._setit(self.chosen_parameter, "n" + str(element.number)))
+                self.parameter_listbox.insert("n" + str(element.number) + ": {:5g}".format(self.parameters[self.parameter_index("n" + str(element.number))]))
+                self.listbox_indices["n" + str(element.number)] = i
+                i += 1
             if element.tag == "O":
-                self.parameter_dropdown["menu"].add_command(label = "k" + str(element.number), command = tk._setit(self.chosen_parameter, "k" + str(element.number)))
+                self.parameter_listbox.insert("k" + str(element.number) + ": {:5g}".format(self.parameters[self.parameter_index("k" + str(element.number))]))
+                self.listbox_indices["k" + str(element.number)] = i
+                i += 1
             if element.tag == "S":
-                self.parameter_dropdown["menu"].add_command(label = "l" + str(element.number), command = tk._setit(self.chosen_parameter, "l" + str(element.number)))
+                self.parameter_listbox.insert("l" + str(element.number) + ": {:5g}".format(self.parameters[self.parameter_index("l" + str(element.number))]))
+                self.listbox_indices["l" + str(element.number)] = i
+                i += 1
             if element.tag == "G":
-                self.parameter_dropdown["menu"].add_command(label = "m" + str(element.number), command = tk._setit(self.chosen_parameter, "m" + str(element.number)))
+                self.parameter_listbox.insert("m" + str(element.number) + ": {:5g}".format(self.parameters[self.parameter_index("m" + str(element.number))]))
+                self.listbox_indices["m" + str(element.number)] = i
+                i += 1
             if element.tag == "H":
-                self.parameter_dropdown["menu"].add_command(label = "t" + str(element.number), command = tk._setit(self.chosen_parameter, "t" + str(element.number)))
-                self.parameter_dropdown["menu"].add_command(label = "b" + str(element.number), command = tk._setit(self.chosen_parameter, "b" + str(element.number)))
-                self.parameter_dropdown["menu"].add_command(label = "g" + str(element.number), command = tk._setit(self.chosen_parameter, "g" + str(element.number)))
-    
+                self.parameter_listbox.insert("t" + str(element.number) + ": {:5g}".format(self.parameters[self.parameter_index("t" + str(element.number))]))
+                self.listbox_indices["t" + str(element.number)] = i
+                i += 1
+                self.parameter_listbox.insert("b" + str(element.number) + ": {:5g}".format(self.parameters[self.parameter_index("b" + str(element.number))]))
+                self.listbox_indices["b" + str(element.number)] = i
+                i += 1
+                self.parameter_listbox.insert("g" + str(element.number) + ": {:5g}".format(self.parameters[self.parameter_index("g" + str(element.number))]))
+                self.listbox_indices["g" + str(element.number)] = i
+                i += 1
+                
+    def select_parameter(self, event):
+        """Select a parameter from self.parameter_listbox.
+        
+        Arguments:
+        self
+        event -- The user's action of clicking on the listbox."""
+        self.chosen_parameter.set(self.parameter_listbox.get())
+        self.reset_parameter_listbox()
+        self.parameter_listbox.itemconfig(self.listbox_indices[list(self.chosen_parameter.get().split(":"))[0]], {"bg": "#00f", "fg": "#fff"})
+            
     def update_label(self, new_value):
         """Update the label below the slider with the (new) parameter name, value and units.
         
         Arguments:
         self
         new_value -- new value of the chosen parameter"""
-        parameter_name = self.chosen_parameter.get()
+        parameter_name = list(self.chosen_parameter.get().split(":"))[0]
         if parameter_name[0] in ["R", "O", "S", "G", "H"]:
             self.parameter_value.set(parameter_name + " = {:5g} ".format(new_value) + " Ω")
         if parameter_name[0] == "C":
@@ -189,9 +224,8 @@ class InteractionFrame(ttk.Frame):
         if parameter_name[0] in "klm":
             self.parameter_value.set(parameter_name + " = {:5g} ".format(new_value) + " s^(1/2)")
     
-    def parameter_index(self):
+    def parameter_index(self, parameter_name):
         """Get the index in parameters of the currently chosen parameter."""
-        parameter_name = self.chosen_parameter.get()
         for element in self.circuit.diagram.list_elements():
             if element.name == parameter_name: #R, C, L, Q, O, S, G: Parameter name matches element name. Can simply look for a match and return idx.
                 return element.idx
@@ -226,7 +260,7 @@ class InteractionFrame(ttk.Frame):
         #Update the label
         self.update_label(output_value)
         #Update the parameter
-        self.parameters[self.parameter_index()] = output_value
+        self.parameters[self.parameter_index(list(self.chosen_parameter.get().split(":"))[0])] = output_value
         #Update the canvas
         self.update_cmd()
     
@@ -237,7 +271,7 @@ class InteractionFrame(ttk.Frame):
         #Update the label
         self.update_label(output_value)
         #Update the parameter
-        self.parameters[self.parameter_index()] = output_value
+        self.parameters[self.parameter_index(list(self.chosen_parameter.get().split(":"))[0])] = output_value
         #Update the canvas
         self.update_cmd()
         self.adjust_controls()
@@ -264,7 +298,7 @@ class InteractionFrame(ttk.Frame):
             self.upper_limit.set("1e6")
             self.slider_scaling.set("logarithmic")
         #Get the parameter value
-        parameter_value = self.parameters[self.parameter_index()]
+        parameter_value = self.parameters[self.parameter_index(list(self.chosen_parameter.get().split(":"))[0])]
         #Update the direct input field
         self.override_parameter_value.set("{:5g}".format(parameter_value))
         #Get the slider response
@@ -277,3 +311,70 @@ class InteractionFrame(ttk.Frame):
             self.slider.set(int(self.slider.to*np.log10(parameter_value - low)/np.log10(high - low)))
         if scale == "linear":
             self.slider.set(int(self.slider.to*(parameter_value - low)/(high - low)))
+            
+class ScrollableListbox():
+    def __init__(self, master):
+        """Listbox-scrollbar combination.
+        
+        Init arguments:
+        self
+        master -- ttk.Frame or tk.Frame on which to place the ScrollableListbox
+        
+        Attributes:
+        listbox -- tk.Listbox
+        scrollbar -- tk.Scrollbar
+        
+        Methods:
+        insert -- insert value into self.listbox
+        get -- get the currently selected option in self.listbox
+        pack -- pack self.listbox and self.scrollbar and configure the two to work together
+        bind_select -- bind a function to element selection
+        itemconfig -- self.listbox.itemconfig"""
+        self.listbox = tk.Listbox(master, activestyle = tk.NONE, selectmode = tk.SINGLE)
+        self.scrollbar = tk.Scrollbar(master)
+        self.itemconfig = self.listbox.itemconfig
+        
+    def insert(self, value):
+        """Put a value (string) into self.listbox.
+        
+        Arguments:
+        self
+        value -- String, to be added to listbox"""
+        self.listbox.insert(tk.END, value)
+        
+    def get(self):
+        """Get the selected value in self.listbox.
+        
+        Arguments:
+        self
+        
+        Returns:
+        Currently selected value in self.listbox."""
+        return self.listbox.get(tk.ANCHOR)
+        
+    def clear(self):
+        """Delete all values in self.listbox."""
+        self.listbox.delete(0, tk.END)
+        
+    def bind_select(self, function):
+        """Bind a function to self.listbox("<<ListboxSelect>>")
+        
+        Arguments:
+        self
+        function -- Function to bind"""
+        self.listbox.bind("<<ListboxSelect>>", function)
+        
+    def pack(self, side = tk.RIGHT, fill = tk.NONE, anchor = tk.W):
+        """Pack self on master and configure self.scrollbar to scroll through self.listbox.
+        
+        Arguments:
+        self
+        side -- side on which to pack self
+        fill -- which directions to fill on master
+        anchor -- packing anchor"""
+        #Packing
+        self.listbox.pack(side = side, fill = fill, anchor = anchor)
+        self.scrollbar.pack(side = side, fill = fill, anchor = anchor)
+        #Attach listbox and scrollbar to each other
+        self.listbox.config(yscrollcommand = self.scrollbar.set)
+        self.scrollbar.config(command = self.listbox.yview)
