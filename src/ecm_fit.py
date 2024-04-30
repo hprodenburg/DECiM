@@ -1,7 +1,8 @@
-"""Part of DECiM. This file contains the fitting classes. Last modified 24 April 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the fitting classes. Last modified 30 April 2024 by Henrik Rodenburg.
 
 Classes:
-RefinementEngine -- class for the simple refinement
+RefinementEngine -- class for refinements in general, independent of the GUI
+SimpleRefinementEngine -- class for the simple refinement
 RefinementWindow -- class for the advanced refinement"""
 
 ###########
@@ -23,11 +24,130 @@ import tkinter.ttk as ttk
 from ecm_datastructure import dataSet
 from ecm_helpers import nearest
 
+######################
+##GENERAL REFINEMENT##
+######################
+
+class RefinementEngine():
+    def __init__(self, function_to_fit, data, parameters, parameter_dict, to_refine, high_f, low_f, previous_parameters, opt_module = "scipy", opt_method = "Nelder-Mead", silent = False, nmaxiter = 500, weighting_scheme = "Unit"):
+        """General handling of refinements.
+        
+        Init arguments (all of which become attributes with the same name):
+        function_to_fit -- function to fit; typically Circuit.diagram.Z
+        data -- dataSet object containing measured data
+        parameters -- list of parameters
+        parameter_list -- dict of parameters; keys are are indices in self.parameters, values are names (e.g. 'R0', 'n1', ...)
+        to_refine -- list of ones and zeros; 1 means that the value in self.parameters at the same index should be refined, 0 means that it should not
+        high_f -- upper frequency bound
+        low_f -- lower frequency bound
+        previous_parameters -- list of lists of parameters
+        opt_module -- string, module from which to import optimizer; only option for now is 'scipy'
+        opt_method -- string, optimizer to use
+        nmaxiter -- maximum number of iterations per refineable parameter
+        weighting_scheme -- weighting scheme, string; one of 'Unit', 'Observed modulus', 'Calculated modulus', 'Observed proportional', and 'Calculated proportional'
+        
+        Attributes (other):
+        module_dict -- dict of modules and corresponding refinement methods; keys are strings, values are methods in this class.
+        l_idx, h_idx -- indices of the lower and upper frequency limits, respectively; created during refinement
+        
+        Methods:
+        refine_solution -- refine the solution and update self.parameters
+        refine_solution_scipy -- refine the solution with scipy.optimize.minimize and update self.parameters
+        error_function -- function that returns the error to be minimized by self.refine_solution"""
+        self.function_to_fit = function_to_fit
+        self.data = data
+        self.parameters = parameters
+        self.parameter_dict = parameter_dict
+        self.to_refine = to_refine
+        self.high_f = high_f
+        self.low_f = low_f
+        self.previous_parameters = previous_parameters
+        self.opt_module = opt_module
+        self.opt_method = opt_method
+        self.silent = silent
+        self.nmaxiter = nmaxiter
+        self.weighting_scheme = weighting_scheme
+        
+        self.module_dict = {"scipy": self.refine_solution_scipy}
+        
+    def refine_solution(self):
+        """Choose the correct refinement method based on self.opt_module."""
+        if self.opt_module in self.module_dict:
+            return self.module_dict[self.opt_module]()
+        else:
+            print("Refinement error: module {:s} not defined.".format(self.opt_module))
+    
+    def refine_solution_scipy(self):
+        """Apply boundaries, update the parameter history and minimize self.error_function using scipy.optimize.minimize."""
+        #Frequency limits
+        self.h_idx, self.l_idx = nearest(self.high_f, self.data.freq), nearest(self.low_f, self.data.freq)
+        #Boundary determination & number of refineable parameters (for maximum iterations)
+        ref_par_count = 0
+        boundaries = []
+        for t in range(len(self.to_refine)):
+            if self.to_refine[t] == 0: #Parameter not included in refinement
+                boundaries.append((self.parameters[t], self.parameters[t])) #Constrain parameter to its present value
+            elif self.to_refine[t] == 1: #Parameter included in refinement
+                ref_par_count += 1
+                if self.parameter_dict[t][0] in ["n", "b", "g"]:
+                    boundaries.append((0, 1)) #Refine the parameter (n, b, g bounded between 0 and 1)
+                else:  
+                    boundaries.append((0, 1e15)) #Refine the parameter (other parameters bounded between 0 and 1e15)
+            else:
+                print("Warning: forbidden refinement option. Constraining parameter {:s}.".format(self.parameters[t]))
+                boundaries.append((self.parameters[t], self.parameters[t]))
+        #Save previous refinement
+        self.previous_parameters.append(self.parameters)
+        #Refinement
+        self.iter = 0
+        opt_res = op.minimize(self.error_function, np.array(self.parameters), method = self.opt_method, options = {"maxiter": self.nmaxiter*ref_par_count}, bounds = boundaries, callback = self.optimisation_callback) #Minimise the error
+        self.parameters = opt_res["x"] #Save new parameters
+        
+    def error_function(self, params):
+        """Function to be minimized in the refinement. Weighting schemes are applied here.
+        
+        Arguments:
+        self
+        params -- list of fit parameters
+        
+        Returns:
+        NumPy array; sum of the squared differences in the impedance; this is done separately for the real and imaginary components, which are then added."""
+        w_re, w_im = 1, 1 #Unit weighting is default
+        if self.weighting_scheme == "Calculated modulus":
+            w_re = np.sqrt(np.real(self.function_to_fit(params, self.data.freq))**2 + np.imag(self.function_to_fit(params, self.data.freq))**2)
+            w_im = w_re
+        elif self.weighting_scheme == "Observed modulus":
+            w_re = np.sqrt(self.data.real**2 + self.data.imag**2)
+            w_im = w_re
+        elif self.weighting_scheme == "Calculated proportional":
+            w_re = 1/(np.real(self.function_to_fit(params, self.data.freq))**2)
+            w_im = 1/(np.imag(self.function_to_fit(params, self.data.freq))**2)
+        elif self.weighting_scheme == "Observed proportional":
+            w_re = 1/(self.data.real**2)
+            w_im = 1/(self.data.imag**2)
+        if self.l_idx == 0 and self.h_idx == -1:
+            return sum(w_re*(np.real(self.function_to_fit(params, self.data.freq)) - self.data.real)**2) + sum(w_im*(np.imag(self.function_to_fit(params, self.data.freq)) - self.data.imag)**2)
+        #If limits are set, return the limited result (with weights being taken care of first)
+        if self.weighting_scheme not in ["", "Unit"]:
+            w_re, w_im = w_re[self.l_idx:self.h_idx], w_im[self.l_idx:self.h_idx]
+        return sum(w_re*(np.real(self.function_to_fit(params, self.data.freq[self.l_idx:self.h_idx])) - self.data.real[self.l_idx:self.h_idx])**2) + sum(w_im*(np.imag(self.function_to_fit(params, self.data.freq[self.l_idx:self.h_idx])) - self.data.imag[self.l_idx:self.h_idx])**2)
+        
+    def optimisation_callback(self, params):
+        """Print the output of the refinement function to the command line for each iteration."""
+        if self.silent:
+            return
+        out_str = "Iteration " + str(self.iter) + " | "
+        for p in self.parameter_dict:
+            out_str += self.parameter_dict[p] + ": " + "{:5g} | ".format(params[p])
+        print(out_str)
+        self.iter += 1
+
+
 #####################
 ##SIMPLE REFINEMENT##
 #####################
 
-class RefinementEngine():
+class SimpleRefinementEngine():
     def __init__(self, params, data, min_impedance_function, bounded = True):
         """Handling of the simple refinement.
         
@@ -51,7 +171,7 @@ class RefinementEngine():
         minRefinement -- complete optimization method"""
         self.input_params = params #Parameters belonging to the circuit elements
         self.output_params = params
-        self.data = data #Raw data, taking the form of a dataSet object (ecm_datastructure). If a limited frequency range is desired, the truncated data should be passed to the RefinementEngine.
+        self.data = data #Raw data, taking the form of a dataSet object (ecm_datastructure). If a limited frequency range is desired, the truncated data should be passed to the SimpleRefinementEngine.
         self.min_impedance_function = min_impedance_function #The function used to calculate the impedance (ecm_circuits)
         self.bounded = bounded
 
@@ -102,6 +222,7 @@ class RefinementWindow(tk.Toplevel):
         refined_parameters -- list refined fit parameters
         parameter_history -- list of lists of previous parameter values
         parameter_dict -- dict containing parameter names as keys and corresponding indices in initial_parameters and refined_parameters as values
+        flipped_parameter_dict -- dict containing indices as values and parameter names as keys
         parameter_list -- list of parameter names
         refinement_accepted -- bool, indicates if the refinement result has been accepted by the user
         limit_visualisation -- bool, indicates whether the frequency limits should be displayed
@@ -125,7 +246,8 @@ class RefinementWindow(tk.Toplevel):
         previous_refinement -- change the parameters back to what they were before the latest refinement
         reset_parameters -- change the parameters back to what they were when the refinement window was launched
         accept_refinement -- close the window and change the model parameters to the refinement result
-        reject_refinement -- close the window and do not change the model parameters"""
+        reject_refinement -- close the window and do not change the model parameters
+        flip_parameter_values_keys -- flip self.parameter_dict keys and values"""
         super().__init__()
         self.title("Equivalent circuit model refinement")
         self.width = int(self.winfo_screenwidth()*0.85)
@@ -156,6 +278,7 @@ class RefinementWindow(tk.Toplevel):
                     self.parameter_dict["t" + str(p.number)] = p.idx2
                     self.parameter_dict["b" + str(p.number)] = p.idx3
                     self.parameter_dict["g" + str(p.number)] = p.idx4
+        self.flip_parameter_values_keys()
         parcount = max(indices) + 1
         self.parameter_list = list(np.zeros(parcount))
         for p in self.parameter_dict:
@@ -396,80 +519,27 @@ class RefinementWindow(tk.Toplevel):
         #Draw on the canvas
         self.canvas.draw()
     
-    def error_function(self, params):
-        """Function to be minimized in the refinement. Weighting schemes are applied here.
-        
-        Arguments:
-        self
-        params -- list of fit parameters
-        
-        Returns:
-        NumPy array; sum of the squared differences in the impedance; this is done separately for the real and imaginary components, which are then added."""
-        w_re, w_im = 1, 1 #Unit weighting is default
-        wsch = self.chosen_weighting.get()
-        if wsch == "Calculated modulus":
-            w_re = np.sqrt(np.real(self.function_to_fit(params, self.data.freq))**2 + np.imag(self.function_to_fit(params, self.data.freq))**2)
-            w_im = w_re
-        elif wsch == "Observed modulus":
-            w_re = np.sqrt(self.data.real**2 + self.data.imag**2)
-            w_im = w_re
-        elif wsch == "Calculated proportional":
-            w_re = 1/(np.real(self.function_to_fit(params, self.data.freq))**2)
-            w_im = 1/(np.imag(self.function_to_fit(params, self.data.freq))**2)
-        elif wsch == "Observed proportional":
-            w_re = 1/(self.data.real**2)
-            w_im = 1/(self.data.imag**2)
-        if self.l_idx == 0 and self.h_idx == -1:
-            return sum(w_re*(np.real(self.function_to_fit(params, self.data.freq)) - self.data.real)**2) + sum(w_im*(np.imag(self.function_to_fit(params, self.data.freq)) - self.data.imag)**2)
-        #If limits are set, return the limited result (with weights being taken care of first)
-        if wsch not in ["", "Unit"]:
-            w_re, w_im = w_re[self.l_idx:self.h_idx], w_im[self.l_idx:self.h_idx]
-        return sum(w_re*(np.real(self.function_to_fit(params, self.data.freq[self.l_idx:self.h_idx])) - self.data.real[self.l_idx:self.h_idx])**2) + sum(w_im*(np.imag(self.function_to_fit(params, self.data.freq[self.l_idx:self.h_idx])) - self.data.imag[self.l_idx:self.h_idx])**2)
-    
     def display_error(self):
         """Calculate the reduced sum of the squares and display it as result_text in the result_label."""
         dof = 2*len(self.data.freq) - len(self.parameter_dict)
         redsumsq = (1/dof)*sum(((np.real(self.function_to_fit(self.refined_parameters, self.data.freq)) - self.data.real)/self.data.real)**2 + ((np.imag(self.function_to_fit(self.refined_parameters, self.data.freq)) - self.data.imag)/self.data.imag)**2)
         #total_error = sum(((np.abs(self.function_to_fit(self.refined_parameters, self.data.freq)) - self.data.amplitude)/self.data.amplitude)**2)
         self.result_text.set("S_v = {:g}".format(redsumsq))
-        
-    def optimisation_callback(self, params):
-        """Print the output of the refinement function to the command line for each iteration."""
-        if self.silent_optimisation:
-            return
-        out_str = "Iteration " + str(self.iter) + " | "
-        for p in self.parameter_dict:
-            out_str += p + ": " + "{:5g} | ".format(params[self.parameter_dict[p]])
-        print(out_str)
-        self.iter += 1
     
     def refine_solution(self):
         """Indicate that refinement is in progress. Then apply boundaries, update the parameter history and minimize the error_function. Finally, update the parameters and residuals, and indicate that the refinement is finished."""
         #Indicate that refinement is in progress
         self.refine_text.set("Refining...")
         self.update()
-        #Frequency limits
-        high, low = float(self.high_lim_input.get()), float(self.low_lim_input.get())
-        self.h_idx, self.l_idx = nearest(high, self.data.freq), nearest(low, self.data.freq)
-        #Boundary determination
-        boundaries = []
-        for t in range(len(self.tick_states)):
-            if self.tick_states[t].get() == 0: #Parameter not included in refinement
-                boundaries.append((self.refined_parameters[t], self.refined_parameters[t])) #Constrain parameter to its present value
-            elif self.tick_states[t].get() == 1: #Parameter included in refinement
-                if self.parameter_list[t][0] == "n":
-                    boundaries.append((0, 1)) #Refine the parameter (n bounded between 0 and 1)
-                else:  
-                    boundaries.append((0, 1e15)) #Refine the parameter (other parameters bounded between 0 and 1e15)
-            else:
-                print("Warning: forbidden tick state. Constraining parameter {:s}.".format(self.parameter_list[t]))
-                boundaries.append((self.refined_parameters[t], self.refined_parameters[t]))
-        #Save previous refinement
-        self.parameter_history.append(self.refined_parameters)
+        #Determine what to refine
+        to_be_refined = []
+        for t in self.tick_states:
+            to_be_refined.append(t.get())
+        #Refinement engine
+        self.refinement_engine = RefinementEngine(self.function_to_fit, self.data, self.refined_parameters, self.flipped_parameter_dict, to_be_refined, float(self.high_lim_value.get()), float(self.low_lim_value.get()), self.parameter_history, weighting_scheme = self.chosen_weighting.get())
         #Refinement
-        self.iter = 0
-        opt_res = op.minimize(self.error_function, np.array(self.refined_parameters), method="Nelder-Mead", options = {"maxiter": 500*len(self.refined_parameters)}, bounds = boundaries, callback = self.optimisation_callback) #Minimise the error
-        self.refined_parameters = opt_res["x"] #Save new parameters
+        self.refinement_engine.refine_solution()
+        self.refined_parameters = self.refinement_engine.parameters
         #Update
         self.set_param_labels() #Update parameter labels
         self.update_residuals() #Update residuals
@@ -501,4 +571,9 @@ class RefinementWindow(tk.Toplevel):
         """Set accept_refinement to False and close the window. The model in DECiM core will remain unchanged."""
         self.refinement_accepted = False #The refinement has been rejected
         self.destroy() #Close the window
+        
+    def flip_parameter_values_keys(self):
+        self.flipped_parameter_dict = {}
+        for p in self.parameter_dict:
+            self.flipped_parameter_dict[self.parameter_dict[p]] = p
         

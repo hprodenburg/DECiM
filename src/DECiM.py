@@ -1,6 +1,6 @@
 """DECiM (Determination of Equivalent Circuit Models) is an equivalent circuit model fitting program for impedance data. It is a GUI-based program.
 Much of the source code is spread over other python source files, all of which must be in the same folder as DECiM.py to ensure that the program works correctly.
-DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.7, 29 April 2024.
+DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.8, 30 April 2024.
 
 This is the core module -- when launched, DECiM starts. This module also defines the Window class."""
 
@@ -52,7 +52,7 @@ from ecm_helpers import nearest, maxima #Helper functions nearest(a, b) and maxi
 from ecm_file_io import parseData, parseCircuitString, parseResult, createResultFile, parseCircuitPresets, DataSpecificationWindow #Functions related to parsing data files, creating result files and parsing result files.
 from ecm_datastructure import dataSet #dataSet class.
 from ecm_plot import PlotFrame, limiter #PlotFrame and limiter classes. DECiM's plots are plotted in a PlotFrame.
-from ecm_fit import RefinementEngine, RefinementWindow #The classes dealing with the refinement procedures.
+from ecm_fit import SimpleRefinementEngine, RefinementWindow #The classes dealing with the refinement procedures.
 from ecm_user_input import InteractionFrame #Frame containing the various input fields, sliders, dropdowns, etc. that make up the interactive part of the program.
 from ecm_history import expandedDataSet, HistoryManager, DataSetSelectorWindow #For non-interactive plotting and quick switching between datasets.
 from ecm_manual import HelpWindow #User instructions.
@@ -404,7 +404,7 @@ class Window(ttk.Frame):
             optim_data = dataSet(freq = self.data.freq[self.fitfreq[1]:self.fitfreq[0]], real = self.data.real[self.fitfreq[1]:self.fitfreq[0]], imag = self.data.imag[self.fitfreq[1]:self.fitfreq[0]])
         else:
             optim_data = self.data
-        refinement_engine = RefinementEngine(self.interactive.parameters, optim_data, self.circuit_manager.circuit.impedance)
+        refinement_engine = SimpleRefinementEngine(self.interactive.parameters, optim_data, self.circuit_manager.circuit.impedance)
         refinement_engine.minRefinement()
         self.prevparams.append(self.interactive.parameters) #Save the previous parameters to allow the refinement to be undone.
         self.interactive.parameters = refinement_engine.output_params
