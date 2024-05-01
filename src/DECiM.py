@@ -1,6 +1,6 @@
 """DECiM (Determination of Equivalent Circuit Models) is an equivalent circuit model fitting program for impedance data. It is a GUI-based program.
 Much of the source code is spread over other python source files, all of which must be in the same folder as DECiM.py to ensure that the program works correctly.
-DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.8, 30 April 2024.
+DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.9, 1 May 2024.
 
 This is the core module -- when launched, DECiM starts. This module also defines the Window class."""
 

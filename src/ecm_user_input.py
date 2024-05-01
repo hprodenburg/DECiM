@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the interactive elements code. Last modified 29 April 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the interactive elements code. Last modified 1 May 2024 by Henrik Rodenburg.
 
 Classes:
 InteractionFrame -- contains all the controls for manual adjustment of fitting parameters
@@ -198,9 +198,11 @@ class InteractionFrame(ttk.Frame):
         Arguments:
         self
         event -- The user's action of clicking on the listbox."""
-        self.chosen_parameter.set(self.parameter_listbox.get())
-        self.reset_parameter_listbox()
-        self.parameter_listbox.itemconfig(self.listbox_indices[list(self.chosen_parameter.get().split(":"))[0]], {"bg": "#00f", "fg": "#fff"})
+        if len(self.parameter_listbox.get())> 0:
+            if self.parameter_listbox.get()[0] in "RLCQOSGHklmntbg":
+                self.chosen_parameter.set(self.parameter_listbox.get())
+                self.reset_parameter_listbox()
+                self.parameter_listbox.itemconfig(self.listbox_indices[list(self.chosen_parameter.get().split(":"))[0]], {"bg": "#00f", "fg": "#fff"})
             
     def update_label(self, new_value):
         """Update the label below the slider with the (new) parameter name, value and units.
