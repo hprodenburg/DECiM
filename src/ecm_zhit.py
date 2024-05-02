@@ -18,6 +18,7 @@ import matplotlib.animation as anim
 
 import scipy.optimize as op
 import scipy.interpolate as ir
+import scipy.signal as sg
 import copy
 
 import tkinter as tk
@@ -31,7 +32,7 @@ from ecm_helpers import nearest
 ################
 
 class ZHITEngine():
-    def __init__(self, data, high_lim = 1e6, low_lim = 1e-2, smooth_n = 10, smooth_s = 0.3):
+    def __init__(self, data, high_lim = 1e6, low_lim = 1e-2, smooth_n = 10, smooth_s = 0.3, savitzky_golay = False):
         """Z-HIT transform engine. Performs all the numerical operations in the Z-HIT transform.
         
         Init arguments, becoming attributes under the same name:
@@ -42,6 +43,8 @@ class ZHITEngine():
         
         smooth_n -- number of frequency points for the spline relative to the original data
         smooth_s -- spline smoothness parameter, the 's' argument in ir.UnivariateSpline
+        
+        savitzky_golay -- Boolean; compute the derivative with Savitzky-Golay filtering or not
         
         Attributes created during transform calculation:
         
@@ -69,6 +72,7 @@ class ZHITEngine():
         self.high_lim = high_lim
         self.smooth_n = smooth_n
         self.smooth_s = smooth_s
+        self.savitzky_golay = savitzky_golay
         
     #Smoothing of phase data to allow taking the derivative
     def spline_interpolation(self):
@@ -116,11 +120,14 @@ class ZHITEngine():
         Returns: tuple of:
         new_x -- NumPy array
         new_y -- NumPy array, first derivative of y"""
-        new_x, new_y = [], []
-        for i in range(len(y) - 1):
-            new_x.append((x[i] + x[i+1])/2)
-            new_y.append((y[i+1] - y[i])/(x[i+1] - x[i]))
-        return np.array(new_x), np.array(new_y)
+        if self.savitzky_golay:
+            return x[:-1], sg.savgol_filter(y, 50, 3, deriv = 1)[:-1]
+        else:
+            new_x, new_y = [], []
+            for i in range(len(y) - 1):
+                new_x.append((x[i] + x[i+1])/2)
+                new_y.append((y[i+1] - y[i])/(x[i+1] - x[i]))
+            return np.array(new_x), np.array(new_y)
         
     def raw_lnZ(self):
         """Calculate ln|Z| following the Z-HIT transform procedure."""
@@ -155,7 +162,7 @@ class ZHITEngine():
         
         Returns:
         Sum of the squares of the differences between the measured and calculated ln|Z|"""
-        return sum((np.log(self.data.amplitude) - (self.small_lnZ + fpars[0]))**2)
+        return sum((np.log(self.data.amplitude[nearest(self.low_lim, self.data.freq):nearest(self.high_lim, self.data.freq) + 1]) - (self.small_lnZ + fpars[0]))**2)
         
     def determine_integration_constant(self):
         """Determine the integration constant C in the Z-HIT transform procedure."""
@@ -177,8 +184,8 @@ class ZHITEngine():
         new_Z = np.exp(self.small_lnZ + self.iconstant) #New impedance
         self.transformed_data.freq = self.data.freq[nearest(self.low_lim, self.data.freq):nearest(self.high_lim, self.data.freq) + 1]
         self.transformed_data.amplitude = new_Z
-        self.transformed_data.real = new_Z*np.cos(self.data.phase)
-        self.transformed_data.imag = new_Z*np.sin(self.data.phase)
+        self.transformed_data.real = new_Z*np.cos(self.transformed_data.phase)
+        self.transformed_data.imag = new_Z*np.sin(self.transformed_data.phase)
         
 
 class ZHITWindow(tk.Toplevel):
@@ -373,7 +380,7 @@ class ZHITWindow(tk.Toplevel):
         self.bode_phase.plot(self.raw_data.freq, self.raw_data.phase*180/np.pi, linestyle = "None", marker = "s", markersize = 6, fillstyle = "full", color = "#229950", markeredgecolor = "#000000", markeredgewidth = 1)
         #Z-HIT calculation
         if self.plot_zhit_result:
-            zhit_engine = ZHITEngine(self.raw_data, low_lim = self.low_lim, high_lim = self.high_lim, smooth_n = self.smooth_n, smooth_s = self.smooth_s) #Start a new ZHITEngine
+            zhit_engine = ZHITEngine(self.raw_data, low_lim = self.low_lim, high_lim = self.high_lim, smooth_n = self.smooth_n, smooth_s = self.smooth_s, savitzky_golay = False) #Start a new ZHITEngine
             zhit_engine.compute_zhit_transform() #Compute the Z-HIT transform
             self.nyquist.plot(zhit_engine.transformed_data.real, -zhit_engine.transformed_data.imag, linestyle = "-", marker = "None", linewidth = 1.5, color = "#DD4444") #Replot everything
             self.bode_amp.plot(zhit_engine.transformed_data.freq, zhit_engine.transformed_data.amplitude, linestyle = "-", marker = "None", linewidth = 1.5, color = "#4444DD")
