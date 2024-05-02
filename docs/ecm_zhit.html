@@ -29,7 +29,8 @@ Classes:<br>
 </td><td class="multicolumn"><a href="numpy.html">numpy</a><br>
 <a href="scipy.optimize.html">scipy.optimize</a><br>
 <a href="matplotlib.pyplot.html">matplotlib.pyplot</a><br>
-</td><td class="multicolumn"><a href="tkinter.html">tkinter</a><br>
+</td><td class="multicolumn"><a href="scipy.signal.html">scipy.signal</a><br>
+<a href="tkinter.html">tkinter</a><br>
 <a href="tkinter.ttk.html">tkinter.ttk</a><br>
 </td></tr></table></td></tr></table><p>
 <table class="section">
@@ -57,12 +58,12 @@ Classes:<br>
 <td class="section-title" colspan=3>&nbsp;<br><a name="ZHITEngine">class <strong>ZHITEngine</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
     
 <tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
-<td class="decor title-decor" colspan=2><span class="code"><a href="#ZHITEngine">ZHITEngine</a>(data,&nbsp;high_lim=1000000.0,&nbsp;low_lim=0.01,&nbsp;smooth_n=10,&nbsp;smooth_s=0.3)<br>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#ZHITEngine">ZHITEngine</a>(data,&nbsp;high_lim=1000000.0,&nbsp;low_lim=0.01,&nbsp;smooth_n=10,&nbsp;smooth_s=0.3,&nbsp;savitzky_golay=False)<br>
 &nbsp;<br>
 <br>&nbsp;</span></td></tr>
 <tr><td>&nbsp;</td>
 <td class="singlecolumn">Methods defined here:<br>
-<dl><dt><a name="ZHITEngine-__init__"><strong>__init__</strong></a>(self, data, high_lim=1000000.0, low_lim=0.01, smooth_n=10, smooth_s=0.3)</dt><dd><span class="code">Z-HIT&nbsp;transform&nbsp;engine.&nbsp;Performs&nbsp;all&nbsp;the&nbsp;numerical&nbsp;operations&nbsp;in&nbsp;the&nbsp;Z-HIT&nbsp;transform.<br>
+<dl><dt><a name="ZHITEngine-__init__"><strong>__init__</strong></a>(self, data, high_lim=1000000.0, low_lim=0.01, smooth_n=10, smooth_s=0.3, savitzky_golay=False)</dt><dd><span class="code">Z-HIT&nbsp;transform&nbsp;engine.&nbsp;Performs&nbsp;all&nbsp;the&nbsp;numerical&nbsp;operations&nbsp;in&nbsp;the&nbsp;Z-HIT&nbsp;transform.<br>
 &nbsp;<br>
 Init&nbsp;arguments,&nbsp;becoming&nbsp;attributes&nbsp;under&nbsp;the&nbsp;same&nbsp;name:<br>
 &nbsp;<br>
@@ -72,6 +73,8 @@ high_lim&nbsp;--&nbsp;frequency&nbsp;upper&nbsp;limit<br>
 &nbsp;<br>
 smooth_n&nbsp;--&nbsp;number&nbsp;of&nbsp;frequency&nbsp;points&nbsp;for&nbsp;the&nbsp;spline&nbsp;relative&nbsp;to&nbsp;the&nbsp;original&nbsp;data<br>
 smooth_s&nbsp;--&nbsp;spline&nbsp;smoothness&nbsp;parameter,&nbsp;the&nbsp;'s'&nbsp;argument&nbsp;in&nbsp;ir.UnivariateSpline<br>
+&nbsp;<br>
+savitzky_golay&nbsp;--&nbsp;Boolean;&nbsp;compute&nbsp;the&nbsp;derivative&nbsp;with&nbsp;Savitzky-Golay&nbsp;filtering&nbsp;or&nbsp;not<br>
 &nbsp;<br>
 Attributes&nbsp;created&nbsp;during&nbsp;transform&nbsp;calculation:<br>
 &nbsp;<br>
