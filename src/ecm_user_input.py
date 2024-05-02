@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the interactive elements code. Last modified 1 May 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the interactive elements code. Last modified 2 May 2024 by Henrik Rodenburg.
 
 Classes:
 InteractionFrame -- contains all the controls for manual adjustment of fitting parameters
@@ -78,14 +78,11 @@ class InteractionFrame(ttk.Frame):
         
         #Create the different elements and pack them to the left
         
-        #Parameter dropdown -- to be replaced with ScrollableListbox -- need to change self.chosen_parameter to have information on parameter value
+        #Parameter ScrollableListbox -- need to change self.chosen_parameter to have information on parameter value
         self.parameter_frame = ttk.Frame(self)
         self.choice_label = tk.Label(self.parameter_frame, text = "Parameter")
         self.choice_label.pack(side = tk.TOP, anchor = tk.CENTER)
         self.chosen_parameter.set("R0: 1")
-        #self.parameter_dropdown = tk.OptionMenu(self.parameter_frame, self.chosen_parameter, "R0")
-        #self.parameter_dropdown.pack(side = tk.TOP, anchor = tk.CENTER)
-        #self.reset_parameter_dropdown()
         self.parameter_listbox = ScrollableListbox(self.parameter_frame)
         self.parameter_listbox.bind_select(self.select_parameter)
         self.parameter_listbox.pack(side = tk.TOP, anchor = tk.CENTER)
@@ -366,7 +363,7 @@ class ScrollableListbox():
         function -- Function to bind"""
         self.listbox.bind("<<ListboxSelect>>", function)
         
-    def pack(self, side = tk.RIGHT, fill = tk.NONE, anchor = tk.W):
+    def pack(self, side = tk.LEFT, fill = tk.NONE, anchor = tk.W):
         """Pack self on master and configure self.scrollbar to scroll through self.listbox.
         
         Arguments:
@@ -374,9 +371,9 @@ class ScrollableListbox():
         side -- side on which to pack self
         fill -- which directions to fill on master
         anchor -- packing anchor"""
-        #Packing
-        self.listbox.pack(side = side, fill = fill, anchor = anchor)
-        self.scrollbar.pack(side = side, fill = fill, anchor = anchor)
         #Attach listbox and scrollbar to each other
         self.listbox.config(yscrollcommand = self.scrollbar.set)
         self.scrollbar.config(command = self.listbox.yview)
+        #Packing -- listbox only, scrollbar is invisible, but the scroll wheel works
+        self.listbox.pack(side = side, fill = fill, anchor = anchor)
+        

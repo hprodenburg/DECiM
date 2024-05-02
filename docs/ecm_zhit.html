@@ -9,10 +9,11 @@
 <tr class="heading-text decor">
 <td class="title">&nbsp;<br><strong class="title">ecm_zhit</strong></td>
 </tr></table>
-    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;Z-HIT&nbsp;maths&nbsp;and&nbsp;window.&nbsp;Last&nbsp;modified&nbsp;5&nbsp;April&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;Z-HIT&nbsp;maths&nbsp;and&nbsp;window.&nbsp;Last&nbsp;modified&nbsp;2&nbsp;May&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
 &nbsp;<br>
 Classes:<br>
-<a href="#ZHITWindow">ZHITWindow</a>&nbsp;--&nbsp;handles&nbsp;the&nbsp;Z-HIT&nbsp;transform</span></p>
+<a href="#ZHITEngine">ZHITEngine</a>&nbsp;--&nbsp;handles&nbsp;the&nbsp;Z-HIT&nbsp;transform<br>
+<a href="#ZHITWindow">ZHITWindow</a>&nbsp;--&nbsp;builds&nbsp;the&nbsp;GUI&nbsp;around&nbsp;the&nbsp;Z-HIT&nbsp;transform&nbsp;as&nbsp;implemented&nbsp;in&nbsp;<a href="#ZHITEngine">ZHITEngine</a></span></p>
 <p>
 <table class="section">
 <tr class="decor pkg-content-decor heading-text">
@@ -37,6 +38,12 @@ Classes:<br>
     
 <tr><td class="decor index-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
 <td class="singlecolumn"><dl>
+<dt class="heading-text"><a href="builtins.html#object">builtins.object</a>
+</dt><dd>
+<dl>
+<dt class="heading-text"><a href="ecm_zhit.html#ZHITEngine">ZHITEngine</a>
+</dt></dl>
+</dd>
 <dt class="heading-text"><a href="tkinter.html#Toplevel">tkinter.Toplevel</a>(<a href="tkinter.html#BaseWidget">tkinter.BaseWidget</a>, <a href="tkinter.html#Wm">tkinter.Wm</a>)
 </dt><dd>
 <dl>
@@ -45,6 +52,106 @@ Classes:<br>
 </dd>
 </dl>
  <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="ZHITEngine">class <strong>ZHITEngine</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#ZHITEngine">ZHITEngine</a>(data,&nbsp;high_lim=1000000.0,&nbsp;low_lim=0.01,&nbsp;smooth_n=10,&nbsp;smooth_s=0.3)<br>
+&nbsp;<br>
+<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn">Methods defined here:<br>
+<dl><dt><a name="ZHITEngine-__init__"><strong>__init__</strong></a>(self, data, high_lim=1000000.0, low_lim=0.01, smooth_n=10, smooth_s=0.3)</dt><dd><span class="code">Z-HIT&nbsp;transform&nbsp;engine.&nbsp;Performs&nbsp;all&nbsp;the&nbsp;numerical&nbsp;operations&nbsp;in&nbsp;the&nbsp;Z-HIT&nbsp;transform.<br>
+&nbsp;<br>
+Init&nbsp;arguments,&nbsp;becoming&nbsp;attributes&nbsp;under&nbsp;the&nbsp;same&nbsp;name:<br>
+&nbsp;<br>
+data&nbsp;--&nbsp;dataSet&nbsp;of&nbsp;measured&nbsp;data<br>
+low_lim&nbsp;--&nbsp;frequency&nbsp;lower&nbsp;limit<br>
+high_lim&nbsp;--&nbsp;frequency&nbsp;upper&nbsp;limit<br>
+&nbsp;<br>
+smooth_n&nbsp;--&nbsp;number&nbsp;of&nbsp;frequency&nbsp;points&nbsp;for&nbsp;the&nbsp;spline&nbsp;relative&nbsp;to&nbsp;the&nbsp;original&nbsp;data<br>
+smooth_s&nbsp;--&nbsp;spline&nbsp;smoothness&nbsp;parameter,&nbsp;the&nbsp;'s'&nbsp;argument&nbsp;in&nbsp;ir.UnivariateSpline<br>
+&nbsp;<br>
+Attributes&nbsp;created&nbsp;during&nbsp;transform&nbsp;calculation:<br>
+&nbsp;<br>
+lnZ&nbsp;--&nbsp;ln|Z|&nbsp;calculated&nbsp;from&nbsp;phase,&nbsp;size&nbsp;=&nbsp;self.<strong>smooth_n</strong>*len(self.<strong>data</strong>.amplitude)<br>
+small_lnZ&nbsp;--&nbsp;ln|Z|&nbsp;calculated&nbsp;from&nbsp;phase,&nbsp;same&nbsp;size&nbsp;as&nbsp;original&nbsp;data&nbsp;(self.<strong>data</strong>.amplitude)<br>
+iconstant&nbsp;--&nbsp;NumPy&nbsp;array&nbsp;containing&nbsp;one&nbsp;value,&nbsp;the&nbsp;integration&nbsp;constant&nbsp;C&nbsp;that&nbsp;best&nbsp;corrects&nbsp;the&nbsp;offset&nbsp;in&nbsp;|Z|<br>
+transformed_data&nbsp;--&nbsp;dataSet&nbsp;of&nbsp;transformed&nbsp;data<br>
+&nbsp;<br>
+Methods:<br>
+&nbsp;<br>
+spline_interpolation&nbsp;--&nbsp;interpolate&nbsp;the&nbsp;phase<br>
+gamma&nbsp;--&nbsp;helper&nbsp;function&nbsp;related&nbsp;to&nbsp;the&nbsp;Riemann&nbsp;zeta&nbsp;function<br>
+integrate&nbsp;--&nbsp;integral&nbsp;calculation<br>
+derivative&nbsp;--&nbsp;first&nbsp;derivative&nbsp;calculation<br>
+raw_lnZ&nbsp;--&nbsp;compute&nbsp;ln|Z|&nbsp;with&nbsp;unknown&nbsp;integration&nbsp;constant<br>
+error_lnZ&nbsp;--&nbsp;sum&nbsp;of&nbsp;the&nbsp;squares&nbsp;of&nbsp;the&nbsp;differences&nbsp;between&nbsp;the&nbsp;measured&nbsp;|Z|&nbsp;and&nbsp;newly&nbsp;calculated&nbsp;ln|Z|<br>
+determine_integration_constant&nbsp;--&nbsp;correct&nbsp;|Z|&nbsp;by&nbsp;determining&nbsp;the&nbsp;integration&nbsp;constant<br>
+lnZ_to_original_dimensions&nbsp;--&nbsp;reduce&nbsp;the&nbsp;number&nbsp;of&nbsp;|Z|&nbsp;data&nbsp;points&nbsp;to&nbsp;the&nbsp;measured&nbsp;number<br>
+phase_to_original_dimensions&nbsp;--&nbsp;reduce&nbsp;the&nbsp;number&nbsp;of&nbsp;phase&nbsp;data&nbsp;points&nbsp;to&nbsp;the&nbsp;measured&nbsp;number<br>
+&nbsp;<br>
+compute_zhit_transform&nbsp;--&nbsp;compute&nbsp;the&nbsp;Z-HIT&nbsp;transformed&nbsp;data&nbsp;and&nbsp;save&nbsp;it&nbsp;to&nbsp;a&nbsp;new&nbsp;dataSet</span></dd></dl>
+
+<dl><dt><a name="ZHITEngine-compute_zhit_transform"><strong>compute_zhit_transform</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="ZHITEngine-derivative"><strong>derivative</strong></a>(self, x, y)</dt><dd><span class="code">Differentiate&nbsp;data&nbsp;y(x)<br>
+&nbsp;<br>
+Arguments:<br>
+x&nbsp;--&nbsp;x&nbsp;data<br>
+y&nbsp;--&nbsp;y&nbsp;data<br>
+&nbsp;<br>
+Returns:&nbsp;tuple&nbsp;of:<br>
+new_x&nbsp;--&nbsp;NumPy&nbsp;array<br>
+new_y&nbsp;--&nbsp;NumPy&nbsp;array,&nbsp;first&nbsp;derivative&nbsp;of&nbsp;y</span></dd></dl>
+
+<dl><dt><a name="ZHITEngine-determine_integration_constant"><strong>determine_integration_constant</strong></a>(self)</dt><dd><span class="code">Determine&nbsp;the&nbsp;integration&nbsp;constant&nbsp;C&nbsp;in&nbsp;the&nbsp;Z-HIT&nbsp;transform&nbsp;procedure.</span></dd></dl>
+
+<dl><dt><a name="ZHITEngine-error_lnZ"><strong>error_lnZ</strong></a>(self, fpars)</dt><dd><span class="code">Calculate&nbsp;the&nbsp;sum&nbsp;of&nbsp;the&nbsp;squares&nbsp;of&nbsp;the&nbsp;differences&nbsp;between&nbsp;the&nbsp;measured&nbsp;and&nbsp;calculated&nbsp;ln|Z|.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+fpars&nbsp;--&nbsp;array&nbsp;containing&nbsp;only&nbsp;one&nbsp;parameter:&nbsp;C,&nbsp;the&nbsp;integration&nbsp;constant<br>
+&nbsp;<br>
+Returns:<br>
+Sum&nbsp;of&nbsp;the&nbsp;squares&nbsp;of&nbsp;the&nbsp;differences&nbsp;between&nbsp;the&nbsp;measured&nbsp;and&nbsp;calculated&nbsp;ln|Z|</span></dd></dl>
+
+<dl><dt><a name="ZHITEngine-gamma"><strong>gamma</strong></a>(self, k)</dt><dd><span class="code">Compute&nbsp;gamma&nbsp;(part&nbsp;of&nbsp;the&nbsp;Riemann&nbsp;zeta&nbsp;function).<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+k&nbsp;--&nbsp;integer<br>
+&nbsp;<br>
+Returns:<br>
+gamma&nbsp;--&nbsp;float</span></dd></dl>
+
+<dl><dt><a name="ZHITEngine-integrate"><strong>integrate</strong></a>(self, x, y)</dt><dd><span class="code">Integrate&nbsp;data&nbsp;y(x).<br>
+&nbsp;<br>
+Arguments:<br>
+x&nbsp;--&nbsp;x&nbsp;data<br>
+y&nbsp;--&nbsp;y&nbsp;data<br>
+&nbsp;<br>
+Returns:<br>
+Integral&nbsp;(scalar)</span></dd></dl>
+
+<dl><dt><a name="ZHITEngine-lnZ_to_original_dimensions"><strong>lnZ_to_original_dimensions</strong></a>(self)</dt><dd><span class="code">Reduce&nbsp;the&nbsp;number&nbsp;of&nbsp;ln|Z|&nbsp;data&nbsp;points&nbsp;to&nbsp;the&nbsp;number&nbsp;that&nbsp;was&nbsp;originally&nbsp;measured.</span></dd></dl>
+
+<dl><dt><a name="ZHITEngine-phase_to_original_dimensions"><strong>phase_to_original_dimensions</strong></a>(self)</dt><dd><span class="code">Reduce&nbsp;the&nbsp;number&nbsp;of&nbsp;phase&nbsp;data&nbsp;points&nbsp;to&nbsp;the&nbsp;number&nbsp;that&nbsp;was&nbsp;originally&nbsp;measured.</span></dd></dl>
+
+<dl><dt><a name="ZHITEngine-raw_lnZ"><strong>raw_lnZ</strong></a>(self)</dt><dd><span class="code">Calculate&nbsp;ln|Z|&nbsp;following&nbsp;the&nbsp;Z-HIT&nbsp;transform&nbsp;procedure.</span></dd></dl>
+
+<dl><dt><a name="ZHITEngine-spline_interpolation"><strong>spline_interpolation</strong></a>(self)</dt><dd><span class="code">Smoothen&nbsp;the&nbsp;phase&nbsp;data&nbsp;with&nbsp;spline&nbsp;interpolation.&nbsp;This&nbsp;will&nbsp;generate&nbsp;a&nbsp;new&nbsp;frequency&nbsp;and&nbsp;phase&nbsp;in&nbsp;data.</span></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
+</td></tr></table> <p>
 <table class="section">
 <tr class="decor title-decor heading-text">
 <td class="section-title" colspan=3>&nbsp;<br><a name="ZHITWindow">class <strong>ZHITWindow</strong></a>(<a href="tkinter.html#Toplevel">tkinter.Toplevel</a>)</td></tr>
@@ -64,7 +171,7 @@ Classes:<br>
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="ZHITWindow-__init__"><strong>__init__</strong></a>(self, data)</dt><dd><span class="code">Z-HIT&nbsp;analysis&nbsp;window.<br>
+<dl><dt><a name="ZHITWindow-__init__"><strong>__init__</strong></a>(self, data)</dt><dd><span class="code">Z-HIT&nbsp;analysis&nbsp;window.&nbsp;Builds&nbsp;the&nbsp;GUI&nbsp;around&nbsp;the&nbsp;<a href="#ZHITEngine">ZHITEngine</a>.<br>
 &nbsp;<br>
 Init&nbsp;arguments:<br>
 data&nbsp;--&nbsp;dataSet&nbsp;of&nbsp;measured&nbsp;data<br>
@@ -110,58 +217,11 @@ phase_to_original_dimensions&nbsp;--&nbsp;reduce&nbsp;the&nbsp;number&nbsp;of&nb
 
 <dl><dt><a name="ZHITWindow-calculate_zhit_amplitude"><strong>calculate_zhit_amplitude</strong></a>(self)</dt><dd><span class="code">Update&nbsp;the&nbsp;settings,&nbsp;allow&nbsp;the&nbsp;Z-HIT&nbsp;amplitude&nbsp;to&nbsp;be&nbsp;calculated&nbsp;and&nbsp;update&nbsp;the&nbsp;plots&nbsp;with&nbsp;update_plot_canvas,&nbsp;which&nbsp;will&nbsp;perform&nbsp;the&nbsp;calculation.</span></dd></dl>
 
-<dl><dt><a name="ZHITWindow-derivative"><strong>derivative</strong></a>(self, x, y)</dt><dd><span class="code">Differentiate&nbsp;data&nbsp;y(x)<br>
-&nbsp;<br>
-Arguments:<br>
-x&nbsp;--&nbsp;x&nbsp;data<br>
-y&nbsp;--&nbsp;y&nbsp;data<br>
-&nbsp;<br>
-Returns:&nbsp;tuple&nbsp;of:<br>
-new_x&nbsp;--&nbsp;NumPy&nbsp;array<br>
-new_y&nbsp;--&nbsp;NumPy&nbsp;array,&nbsp;first&nbsp;derivative&nbsp;of&nbsp;y</span></dd></dl>
-
-<dl><dt><a name="ZHITWindow-determine_integration_constant"><strong>determine_integration_constant</strong></a>(self)</dt><dd><span class="code">Determine&nbsp;the&nbsp;integration&nbsp;constant&nbsp;C&nbsp;in&nbsp;the&nbsp;Z-HIT&nbsp;transform&nbsp;procedure.</span></dd></dl>
-
-<dl><dt><a name="ZHITWindow-error_lnZ"><strong>error_lnZ</strong></a>(self, fpars)</dt><dd><span class="code">Calculate&nbsp;the&nbsp;sum&nbsp;of&nbsp;the&nbsp;squares&nbsp;of&nbsp;the&nbsp;differences&nbsp;between&nbsp;the&nbsp;measured&nbsp;and&nbsp;calculated&nbsp;ln|Z|.<br>
-&nbsp;<br>
-Arguments:<br>
-self<br>
-fpars&nbsp;--&nbsp;array&nbsp;containing&nbsp;only&nbsp;one&nbsp;parameter:&nbsp;C,&nbsp;the&nbsp;integration&nbsp;constant<br>
-&nbsp;<br>
-Returns:<br>
-Sum&nbsp;of&nbsp;the&nbsp;squares&nbsp;of&nbsp;the&nbsp;differences&nbsp;between&nbsp;the&nbsp;measured&nbsp;and&nbsp;calculated&nbsp;ln|Z|</span></dd></dl>
-
-<dl><dt><a name="ZHITWindow-gamma"><strong>gamma</strong></a>(self, k)</dt><dd><span class="code">Compute&nbsp;gamma&nbsp;(part&nbsp;of&nbsp;the&nbsp;Riemann&nbsp;zeta&nbsp;function).<br>
-&nbsp;<br>
-Arguments:<br>
-self<br>
-k&nbsp;--&nbsp;integer<br>
-&nbsp;<br>
-Returns:<br>
-gamma&nbsp;--&nbsp;float</span></dd></dl>
-
-<dl><dt><a name="ZHITWindow-integrate"><strong>integrate</strong></a>(self, x, y)</dt><dd><span class="code">Integrate&nbsp;data&nbsp;y(x).<br>
-&nbsp;<br>
-Arguments:<br>
-x&nbsp;--&nbsp;x&nbsp;data<br>
-y&nbsp;--&nbsp;y&nbsp;data<br>
-&nbsp;<br>
-Returns:<br>
-Integral&nbsp;(scalar)</span></dd></dl>
-
-<dl><dt><a name="ZHITWindow-lnZ_to_original_dimensions"><strong>lnZ_to_original_dimensions</strong></a>(self)</dt><dd><span class="code">Reduce&nbsp;the&nbsp;number&nbsp;of&nbsp;ln|Z|&nbsp;data&nbsp;points&nbsp;to&nbsp;the&nbsp;number&nbsp;that&nbsp;was&nbsp;originally&nbsp;measured.</span></dd></dl>
-
 <dl><dt><a name="ZHITWindow-make_UI"><strong>make_UI</strong></a>(self)</dt><dd><span class="code">Make&nbsp;a&nbsp;high&nbsp;and&nbsp;low&nbsp;ttk.Frame,&nbsp;then&nbsp;fill&nbsp;the&nbsp;lower&nbsp;frame&nbsp;with&nbsp;new&nbsp;frames&nbsp;for&nbsp;the&nbsp;settings&nbsp;tk.Entries&nbsp;and&nbsp;tk.Labels.&nbsp;Then,&nbsp;add&nbsp;buttons&nbsp;onto&nbsp;the&nbsp;lower&nbsp;frame.</span></dd></dl>
 
 <dl><dt><a name="ZHITWindow-make_plotting_frame"><strong>make_plotting_frame</strong></a>(self)</dt><dd><span class="code">Make&nbsp;the&nbsp;plot&nbsp;canvas,&nbsp;put&nbsp;the&nbsp;plots&nbsp;on&nbsp;it&nbsp;and&nbsp;create&nbsp;the&nbsp;toolbar.</span></dd></dl>
 
-<dl><dt><a name="ZHITWindow-phase_to_original_dimensions"><strong>phase_to_original_dimensions</strong></a>(self)</dt><dd><span class="code">Reduce&nbsp;the&nbsp;number&nbsp;of&nbsp;phase&nbsp;data&nbsp;points&nbsp;to&nbsp;the&nbsp;number&nbsp;that&nbsp;was&nbsp;originally&nbsp;measured.</span></dd></dl>
-
-<dl><dt><a name="ZHITWindow-raw_lnZ"><strong>raw_lnZ</strong></a>(self)</dt><dd><span class="code">Calculate&nbsp;ln|Z|&nbsp;following&nbsp;the&nbsp;Z-HIT&nbsp;transform&nbsp;procedure.</span></dd></dl>
-
 <dl><dt><a name="ZHITWindow-reject_and_close"><strong>reject_and_close</strong></a>(self)</dt><dd><span class="code">Reject&nbsp;the&nbsp;Z-HIT&nbsp;data&nbsp;transformation&nbsp;and&nbsp;close&nbsp;the&nbsp;window.</span></dd></dl>
-
-<dl><dt><a name="ZHITWindow-spline_interpolation"><strong>spline_interpolation</strong></a>(self)</dt><dd><span class="code">Smoothen&nbsp;the&nbsp;phase&nbsp;data&nbsp;with&nbsp;spline&nbsp;interpolation.&nbsp;This&nbsp;will&nbsp;generate&nbsp;a&nbsp;new&nbsp;frequency&nbsp;and&nbsp;phase&nbsp;in&nbsp;data.</span></dd></dl>
 
 <dl><dt><a name="ZHITWindow-update_plot_canvas"><strong>update_plot_canvas</strong></a>(self)</dt><dd><span class="code">Clear&nbsp;the&nbsp;plots,&nbsp;redraw&nbsp;them&nbsp;and,&nbsp;if&nbsp;allowed,&nbsp;calculate&nbsp;and&nbsp;plot&nbsp;the&nbsp;Z-HIT&nbsp;result.&nbsp;Then&nbsp;redraw&nbsp;the&nbsp;canvas.</span></dd></dl>
 

@@ -1,7 +1,8 @@
-"""Part of DECiM. This file contains the Z-HIT maths and window. Last modified 5 April 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the Z-HIT maths and window. Last modified 2 May 2024 by Henrik Rodenburg.
 
 Classes:
-ZHITWindow -- handles the Z-HIT transform"""
+ZHITEngine -- handles the Z-HIT transform
+ZHITWindow -- builds the GUI around the Z-HIT transform as implemented in ZHITEngine"""
 
 ###########
 ##IMPORTS##
@@ -29,9 +30,160 @@ from ecm_helpers import nearest
 ##Z-HIT WINDOW##
 ################
 
+class ZHITEngine():
+    def __init__(self, data, high_lim = 1e6, low_lim = 1e-2, smooth_n = 10, smooth_s = 0.3):
+        """Z-HIT transform engine. Performs all the numerical operations in the Z-HIT transform.
+        
+        Init arguments, becoming attributes under the same name:
+        
+        data -- dataSet of measured data
+        low_lim -- frequency lower limit
+        high_lim -- frequency upper limit
+        
+        smooth_n -- number of frequency points for the spline relative to the original data
+        smooth_s -- spline smoothness parameter, the 's' argument in ir.UnivariateSpline
+        
+        Attributes created during transform calculation:
+        
+        lnZ -- ln|Z| calculated from phase, size = self.smooth_n*len(self.data.amplitude)
+        small_lnZ -- ln|Z| calculated from phase, same size as original data (self.data.amplitude)
+        iconstant -- NumPy array containing one value, the integration constant C that best corrects the offset in |Z|
+        transformed_data -- dataSet of transformed data
+        
+        Methods:
+        
+        spline_interpolation -- interpolate the phase
+        gamma -- helper function related to the Riemann zeta function
+        integrate -- integral calculation
+        derivative -- first derivative calculation
+        raw_lnZ -- compute ln|Z| with unknown integration constant
+        error_lnZ -- sum of the squares of the differences between the measured |Z| and newly calculated ln|Z|
+        determine_integration_constant -- correct |Z| by determining the integration constant
+        lnZ_to_original_dimensions -- reduce the number of |Z| data points to the measured number
+        phase_to_original_dimensions -- reduce the number of phase data points to the measured number
+        
+        compute_zhit_transform -- compute the Z-HIT transformed data and save it to a new dataSet"""
+        self.data = data
+        self.transformed_data = copy.deepcopy(data)
+        self.low_lim = low_lim
+        self.high_lim = high_lim
+        self.smooth_n = smooth_n
+        self.smooth_s = smooth_s
+        
+    #Smoothing of phase data to allow taking the derivative
+    def spline_interpolation(self):
+        """Smoothen the phase data with spline interpolation. This will generate a new frequency and phase in data."""
+        phase_spline = ir.UnivariateSpline(self.transformed_data.freq, self.transformed_data.phase, s = self.smooth_s)
+        new_freq = 10**np.linspace(np.log10(self.transformed_data.freq[0]), np.log10(self.transformed_data.freq[-1]), len(self.transformed_data.freq)*self.smooth_n)
+        new_phase = phase_spline(new_freq)
+        self.transformed_data.freq = new_freq
+        self.transformed_data.phase = new_phase
+        
+    #Mathematics behind the Z-HIT transform
+    def gamma(self, k):
+        """Compute gamma (part of the Riemann zeta function).
+        
+        Arguments:
+        self
+        k -- integer
+        
+        Returns:
+        gamma -- float"""
+        zeta = {2: np.pi**2/6, 4: np.pi**4/90, 6: np.pi**6/945, 8: np.pi**8/9450}
+        return (-1)**k * (np.pi/2) * (1/2**k) * zeta[k + 1]
+        
+    def integrate(self, x, y):
+        """Integrate data y(x).
+        
+        Arguments:
+        x -- x data
+        y -- y data
+        
+        Returns:
+        Integral (scalar)"""
+        out = []
+        for i in range(len(y) - 1):
+            out.append(((y[i] + y[i+1])/2) * (x[i+1] - x[i]))
+        return sum(out)
+        
+    def derivative(self, x, y):
+        """Differentiate data y(x)
+        
+        Arguments:
+        x -- x data
+        y -- y data
+        
+        Returns: tuple of:
+        new_x -- NumPy array
+        new_y -- NumPy array, first derivative of y"""
+        new_x, new_y = [], []
+        for i in range(len(y) - 1):
+            new_x.append((x[i] + x[i+1])/2)
+            new_y.append((y[i+1] - y[i])/(x[i+1] - x[i]))
+        return np.array(new_x), np.array(new_y)
+        
+    def raw_lnZ(self):
+        """Calculate ln|Z| following the Z-HIT transform procedure."""
+        lnw = np.log(2*np.pi*self.transformed_data.freq)
+        integrals = []
+        for i in range(len(lnw) + 1):
+            integrals.append(self.integrate(lnw[:i], self.transformed_data.phase[:i]))
+        integrals = np.array(integrals)
+        dlnw, dphase = self.derivative(lnw, self.transformed_data.phase)
+        self.lnZ = (2/np.pi)*integrals[1:-1] + self.gamma(1)*dphase #Constant of integration is omitted here
+        
+    def lnZ_to_original_dimensions(self):
+        """Reduce the number of ln|Z| data points to the number that was originally measured."""
+        small_lnZ = []
+        for i in range(0, len(self.lnZ) + self.smooth_n, self.smooth_n):
+            small_lnZ.append(sum(self.lnZ[i:i + self.smooth_n])/self.smooth_n)
+        self.small_lnZ = np.array(small_lnZ)
+        
+    def phase_to_original_dimensions(self):
+        """Reduce the number of phase data points to the number that was originally measured."""
+        small_phase = []
+        for i in range(0, len(self.transformed_data.phase) + self.smooth_n, self.smooth_n):
+            small_phase.append(sum(self.transformed_data.phase[i:i + self.smooth_n])/self.smooth_n)
+        self.transformed_data.phase = np.array(small_phase)
+        
+    def error_lnZ(self, fpars):
+        """Calculate the sum of the squares of the differences between the measured and calculated ln|Z|.
+        
+        Arguments:
+        self
+        fpars -- array containing only one parameter: C, the integration constant
+        
+        Returns:
+        Sum of the squares of the differences between the measured and calculated ln|Z|"""
+        return sum((np.log(self.data.amplitude) - (self.small_lnZ + fpars[0]))**2)
+        
+    def determine_integration_constant(self):
+        """Determine the integration constant C in the Z-HIT transform procedure."""
+        self.iconstant = np.zeros(1)
+        opt_res = op.minimize(self.error_lnZ, self.iconstant, method = "Nelder-Mead", options = {"maxiter": 500})
+        self.iconstant = opt_res["x"]
+        
+    def compute_zhit_transform(self):
+        self.transformed_data.freq = self.transformed_data.freq[nearest(self.low_lim, self.data.freq):nearest(self.high_lim, self.data.freq)] #Frequency limits
+        self.transformed_data.real = self.transformed_data.real[nearest(self.low_lim, self.data.freq):nearest(self.high_lim, self.data.freq)]
+        self.transformed_data.imag = self.transformed_data.imag[nearest(self.low_lim, self.data.freq):nearest(self.high_lim, self.data.freq)]
+        self.transformed_data.amplitude = self.transformed_data.amplitude[nearest(self.low_lim, self.data.freq):nearest(self.high_lim, self.data.freq)]
+        self.transformed_data.phase = self.transformed_data.phase[nearest(self.low_lim, self.data.freq):nearest(self.high_lim, self.data.freq)]
+        self.spline_interpolation() #New frequency & phase
+        self.raw_lnZ() #Towards new impedance...
+        self.lnZ_to_original_dimensions()
+        self.phase_to_original_dimensions()
+        self.determine_integration_constant() #Again, towards new impedance...
+        new_Z = np.exp(self.small_lnZ + self.iconstant) #New impedance
+        self.transformed_data.freq = self.data.freq[nearest(self.low_lim, self.data.freq):nearest(self.high_lim, self.data.freq) + 1]
+        self.transformed_data.amplitude = new_Z
+        self.transformed_data.real = new_Z*np.cos(self.data.phase)
+        self.transformed_data.imag = new_Z*np.sin(self.data.phase)
+        
+
 class ZHITWindow(tk.Toplevel):
     def __init__(self, data):
-        """Z-HIT analysis window.
+        """Z-HIT analysis window. Builds the GUI around the ZHITEngine.
         
         Init arguments:
         data -- dataSet of measured data
@@ -77,14 +229,14 @@ class ZHITWindow(tk.Toplevel):
         self.width = int(self.winfo_screenwidth()*0.85)
         self.height = int(self.winfo_screenheight()*0.85)
         self.geometry("{:d}x{:d}".format(self.width, self.height))
-        self.raw_data = copy.deepcopy(data)
+        self.raw_data = data
         self.data = copy.deepcopy(data)
+        self.low_lim = min(data.freq)
+        self.high_lim = max(data.freq)
+        self.smooth_n = 10
+        self.smooth_s = 0.3
         self.plot_zhit_result = False
         self.correction_accepted = False
-        self.low_lim = min(self.data.freq)
-        self.high_lim = max(self.data.freq)
-        self.smooth_n = 10
-        self.smooth_s = 0.03
         self.make_UI()
         
     #UI initialisation
@@ -221,114 +373,11 @@ class ZHITWindow(tk.Toplevel):
         self.bode_phase.plot(self.raw_data.freq, self.raw_data.phase*180/np.pi, linestyle = "None", marker = "s", markersize = 6, fillstyle = "full", color = "#229950", markeredgecolor = "#000000", markeredgewidth = 1)
         #Z-HIT calculation
         if self.plot_zhit_result:
-            self.data.freq = self.raw_data.freq[nearest(self.low_lim, self.raw_data.freq):nearest(self.high_lim, self.raw_data.freq)] #Frequency limits
-            self.data.real = self.raw_data.real[nearest(self.low_lim, self.raw_data.freq):nearest(self.high_lim, self.raw_data.freq)]
-            self.data.imag = self.raw_data.imag[nearest(self.low_lim, self.raw_data.freq):nearest(self.high_lim, self.raw_data.freq)]
-            self.data.amplitude = self.raw_data.amplitude[nearest(self.low_lim, self.raw_data.freq):nearest(self.high_lim, self.raw_data.freq)]
-            self.data.phase = self.raw_data.phase[nearest(self.low_lim, self.raw_data.freq):nearest(self.high_lim, self.raw_data.freq)]
-            self.spline_interpolation() #New frequency & phase
-            self.raw_lnZ() #Towards new impedance...
-            self.lnZ_to_original_dimensions()
-            self.phase_to_original_dimensions()
-            self.determine_integration_constant() #Again, towards new impedance...
-            new_Z = np.exp(self.small_lnZ + self.iconstant) #New impedance
-            self.data.freq = self.raw_data.freq[nearest(self.low_lim, self.raw_data.freq):nearest(self.high_lim, self.raw_data.freq)]
-            self.data.amplitude = new_Z
-            self.data.real = new_Z*np.cos(self.data.phase)
-            self.data.imag = new_Z*np.sin(self.data.phase)
-            self.nyquist.plot(self.data.real, -self.data.imag, linestyle = "-", marker = "None", linewidth = 1.5, color = "#DD4444") #Replot everything
-            self.bode_amp.plot(self.data.freq, self.data.amplitude, linestyle = "-", marker = "None", linewidth = 1.5, color = "#4444DD")
-            self.bode_phase.plot(self.data.freq, self.data.phase*180/np.pi, linestyle = "-", marker = "None", linewidth = 1.5, color = "#44DD44")
+            zhit_engine = ZHITEngine(self.raw_data, low_lim = self.low_lim, high_lim = self.high_lim, smooth_n = self.smooth_n, smooth_s = self.smooth_s) #Start a new ZHITEngine
+            zhit_engine.compute_zhit_transform() #Compute the Z-HIT transform
+            self.nyquist.plot(zhit_engine.transformed_data.real, -zhit_engine.transformed_data.imag, linestyle = "-", marker = "None", linewidth = 1.5, color = "#DD4444") #Replot everything
+            self.bode_amp.plot(zhit_engine.transformed_data.freq, zhit_engine.transformed_data.amplitude, linestyle = "-", marker = "None", linewidth = 1.5, color = "#4444DD")
+            self.bode_phase.plot(zhit_engine.transformed_data.freq, zhit_engine.transformed_data.phase*180/np.pi, linestyle = "-", marker = "None", linewidth = 1.5, color = "#44DD44")
+            self.data = zhit_engine.transformed_data #Save the transformed data
         self.canvas.draw()
         
-    def spline_interpolation(self):
-        """Smoothen the phase data with spline interpolation. This will generate a new frequency and phase in data."""
-        phase_spline = ir.UnivariateSpline(self.data.freq, self.data.phase, s = self.smooth_s)
-        new_freq = 10**np.linspace(np.log10(self.data.freq[0]), np.log10(self.data.freq[-1]), len(self.data.freq)*self.smooth_n)
-        new_phase = phase_spline(new_freq)
-        self.data.freq = new_freq
-        self.data.phase = new_phase
-        
-    #Mathematics behind the Z-HIT transform
-    def gamma(self, k):
-        """Compute gamma (part of the Riemann zeta function).
-        
-        Arguments:
-        self
-        k -- integer
-        
-        Returns:
-        gamma -- float"""
-        zeta = {2: np.pi**2/6, 4: np.pi**4/90, 6: np.pi**6/945, 8: np.pi**8/9450}
-        return (-1)**k * (np.pi/2) * (1/2**k) * zeta[k + 1]
-        
-    def integrate(self, x, y):
-        """Integrate data y(x).
-        
-        Arguments:
-        x -- x data
-        y -- y data
-        
-        Returns:
-        Integral (scalar)"""
-        out = []
-        for i in range(len(y) - 1):
-            out.append(((y[i] + y[i+1])/2) * (x[i+1] - x[i]))
-        return sum(out)
-        
-    def derivative(self, x, y):
-        """Differentiate data y(x)
-        
-        Arguments:
-        x -- x data
-        y -- y data
-        
-        Returns: tuple of:
-        new_x -- NumPy array
-        new_y -- NumPy array, first derivative of y"""
-        new_x, new_y = [], []
-        for i in range(len(y) - 1):
-            new_x.append((x[i] + x[i+1])/2)
-            new_y.append((y[i+1] - y[i])/(x[i+1] - x[i]))
-        return np.array(new_x), np.array(new_y)
-        
-    def raw_lnZ(self):
-        """Calculate ln|Z| following the Z-HIT transform procedure."""
-        lnw = np.log(2*np.pi*self.data.freq)
-        integrals = []
-        for i in range(len(lnw) + 1):
-            integrals.append(self.integrate(lnw[:i], self.data.phase[:i]))
-        integrals = np.array(integrals)
-        dlnw, dphase = self.derivative(lnw, self.data.phase)
-        self.lnZ = (2/np.pi)*integrals[1:-1] + self.gamma(1)*dphase #Constant of integration is omitted here
-        
-    def lnZ_to_original_dimensions(self):
-        """Reduce the number of ln|Z| data points to the number that was originally measured."""
-        small_lnZ = []
-        for i in range(0, len(self.lnZ), self.smooth_n):
-            small_lnZ.append(sum(self.lnZ[i:i + self.smooth_n])/self.smooth_n)
-        self.small_lnZ = np.array(small_lnZ)
-        
-    def phase_to_original_dimensions(self):
-        """Reduce the number of phase data points to the number that was originally measured."""
-        small_phase = []
-        for i in range(0, len(self.data.phase), self.smooth_n):
-            small_phase.append(sum(self.data.phase[i:i + self.smooth_n])/self.smooth_n)
-        self.data.phase = np.array(small_phase)
-        
-    def error_lnZ(self, fpars):
-        """Calculate the sum of the squares of the differences between the measured and calculated ln|Z|.
-        
-        Arguments:
-        self
-        fpars -- array containing only one parameter: C, the integration constant
-        
-        Returns:
-        Sum of the squares of the differences between the measured and calculated ln|Z|"""
-        return sum((np.log(self.data.amplitude) - (self.small_lnZ + fpars[0]))**2)
-        
-    def determine_integration_constant(self):
-        """Determine the integration constant C in the Z-HIT transform procedure."""
-        self.iconstant = np.zeros(1)
-        opt_res = op.minimize(self.error_lnZ, self.iconstant, method = "Nelder-Mead", options = {"maxiter": 500})
-        self.iconstant = opt_res["x"]
