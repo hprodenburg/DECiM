@@ -9,7 +9,7 @@
 <tr class="heading-text decor">
 <td class="title">&nbsp;<br><strong class="title">ecm_zhit</strong></td>
 </tr></table>
-    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;Z-HIT&nbsp;maths&nbsp;and&nbsp;window.&nbsp;Last&nbsp;modified&nbsp;2&nbsp;May&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;Z-HIT&nbsp;maths&nbsp;and&nbsp;window.&nbsp;Last&nbsp;modified&nbsp;3&nbsp;May&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
 &nbsp;<br>
 Classes:<br>
 <a href="#ZHITEngine">ZHITEngine</a>&nbsp;--&nbsp;handles&nbsp;the&nbsp;Z-HIT&nbsp;transform<br>
@@ -58,12 +58,12 @@ Classes:<br>
 <td class="section-title" colspan=3>&nbsp;<br><a name="ZHITEngine">class <strong>ZHITEngine</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
     
 <tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
-<td class="decor title-decor" colspan=2><span class="code"><a href="#ZHITEngine">ZHITEngine</a>(data,&nbsp;high_lim=1000000.0,&nbsp;low_lim=0.01,&nbsp;smooth_n=10,&nbsp;smooth_s=0.3,&nbsp;savitzky_golay=False)<br>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#ZHITEngine">ZHITEngine</a>(data,&nbsp;high_lim=1000000.0,&nbsp;low_lim=0.01,&nbsp;cut_hf_edge=True,&nbsp;cut_lf_edge=False,&nbsp;savgol_winlength=20,&nbsp;savgol_polyorder=2)<br>
 &nbsp;<br>
 <br>&nbsp;</span></td></tr>
 <tr><td>&nbsp;</td>
 <td class="singlecolumn">Methods defined here:<br>
-<dl><dt><a name="ZHITEngine-__init__"><strong>__init__</strong></a>(self, data, high_lim=1000000.0, low_lim=0.01, smooth_n=10, smooth_s=0.3, savitzky_golay=False)</dt><dd><span class="code">Z-HIT&nbsp;transform&nbsp;engine.&nbsp;Performs&nbsp;all&nbsp;the&nbsp;numerical&nbsp;operations&nbsp;in&nbsp;the&nbsp;Z-HIT&nbsp;transform.<br>
+<dl><dt><a name="ZHITEngine-__init__"><strong>__init__</strong></a>(self, data, high_lim=1000000.0, low_lim=0.01, cut_hf_edge=True, cut_lf_edge=False, savgol_winlength=20, savgol_polyorder=2)</dt><dd><span class="code">Z-HIT&nbsp;transform&nbsp;engine.&nbsp;Performs&nbsp;all&nbsp;the&nbsp;numerical&nbsp;operations&nbsp;in&nbsp;the&nbsp;Z-HIT&nbsp;transform.<br>
 &nbsp;<br>
 Init&nbsp;arguments,&nbsp;becoming&nbsp;attributes&nbsp;under&nbsp;the&nbsp;same&nbsp;name:<br>
 &nbsp;<br>
@@ -71,33 +71,39 @@ data&nbsp;--&nbsp;dataSet&nbsp;of&nbsp;measured&nbsp;data<br>
 low_lim&nbsp;--&nbsp;frequency&nbsp;lower&nbsp;limit<br>
 high_lim&nbsp;--&nbsp;frequency&nbsp;upper&nbsp;limit<br>
 &nbsp;<br>
-smooth_n&nbsp;--&nbsp;number&nbsp;of&nbsp;frequency&nbsp;points&nbsp;for&nbsp;the&nbsp;spline&nbsp;relative&nbsp;to&nbsp;the&nbsp;original&nbsp;data<br>
-smooth_s&nbsp;--&nbsp;spline&nbsp;smoothness&nbsp;parameter,&nbsp;the&nbsp;'s'&nbsp;argument&nbsp;in&nbsp;ir.UnivariateSpline<br>
+cut_hf_edge&nbsp;--&nbsp;Boolean;&nbsp;cut&nbsp;the&nbsp;high-frequency&nbsp;smoothed&nbsp;data<br>
+cut_lf_edge&nbsp;--&nbsp;Boolean;&nbsp;cut&nbsp;the&nbsp;low-frequency&nbsp;smoothed&nbsp;data<br>
 &nbsp;<br>
-savitzky_golay&nbsp;--&nbsp;Boolean;&nbsp;compute&nbsp;the&nbsp;derivative&nbsp;with&nbsp;Savitzky-Golay&nbsp;filtering&nbsp;or&nbsp;not<br>
+savgol_winlength&nbsp;--&nbsp;window&nbsp;length&nbsp;for&nbsp;filter<br>
+savgol_polyorder&nbsp;--&nbsp;polynomial_order&nbsp;for&nbsp;filter<br>
+&nbsp;<br>
+Further&nbsp;starting&nbsp;attributes:<br>
+high_cut&nbsp;--&nbsp;number&nbsp;of&nbsp;points&nbsp;to&nbsp;cut&nbsp;from&nbsp;self.<strong>lnZ</strong>,&nbsp;self.<strong>transformed_data</strong>.amplitude,&nbsp;self.<strong>transformed_data</strong>.freq,&nbsp;and&nbsp;self.<strong>transformed_data</strong>.phase&nbsp;if&nbsp;cut_hf_edge;&nbsp;normally&nbsp;1/10th&nbsp;of&nbsp;data&nbsp;length<br>
+low_cut&nbsp;--&nbsp;number&nbsp;of&nbsp;points&nbsp;to&nbsp;cut&nbsp;from&nbsp;self.<strong>lnZ</strong>,&nbsp;self.<strong>transformed_data</strong>.amplitude,&nbsp;self.<strong>transformed_data</strong>.freq,&nbsp;and&nbsp;self.<strong>transformed_data</strong>.phase&nbsp;if&nbsp;cut_lf_edge;&nbsp;normally&nbsp;1/10th&nbsp;of&nbsp;data&nbsp;length<br>
 &nbsp;<br>
 Attributes&nbsp;created&nbsp;during&nbsp;transform&nbsp;calculation:<br>
 &nbsp;<br>
-lnZ&nbsp;--&nbsp;ln|Z|&nbsp;calculated&nbsp;from&nbsp;phase,&nbsp;size&nbsp;=&nbsp;self.<strong>smooth_n</strong>*len(self.<strong>data</strong>.amplitude)<br>
-small_lnZ&nbsp;--&nbsp;ln|Z|&nbsp;calculated&nbsp;from&nbsp;phase,&nbsp;same&nbsp;size&nbsp;as&nbsp;original&nbsp;data&nbsp;(self.<strong>data</strong>.amplitude)<br>
+lnZ&nbsp;--&nbsp;ln|Z|&nbsp;calculated&nbsp;from&nbsp;phase<br>
 iconstant&nbsp;--&nbsp;NumPy&nbsp;array&nbsp;containing&nbsp;one&nbsp;value,&nbsp;the&nbsp;integration&nbsp;constant&nbsp;C&nbsp;that&nbsp;best&nbsp;corrects&nbsp;the&nbsp;offset&nbsp;in&nbsp;|Z|<br>
 transformed_data&nbsp;--&nbsp;dataSet&nbsp;of&nbsp;transformed&nbsp;data<br>
+backup_data&nbsp;--&nbsp;dataSet&nbsp;to&nbsp;recover&nbsp;initial&nbsp;data<br>
 &nbsp;<br>
 Methods:<br>
 &nbsp;<br>
-spline_interpolation&nbsp;--&nbsp;interpolate&nbsp;the&nbsp;phase<br>
+smooth_phase&nbsp;--&nbsp;Use&nbsp;a&nbsp;Savitzky-Golay&nbsp;filter&nbsp;to&nbsp;smoothen&nbsp;the&nbsp;phase&nbsp;data<br>
+cut_edges&nbsp;--&nbsp;remove&nbsp;the&nbsp;ends&nbsp;of&nbsp;the&nbsp;smoothed&nbsp;phase,&nbsp;and&nbsp;other&nbsp;arrays;&nbsp;works&nbsp;well&nbsp;against&nbsp;edge&nbsp;artifacts<br>
 gamma&nbsp;--&nbsp;helper&nbsp;function&nbsp;related&nbsp;to&nbsp;the&nbsp;Riemann&nbsp;zeta&nbsp;function<br>
 integrate&nbsp;--&nbsp;integral&nbsp;calculation<br>
 derivative&nbsp;--&nbsp;first&nbsp;derivative&nbsp;calculation<br>
 raw_lnZ&nbsp;--&nbsp;compute&nbsp;ln|Z|&nbsp;with&nbsp;unknown&nbsp;integration&nbsp;constant<br>
 error_lnZ&nbsp;--&nbsp;sum&nbsp;of&nbsp;the&nbsp;squares&nbsp;of&nbsp;the&nbsp;differences&nbsp;between&nbsp;the&nbsp;measured&nbsp;|Z|&nbsp;and&nbsp;newly&nbsp;calculated&nbsp;ln|Z|<br>
 determine_integration_constant&nbsp;--&nbsp;correct&nbsp;|Z|&nbsp;by&nbsp;determining&nbsp;the&nbsp;integration&nbsp;constant<br>
-lnZ_to_original_dimensions&nbsp;--&nbsp;reduce&nbsp;the&nbsp;number&nbsp;of&nbsp;|Z|&nbsp;data&nbsp;points&nbsp;to&nbsp;the&nbsp;measured&nbsp;number<br>
 phase_to_original_dimensions&nbsp;--&nbsp;reduce&nbsp;the&nbsp;number&nbsp;of&nbsp;phase&nbsp;data&nbsp;points&nbsp;to&nbsp;the&nbsp;measured&nbsp;number<br>
-&nbsp;<br>
 compute_zhit_transform&nbsp;--&nbsp;compute&nbsp;the&nbsp;Z-HIT&nbsp;transformed&nbsp;data&nbsp;and&nbsp;save&nbsp;it&nbsp;to&nbsp;a&nbsp;new&nbsp;dataSet</span></dd></dl>
 
 <dl><dt><a name="ZHITEngine-compute_zhit_transform"><strong>compute_zhit_transform</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="ZHITEngine-cut_edges"><strong>cut_edges</strong></a>(self)</dt><dd><span class="code">Remove&nbsp;the&nbsp;poorly&nbsp;smoothed&nbsp;edges&nbsp;of&nbsp;the&nbsp;phase&nbsp;data&nbsp;for&nbsp;the&nbsp;derivative&nbsp;calculation.</span></dd></dl>
 
 <dl><dt><a name="ZHITEngine-derivative"><strong>derivative</strong></a>(self, x, y)</dt><dd><span class="code">Differentiate&nbsp;data&nbsp;y(x)<br>
 &nbsp;<br>
@@ -138,13 +144,9 @@ y&nbsp;--&nbsp;y&nbsp;data<br>
 Returns:<br>
 Integral&nbsp;(scalar)</span></dd></dl>
 
-<dl><dt><a name="ZHITEngine-lnZ_to_original_dimensions"><strong>lnZ_to_original_dimensions</strong></a>(self)</dt><dd><span class="code">Reduce&nbsp;the&nbsp;number&nbsp;of&nbsp;ln|Z|&nbsp;data&nbsp;points&nbsp;to&nbsp;the&nbsp;number&nbsp;that&nbsp;was&nbsp;originally&nbsp;measured.</span></dd></dl>
-
-<dl><dt><a name="ZHITEngine-phase_to_original_dimensions"><strong>phase_to_original_dimensions</strong></a>(self)</dt><dd><span class="code">Reduce&nbsp;the&nbsp;number&nbsp;of&nbsp;phase&nbsp;data&nbsp;points&nbsp;to&nbsp;the&nbsp;number&nbsp;that&nbsp;was&nbsp;originally&nbsp;measured.</span></dd></dl>
-
 <dl><dt><a name="ZHITEngine-raw_lnZ"><strong>raw_lnZ</strong></a>(self)</dt><dd><span class="code">Calculate&nbsp;ln|Z|&nbsp;following&nbsp;the&nbsp;Z-HIT&nbsp;transform&nbsp;procedure.</span></dd></dl>
 
-<dl><dt><a name="ZHITEngine-spline_interpolation"><strong>spline_interpolation</strong></a>(self)</dt><dd><span class="code">Smoothen&nbsp;the&nbsp;phase&nbsp;data&nbsp;with&nbsp;spline&nbsp;interpolation.&nbsp;This&nbsp;will&nbsp;generate&nbsp;a&nbsp;new&nbsp;frequency&nbsp;and&nbsp;phase&nbsp;in&nbsp;data.</span></dd></dl>
+<dl><dt><a name="ZHITEngine-smooth_phase"><strong>smooth_phase</strong></a>(self)</dt><dd><span class="code">Use&nbsp;a&nbsp;Savitzky-Golay&nbsp;filter&nbsp;to&nbsp;smoothen&nbsp;the&nbsp;phase.</span></dd></dl>
 
 <hr>
 Data descriptors defined here:<br>
@@ -189,11 +191,10 @@ data&nbsp;--&nbsp;dataSet&nbsp;of&nbsp;measured&nbsp;data&nbsp;(deep&nbsp;copy)<
 plot_zhit_result&nbsp;--&nbsp;Boolean,&nbsp;indicates&nbsp;if&nbsp;result&nbsp;can&nbsp;be&nbsp;plotted<br>
 correction_accepted&nbsp;--&nbsp;Boolean,&nbsp;indicates&nbsp;if&nbsp;data&nbsp;transformation&nbsp;is&nbsp;accepted<br>
 &nbsp;<br>
+show_derivative&nbsp;--&nbsp;debugging&nbsp;option,&nbsp;crudely&nbsp;plots&nbsp;the&nbsp;derivative&nbsp;of&nbsp;the&nbsp;phase<br>
+&nbsp;<br>
 low_lim&nbsp;--&nbsp;frequency&nbsp;lower&nbsp;limit<br>
 high_lim&nbsp;--&nbsp;frequency&nbsp;upper&nbsp;limit<br>
-&nbsp;<br>
-smooth_n&nbsp;--&nbsp;number&nbsp;of&nbsp;frequency&nbsp;points&nbsp;for&nbsp;the&nbsp;spline&nbsp;relative&nbsp;to&nbsp;the&nbsp;original&nbsp;data<br>
-smooth_s&nbsp;--&nbsp;spline&nbsp;smoothness&nbsp;parameter,&nbsp;the&nbsp;'s'&nbsp;argument&nbsp;in&nbsp;ir.UnivariateSpline<br>
 &nbsp;<br>
 Methods:<br>
 make_UI&nbsp;--&nbsp;make&nbsp;the&nbsp;UI<br>
@@ -203,18 +204,9 @@ update_settings&nbsp;--&nbsp;update&nbsp;the&nbsp;settings&nbsp;for&nbsp;the&nbs
 calculate_zhit_amplitude&nbsp;--&nbsp;allow&nbsp;the&nbsp;Z-HIT&nbsp;transform&nbsp;to&nbsp;be&nbsp;calculated&nbsp;by&nbsp;the&nbsp;update_plot_canvas&nbsp;method<br>
 reject_and_close&nbsp;--&nbsp;close&nbsp;the&nbsp;window&nbsp;without&nbsp;accepting&nbsp;the&nbsp;data&nbsp;transformation<br>
 accept_and_close&nbsp;--&nbsp;accept&nbsp;the&nbsp;data&nbsp;transformation&nbsp;and&nbsp;close&nbsp;the&nbsp;window<br>
+toggle_filter_entries&nbsp;--&nbsp;enable&nbsp;or&nbsp;disable&nbsp;Savitzky-Golay&nbsp;filter&nbsp;tk.Entries&nbsp;and&nbsp;tk.Labels<br>
 &nbsp;<br>
-update_plot_canvas&nbsp;--&nbsp;clear&nbsp;and&nbsp;redraw&nbsp;the&nbsp;plot&nbsp;canvas;&nbsp;also&nbsp;includes&nbsp;the&nbsp;whole&nbsp;Z-HIT&nbsp;procedure<br>
-&nbsp;<br>
-spline_interpolation&nbsp;--&nbsp;interpolate&nbsp;the&nbsp;phase<br>
-gamma&nbsp;--&nbsp;helper&nbsp;function&nbsp;related&nbsp;to&nbsp;the&nbsp;Riemann&nbsp;zeta&nbsp;function<br>
-integrate&nbsp;--&nbsp;integral&nbsp;calculation<br>
-derivative&nbsp;--&nbsp;first&nbsp;derivative&nbsp;calculation<br>
-raw_lnZ&nbsp;--&nbsp;compute&nbsp;ln|Z|&nbsp;with&nbsp;unknown&nbsp;integration&nbsp;constant<br>
-error_lnZ&nbsp;--&nbsp;sum&nbsp;of&nbsp;the&nbsp;squares&nbsp;of&nbsp;the&nbsp;differences&nbsp;between&nbsp;the&nbsp;measured&nbsp;|Z|&nbsp;and&nbsp;newly&nbsp;calculated&nbsp;ln|Z|<br>
-determine_integration_constant&nbsp;--&nbsp;correct&nbsp;|Z|&nbsp;by&nbsp;determining&nbsp;the&nbsp;integration&nbsp;constant<br>
-lnZ_to_original_dimensions&nbsp;--&nbsp;reduce&nbsp;the&nbsp;number&nbsp;of&nbsp;|Z|&nbsp;data&nbsp;points&nbsp;to&nbsp;the&nbsp;measured&nbsp;number<br>
-phase_to_original_dimensions&nbsp;--&nbsp;reduce&nbsp;the&nbsp;number&nbsp;of&nbsp;phase&nbsp;data&nbsp;points&nbsp;to&nbsp;the&nbsp;measured&nbsp;number</span></dd></dl>
+update_plot_canvas&nbsp;--&nbsp;clear&nbsp;and&nbsp;redraw&nbsp;the&nbsp;plot&nbsp;canvas;&nbsp;also&nbsp;includes&nbsp;the&nbsp;whole&nbsp;Z-HIT&nbsp;procedure</span></dd></dl>
 
 <dl><dt><a name="ZHITWindow-accept_and_close"><strong>accept_and_close</strong></a>(self)</dt><dd><span class="code">Accept&nbsp;the&nbsp;Z-HIT&nbsp;data&nbsp;transformation&nbsp;and&nbsp;close&nbsp;the&nbsp;window.</span></dd></dl>
 
@@ -228,7 +220,7 @@ phase_to_original_dimensions&nbsp;--&nbsp;reduce&nbsp;the&nbsp;number&nbsp;of&nb
 
 <dl><dt><a name="ZHITWindow-update_plot_canvas"><strong>update_plot_canvas</strong></a>(self)</dt><dd><span class="code">Clear&nbsp;the&nbsp;plots,&nbsp;redraw&nbsp;them&nbsp;and,&nbsp;if&nbsp;allowed,&nbsp;calculate&nbsp;and&nbsp;plot&nbsp;the&nbsp;Z-HIT&nbsp;result.&nbsp;Then&nbsp;redraw&nbsp;the&nbsp;canvas.</span></dd></dl>
 
-<dl><dt><a name="ZHITWindow-update_settings"><strong>update_settings</strong></a>(self)</dt><dd><span class="code">Üpdate&nbsp;the&nbsp;frequency&nbsp;limits&nbsp;and&nbsp;the&nbsp;parameters&nbsp;used&nbsp;to&nbsp;create&nbsp;the&nbsp;spline&nbsp;curve.</span></dd></dl>
+<dl><dt><a name="ZHITWindow-update_settings"><strong>update_settings</strong></a>(self)</dt><dd><span class="code">Update&nbsp;the&nbsp;frequency&nbsp;limits&nbsp;and&nbsp;the&nbsp;parameters&nbsp;used&nbsp;to&nbsp;create&nbsp;the&nbsp;spline&nbsp;curve.</span></dd></dl>
 
 <hr>
 Methods inherited from <a href="tkinter.html#BaseWidget">tkinter.BaseWidget</a>:<br>

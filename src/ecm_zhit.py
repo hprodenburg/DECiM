@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the Z-HIT maths and window. Last modified 2 May 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the Z-HIT maths and window. Last modified 3 May 2024 by Henrik Rodenburg.
 
 Classes:
 ZHITEngine -- handles the Z-HIT transform
@@ -32,7 +32,7 @@ from ecm_helpers import nearest
 ################
 
 class ZHITEngine():
-    def __init__(self, data, high_lim = 1e6, low_lim = 1e-2, smooth_n = 10, smooth_s = 0.3, savitzky_golay = False):
+    def __init__(self, data, high_lim = 1e6, low_lim = 1e-2, cut_hf_edge = True, cut_lf_edge = False, savgol_winlength = 20, savgol_polyorder = 2):
         """Z-HIT transform engine. Performs all the numerical operations in the Z-HIT transform.
         
         Init arguments, becoming attributes under the same name:
@@ -41,48 +41,47 @@ class ZHITEngine():
         low_lim -- frequency lower limit
         high_lim -- frequency upper limit
         
-        smooth_n -- number of frequency points for the spline relative to the original data
-        smooth_s -- spline smoothness parameter, the 's' argument in ir.UnivariateSpline
+        cut_hf_edge -- Boolean; cut the high-frequency smoothed data
+        cut_lf_edge -- Boolean; cut the low-frequency smoothed data
         
-        savitzky_golay -- Boolean; compute the derivative with Savitzky-Golay filtering or not
+        savgol_winlength -- window length for filter
+        savgol_polyorder -- polynomial_order for filter
+        
+        Further starting attributes:
+        high_cut -- number of points to cut from self.lnZ, self.transformed_data.amplitude, self.transformed_data.freq, and self.transformed_data.phase if cut_hf_edge; normally 1/10th of data length
+        low_cut -- number of points to cut from self.lnZ, self.transformed_data.amplitude, self.transformed_data.freq, and self.transformed_data.phase if cut_lf_edge; normally 1/10th of data length
         
         Attributes created during transform calculation:
         
-        lnZ -- ln|Z| calculated from phase, size = self.smooth_n*len(self.data.amplitude)
-        small_lnZ -- ln|Z| calculated from phase, same size as original data (self.data.amplitude)
+        lnZ -- ln|Z| calculated from phase
         iconstant -- NumPy array containing one value, the integration constant C that best corrects the offset in |Z|
         transformed_data -- dataSet of transformed data
+        backup_data -- dataSet to recover initial data
         
         Methods:
         
-        spline_interpolation -- interpolate the phase
+        smooth_phase -- Use a Savitzky-Golay filter to smoothen the phase data
+        cut_edges -- remove the ends of the smoothed phase, and other arrays; works well against edge artifacts
         gamma -- helper function related to the Riemann zeta function
         integrate -- integral calculation
         derivative -- first derivative calculation
         raw_lnZ -- compute ln|Z| with unknown integration constant
         error_lnZ -- sum of the squares of the differences between the measured |Z| and newly calculated ln|Z|
         determine_integration_constant -- correct |Z| by determining the integration constant
-        lnZ_to_original_dimensions -- reduce the number of |Z| data points to the measured number
         phase_to_original_dimensions -- reduce the number of phase data points to the measured number
-        
         compute_zhit_transform -- compute the Z-HIT transformed data and save it to a new dataSet"""
         self.data = data
         self.transformed_data = copy.deepcopy(data)
+        self.backup_data = copy.deepcopy(data)
         self.low_lim = low_lim
         self.high_lim = high_lim
-        self.smooth_n = smooth_n
-        self.smooth_s = smooth_s
-        self.savitzky_golay = savitzky_golay
-        
-    #Smoothing of phase data to allow taking the derivative
-    def spline_interpolation(self):
-        """Smoothen the phase data with spline interpolation. This will generate a new frequency and phase in data."""
-        phase_spline = ir.UnivariateSpline(self.transformed_data.freq, self.transformed_data.phase, s = self.smooth_s)
-        new_freq = 10**np.linspace(np.log10(self.transformed_data.freq[0]), np.log10(self.transformed_data.freq[-1]), len(self.transformed_data.freq)*self.smooth_n)
-        new_phase = phase_spline(new_freq)
-        self.transformed_data.freq = new_freq
-        self.transformed_data.phase = new_phase
-        
+        self.low_cut = int(len(data.freq)/10)
+        self.high_cut = int(len(data.freq)/10)
+        self.cut_hf_edge = cut_hf_edge
+        self.cut_lf_edge = cut_lf_edge
+        self.savgol_winlength = savgol_winlength
+        self.savgol_polyorder = savgol_polyorder
+                
     #Mathematics behind the Z-HIT transform
     def gamma(self, k):
         """Compute gamma (part of the Riemann zeta function).
@@ -120,14 +119,30 @@ class ZHITEngine():
         Returns: tuple of:
         new_x -- NumPy array
         new_y -- NumPy array, first derivative of y"""
-        if self.savitzky_golay:
-            return x[:-1], sg.savgol_filter(y, 50, 3, deriv = 1)[:-1]
-        else:
-            new_x, new_y = [], []
-            for i in range(len(y) - 1):
-                new_x.append((x[i] + x[i+1])/2)
-                new_y.append((y[i+1] - y[i])/(x[i+1] - x[i]))
-            return np.array(new_x), np.array(new_y)
+        return x, sg.savgol_filter(y, self.savgol_winlength, self.savgol_polyorder, deriv = 1)
+        
+    def smooth_phase(self):
+        """Use a Savitzky-Golay filter to smoothen the phase."""
+        self.transformed_data.phase = sg.savgol_filter(self.transformed_data.phase, self.savgol_winlength, self.savgol_polyorder, deriv = 0)
+        
+    def cut_edges(self):
+        """Remove the poorly smoothed edges of the phase data for the derivative calculation."""
+        if self.cut_hf_edge and max(self.transformed_data.freq) == self.transformed_data.freq[-1]:
+            self.transformed_data.freq = self.transformed_data.freq[:-self.high_cut]
+            self.transformed_data.phase = self.transformed_data.phase[:-self.high_cut]
+            self.transformed_data.amplitude = self.transformed_data.amplitude[:-self.high_cut]
+        elif self.cut_hf_edge and max(self.transformed_data.freq) == self.transformed_data.freq[0]:
+            self.transformed_data.freq = self.transformed_data.freq[self.high_cut:]
+            self.transformed_data.phase = self.transformed_data.phase[self.high_cut:]
+            self.transformed_data.amplitude = self.transformed_data.amplitude[self.high_cut:]
+        if self.cut_lf_edge and min(self.transformed_data.freq) == self.transformed_data.freq[-1]:
+            self.transformed_data.freq = self.transformed_data.freq[:-self.low_cut]
+            self.transformed_data.phase = self.transformed_data.phase[:-self.low_cut]
+            self.transformed_data.amplitude = self.transformed_data.amplitude[:-self.low_cut]
+        elif self.cut_lf_edge and min(self.transformed_data.freq) == self.transformed_data.freq[0]:
+            self.transformed_data.freq = self.transformed_data.freq[self.low_cut:]
+            self.transformed_data.phase = self.transformed_data.phase[self.low_cut:]
+            self.transformed_data.amplitude = self.transformed_data.amplitude[self.low_cut:]
         
     def raw_lnZ(self):
         """Calculate ln|Z| following the Z-HIT transform procedure."""
@@ -136,22 +151,8 @@ class ZHITEngine():
         for i in range(len(lnw) + 1):
             integrals.append(self.integrate(lnw[:i], self.transformed_data.phase[:i]))
         integrals = np.array(integrals)
-        dlnw, dphase = self.derivative(lnw, self.transformed_data.phase)
-        self.lnZ = (2/np.pi)*integrals[1:-1] + self.gamma(1)*dphase #Constant of integration is omitted here
-        
-    def lnZ_to_original_dimensions(self):
-        """Reduce the number of ln|Z| data points to the number that was originally measured."""
-        small_lnZ = []
-        for i in range(0, len(self.lnZ) + self.smooth_n, self.smooth_n):
-            small_lnZ.append(sum(self.lnZ[i:i + self.smooth_n])/self.smooth_n)
-        self.small_lnZ = np.array(small_lnZ)
-        
-    def phase_to_original_dimensions(self):
-        """Reduce the number of phase data points to the number that was originally measured."""
-        small_phase = []
-        for i in range(0, len(self.transformed_data.phase) + self.smooth_n, self.smooth_n):
-            small_phase.append(sum(self.transformed_data.phase[i:i + self.smooth_n])/self.smooth_n)
-        self.transformed_data.phase = np.array(small_phase)
+        self.dlnw, self.dphase = self.derivative(lnw, self.transformed_data.phase)
+        self.lnZ = (2/np.pi)*integrals[:-1] + self.gamma(1)*self.dphase #Constant of integration is omitted here
         
     def error_lnZ(self, fpars):
         """Calculate the sum of the squares of the differences between the measured and calculated ln|Z|.
@@ -162,7 +163,7 @@ class ZHITEngine():
         
         Returns:
         Sum of the squares of the differences between the measured and calculated ln|Z|"""
-        return sum((np.log(self.data.amplitude[nearest(self.low_lim, self.data.freq):nearest(self.high_lim, self.data.freq) + 1]) - (self.small_lnZ + fpars[0]))**2)
+        return sum((np.log(self.transformed_data.amplitude[nearest(self.low_lim, self.transformed_data.freq):nearest(self.high_lim, self.transformed_data.freq) + 1]) - (self.lnZ + fpars[0]))**2)
         
     def determine_integration_constant(self):
         """Determine the integration constant C in the Z-HIT transform procedure."""
@@ -171,22 +172,20 @@ class ZHITEngine():
         self.iconstant = opt_res["x"]
         
     def compute_zhit_transform(self):
+        self.data = copy.deepcopy(self.backup_data)
         self.transformed_data.freq = self.transformed_data.freq[nearest(self.low_lim, self.data.freq):nearest(self.high_lim, self.data.freq)] #Frequency limits
         self.transformed_data.real = self.transformed_data.real[nearest(self.low_lim, self.data.freq):nearest(self.high_lim, self.data.freq)]
         self.transformed_data.imag = self.transformed_data.imag[nearest(self.low_lim, self.data.freq):nearest(self.high_lim, self.data.freq)]
         self.transformed_data.amplitude = self.transformed_data.amplitude[nearest(self.low_lim, self.data.freq):nearest(self.high_lim, self.data.freq)]
         self.transformed_data.phase = self.transformed_data.phase[nearest(self.low_lim, self.data.freq):nearest(self.high_lim, self.data.freq)]
-        self.spline_interpolation() #New frequency & phase
-        self.raw_lnZ() #Towards new impedance...
-        self.lnZ_to_original_dimensions()
-        self.phase_to_original_dimensions()
-        self.determine_integration_constant() #Again, towards new impedance...
-        new_Z = np.exp(self.small_lnZ + self.iconstant) #New impedance
-        self.transformed_data.freq = self.data.freq[nearest(self.low_lim, self.data.freq):nearest(self.high_lim, self.data.freq) + 1]
-        self.transformed_data.amplitude = new_Z
-        self.transformed_data.real = new_Z*np.cos(self.transformed_data.phase)
-        self.transformed_data.imag = new_Z*np.sin(self.transformed_data.phase)
-        
+        self.smooth_phase() #New phase
+        self.cut_edges()
+        self.raw_lnZ() #Towards new impedance;
+        self.determine_integration_constant() #Again, towards new impedance;
+        self.transformed_data.amplitude = np.exp(self.lnZ + self.iconstant) #New impedance
+        #self.transformed_data.freq = self.data.freq[nearest(self.low_lim, self.data.freq):nearest(self.high_lim, self.data.freq) + 1]
+        self.transformed_data.real = self.transformed_data.amplitude*np.cos(self.transformed_data.phase)
+        self.transformed_data.imag = self.transformed_data.amplitude*np.sin(self.transformed_data.phase)
 
 class ZHITWindow(tk.Toplevel):
     def __init__(self, data):
@@ -205,11 +204,10 @@ class ZHITWindow(tk.Toplevel):
         plot_zhit_result -- Boolean, indicates if result can be plotted
         correction_accepted -- Boolean, indicates if data transformation is accepted
         
+        show_derivative -- debugging option, crudely plots the derivative of the phase
+        
         low_lim -- frequency lower limit
         high_lim -- frequency upper limit
-        
-        smooth_n -- number of frequency points for the spline relative to the original data
-        smooth_s -- spline smoothness parameter, the 's' argument in ir.UnivariateSpline
         
         Methods:
         make_UI -- make the UI
@@ -219,18 +217,9 @@ class ZHITWindow(tk.Toplevel):
         calculate_zhit_amplitude -- allow the Z-HIT transform to be calculated by the update_plot_canvas method
         reject_and_close -- close the window without accepting the data transformation
         accept_and_close -- accept the data transformation and close the window
+        toggle_filter_entries -- enable or disable Savitzky-Golay filter tk.Entries and tk.Labels
         
-        update_plot_canvas -- clear and redraw the plot canvas; also includes the whole Z-HIT procedure
-        
-        spline_interpolation -- interpolate the phase
-        gamma -- helper function related to the Riemann zeta function
-        integrate -- integral calculation
-        derivative -- first derivative calculation
-        raw_lnZ -- compute ln|Z| with unknown integration constant
-        error_lnZ -- sum of the squares of the differences between the measured |Z| and newly calculated ln|Z|
-        determine_integration_constant -- correct |Z| by determining the integration constant
-        lnZ_to_original_dimensions -- reduce the number of |Z| data points to the measured number
-        phase_to_original_dimensions -- reduce the number of phase data points to the measured number"""
+        update_plot_canvas -- clear and redraw the plot canvas; also includes the whole Z-HIT procedure"""
         super().__init__()
         self.title("Z-HIT transform")
         self.width = int(self.winfo_screenwidth()*0.85)
@@ -240,10 +229,11 @@ class ZHITWindow(tk.Toplevel):
         self.data = copy.deepcopy(data)
         self.low_lim = min(data.freq)
         self.high_lim = max(data.freq)
-        self.smooth_n = 10
-        self.smooth_s = 0.3
+        self.window_length = 50
+        self.polynomial_order = 3
         self.plot_zhit_result = False
         self.correction_accepted = False
+        self.show_derivative = False
         self.make_UI()
         
     #UI initialisation
@@ -258,17 +248,17 @@ class ZHITWindow(tk.Toplevel):
         #Making the plotting frame
         self.make_plotting_frame()
         
-        #Entry boxes for Z-HIT frequency range and smoothing parameters
+        #Entry boxes for Z-HIT frequency range
         self.settings_frame = ttk.Frame(self.controls_frame)
         self.settings_frame.pack(side = tk.TOP, anchor = tk.CENTER)
         self.low_freq_frame = ttk.Frame(self.settings_frame)
         self.low_freq_frame.pack(side = tk.LEFT, anchor = tk.N)
         self.high_freq_frame = ttk.Frame(self.settings_frame)
         self.high_freq_frame.pack(side = tk.LEFT, anchor = tk.N)
-        self.smooth_n_frame = ttk.Frame(self.settings_frame)
-        self.smooth_n_frame.pack(side = tk.LEFT, anchor = tk.N)
-        self.smooth_s_frame = ttk.Frame(self.settings_frame)
-        self.smooth_s_frame.pack(side = tk.LEFT, anchor = tk.N)
+        self.cut_frame = ttk.Frame(self.settings_frame)
+        self.cut_frame.pack(side = tk.LEFT, anchor = tk.S)
+        self.freq_label = tk.Label(self.low_freq_frame, text = "Frequency range:")
+        self.freq_label.pack(side = tk.LEFT, anchor = tk.CENTER, padx = 5)
         self.low_freq_par = tk.StringVar()
         self.low_freq_par.set(str(self.low_lim))
         self.low_freq_label = tk.Label(self.low_freq_frame, text = "Lowest\nfrequency (Hz)")
@@ -281,28 +271,42 @@ class ZHITWindow(tk.Toplevel):
         self.high_freq_label.pack(side = tk.TOP, anchor = tk.CENTER)
         self.high_freq_entry = tk.Entry(self.high_freq_frame, textvariable = self.high_freq_par)
         self.high_freq_entry.pack(side = tk.TOP, anchor = tk.CENTER)
-        self.smooth_n_par = tk.StringVar()
-        self.smooth_n_par.set(str(self.smooth_n))
-        self.smooth_n_label = tk.Label(self.smooth_n_frame, text = "No. of points: spline\nvs. original data")
-        self.smooth_n_label.pack(side = tk.TOP, anchor = tk.CENTER)
-        self.smooth_n_entry = tk.Entry(self.smooth_n_frame, textvariable = self.smooth_n_par)
-        self.smooth_n_entry.pack(side = tk.TOP, anchor = tk.CENTER)
-        self.smooth_s_par = tk.StringVar()
-        self.smooth_s_par.set(str(self.smooth_s))
-        self.smooth_s_label = tk.Label(self.smooth_s_frame, text = "Smoothness\nof spline fit")
-        self.smooth_s_label.pack(side = tk.TOP, anchor = tk.CENTER)
-        self.smooth_s_entry = tk.Entry(self.smooth_s_frame, textvariable = self.smooth_s_par)
-        self.smooth_s_entry.pack(side = tk.TOP, anchor = tk.CENTER)
+        self.cut_label = tk.Label(self.cut_frame, text = "Cut edge artifacts:")
+        self.cut_label.pack(side = tk.LEFT, anchor = tk.CENTER, padx = 5)
+        self.low_f_cut = tk.IntVar()
+        self.low_cut_tickbox = tk.Checkbutton(self.cut_frame, text = "Low f", variable = self.low_f_cut, onvalue = 1, offvalue = 0)
+        self.low_cut_tickbox.pack(side = tk.LEFT, anchor = tk.CENTER)
+        self.high_f_cut = tk.IntVar()
+        self.high_cut_tickbox = tk.Checkbutton(self.cut_frame, text = "High f", variable = self.high_f_cut, onvalue = 1, offvalue = 0)
+        self.high_cut_tickbox.pack(side = tk.LEFT, anchor = tk.CENTER)
         
         #Buttons
         self.buttons_frame = ttk.Frame(self.controls_frame)
-        self.buttons_frame.pack(side = tk.TOP, anchor = tk.CENTER, pady = 25)
+        self.buttons_frame.pack(side = tk.TOP, anchor = tk.CENTER, pady = 10)
         self.calculate_button = tk.Button(self.buttons_frame, text = "Calculate Z-HIT impedance", command = self.calculate_zhit_amplitude)
         self.calculate_button.pack(side = tk.RIGHT, anchor = tk.CENTER)
         self.reject_button = tk.Button(self.buttons_frame, text = "Reject and close", command = self.reject_and_close)
         self.reject_button.pack(side = tk.RIGHT, anchor = tk.CENTER)
         self.accept_button = tk.Button(self.buttons_frame, text = "Accept, save and close", command = self.accept_and_close)
         self.accept_button.pack(side = tk.RIGHT, anchor = tk.CENTER)
+        
+        #Savitzky-Golay filter settings
+        self.filter_frame = ttk.Frame(self.controls_frame)
+        self.filter_frame.pack(side = tk.TOP, anchor = tk.CENTER)
+        self.filter_label = tk.Label(self.filter_frame, text = "Savitzky-Golay filter:")
+        self.filter_label.pack(side = tk.LEFT, anchor = tk.CENTER, padx = 5)
+        self.filter_winlength = tk.StringVar()
+        self.filter_winlength.set(str(self.window_length))
+        self.filter_polyorder = tk.StringVar()
+        self.filter_polyorder.set(str(self.polynomial_order))
+        self.winlength_label = tk.Label(self.filter_frame, text = "Window length:")
+        self.winlength_label.pack(side = tk.LEFT, anchor = tk.CENTER)
+        self.winlength_entry = tk.Entry(self.filter_frame, textvariable = self.filter_winlength)
+        self.winlength_entry.pack(side = tk.LEFT, anchor = tk.CENTER)
+        self.polyorder_label = tk.Label(self.filter_frame, text = "Polynomial order:")
+        self.polyorder_label.pack(side = tk.LEFT, anchor = tk.CENTER)
+        self.polyorder_entry = tk.Entry(self.filter_frame, textvariable = self.filter_polyorder)
+        self.polyorder_entry.pack(side = tk.LEFT, anchor = tk.CENTER)
         
     def make_plotting_frame(self):
         """Make the plot canvas, put the plots on it and create the toolbar."""
@@ -321,11 +325,11 @@ class ZHITWindow(tk.Toplevel):
         
     #Commands from UI
     def update_settings(self):
-        """Üpdate the frequency limits and the parameters used to create the spline curve."""
+        """Update the frequency limits and the parameters used to create the spline curve."""
         self.low_lim = float(self.low_freq_par.get())
         self.high_lim = float(self.high_freq_par.get())
-        self.smooth_n = int(self.smooth_n_par.get())
-        self.smooth_s = float(self.smooth_s_par.get())
+        self.window_length = int(self.winlength_entry.get())
+        self.polynomial_order = int(self.polyorder_entry.get())
     
     def calculate_zhit_amplitude(self):
         """Update the settings, allow the Z-HIT amplitude to be calculated and update the plots with update_plot_canvas, which will perform the calculation."""
@@ -380,11 +384,16 @@ class ZHITWindow(tk.Toplevel):
         self.bode_phase.plot(self.raw_data.freq, self.raw_data.phase*180/np.pi, linestyle = "None", marker = "s", markersize = 6, fillstyle = "full", color = "#229950", markeredgecolor = "#000000", markeredgewidth = 1)
         #Z-HIT calculation
         if self.plot_zhit_result:
-            zhit_engine = ZHITEngine(self.raw_data, low_lim = self.low_lim, high_lim = self.high_lim, smooth_n = self.smooth_n, smooth_s = self.smooth_s, savitzky_golay = False) #Start a new ZHITEngine
+            #Get the Savitzky-Golay filter options
+            bool_dict = {0: False, 1: True}
+            zhit_engine = ZHITEngine(self.raw_data, low_lim = self.low_lim, high_lim = self.high_lim, cut_lf_edge = bool_dict[self.low_f_cut.get()], cut_hf_edge = bool_dict[self.high_f_cut.get()], savgol_winlength = self.window_length, savgol_polyorder = self.polynomial_order) #Start a new ZHITEngine
             zhit_engine.compute_zhit_transform() #Compute the Z-HIT transform
             self.nyquist.plot(zhit_engine.transformed_data.real, -zhit_engine.transformed_data.imag, linestyle = "-", marker = "None", linewidth = 1.5, color = "#DD4444") #Replot everything
             self.bode_amp.plot(zhit_engine.transformed_data.freq, zhit_engine.transformed_data.amplitude, linestyle = "-", marker = "None", linewidth = 1.5, color = "#4444DD")
-            self.bode_phase.plot(zhit_engine.transformed_data.freq, zhit_engine.transformed_data.phase*180/np.pi, linestyle = "-", marker = "None", linewidth = 1.5, color = "#44DD44")
+            self.bode_phase.plot(zhit_engine.transformed_data.freq, zhit_engine.transformed_data.phase*180/np.pi, linestyle = "-", marker = "None", linewidth = 1.5, color = "#44DD44", label = "$\phi$ ($^\circ$)")
+            if self.show_derivative:
+                self.bode_phase.plot(zhit_engine.transformed_data.freq, zhit_engine.dphase*180/np.pi, linestyle = "-", marker = "None", linewidth = 1.5, color = "#DD4444", label = "d$\phi$/dln$\omega$ ($^\circ$/ln(Hz))")
+                self.bode_phase.legend(loc = "upper right", frameon = False, labelcolor = "linecolor", labelspacing = .05, handlelength = 1.25, handletextpad = .5)
             self.data = zhit_engine.transformed_data #Save the transformed data
         self.canvas.draw()
         
