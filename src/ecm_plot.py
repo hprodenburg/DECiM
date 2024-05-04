@@ -1,7 +1,15 @@
-"""Part of DECiM. This file contains the plotting canvas class and some additional plotting-related code. Last modified 5 April 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the plotting canvas class and some additional plotting-related code. Last modified 4 May 2024 by Henrik Rodenburg.
 
 Classes:
+ImpedancePlot -- base class for all plot panels; possible subclasses below:
+    ComplexPlaneImpedancePlot -- Z'' vs. Z'
+    ComplexPlaneAdmittancePlot -- Y'' vs. Y'
+    ImpedanceFrequencyPlot -- Z' and Z'' vs. f
+    AdmittanceFrequencyPlot -- Y' and Y'' vs. f
+    BodePhaseAmplitudePlot -- |Z| and phi vs. f
+
 limiter -- handles the upper and lower limits of the plots
+
 PlotFrame -- ttk.Frame with the plot canvas and toolbar"""
 
 ###########
@@ -67,6 +75,623 @@ class limiter():
         self.enabled = enabled
 
 ###################
+##PLOTTING PANELS##
+###################
+
+class ImpedancePlot():
+    def __init__(self, primary, data, model, ghost_data, ghost_data_visibility, make_twinx = True, data_on = True, model_on = True, primary_axis_on = True, twin_axis_on = True, primary_data_colour = "#114077", twin_data_colour = "#117740", primary_model_colour = "#4444DD", twin_model_colour = "#44DD44"):
+        """Base class for all plot panels: Nyquist plots, Bode plots, etc.
+        
+        Init arguments becoming attributes under the same name:
+        primary -- Matplotlib Axes holding the primary y axis
+        data -- dataSet of experimental data
+        model -- dataSet of model curve
+        ghost_data -- dictionary of {'dataset name': ecm_history.expandedDataSet}; holds all data and models saved to History
+        ghost_data_visibility -- list of names in ghost_data; all names in this list are of dataSets that should be visible
+        
+        make_twinx -- Bool; indicates if a twinx plot should be made. This is done here in __init__
+        
+        data_on -- Bool; display data
+        model_on -- Bool; display model
+        primary_axis_on -- Bool; display normal (x, y) data
+        twin_axis_on -- Bool; display twinx (x, y) data
+        
+        Other attributes:
+        ghost_colours -- colours for ghost data
+        ghost_m_colours -- colours for ghost models
+        
+        twin -- Axes, generated via self.twinx
+        
+        Methods:
+        plot_all -- plot all lines and markers indicated by data_on, model_on, primary_axis_on, twin_axis_on
+        
+        plot_primary_data -- plot data along primary y axis
+        plot_twin_data -- plot data along self.twin y axis
+        plot_primary_model -- plot model curve along primary y axis
+        plot_twin_model -- plot model curve along self.twin y axis
+        
+        plot_primary_ghost_data -- plot ghost data along primary y axis
+        plot_twin_ghost_data -- plot ghost data along self.twin y axis
+        plot_primary_ghost_model -- plot ghost model curve along primary y axis
+        plot_twin_ghost_model -- plot ghost model curve along self.twin y axis
+        
+        set_text -- set axis labels and title (not implemented in base class)
+        set_axis_colours -- set axis label colours and positions
+        
+        set_twin_xlim, set_twin_xscale, set_twin_ylim, set_twin_yscale -- set_xlim, set_xscale, set_ylim, and set_yscale for self.twin, with consideration for self.make_twinx
+        
+        set_base_limits -- set self.lim_x, self.lim_y1, and self.lim_y2; these are (low, high) Tuples of plot limits that provide a view of the entire dataset for x, primary y, and twin y, respectively
+        
+        d_extend -- provide reasonable lower limit for plot
+        u_extend -- provide reasonable upper limit for plot"""
+        self.primary = primary
+        
+        self.data = data
+        self.model = model
+        self.ghost_data = ghost_data
+        self.ghost_data_visibility = ghost_data_visibility
+        
+        self.make_twinx = make_twinx
+        
+        self.data_on = data_on
+        self.model_on = model_on
+        self.primary_axis_on = primary_axis_on
+        self.twin_axis_on = twin_axis_on
+        
+        if self.make_twinx:
+            self.twin = self.primary.twinx()
+            
+        self.primary_data_colour = primary_data_colour
+        self.primary_model_colour = primary_model_colour
+        self.twin_data_colour = twin_data_colour
+        self.twin_model_colour = twin_model_colour
+        
+        self.ghost_colours = ["#FF00FF", "#FFA000", "#00A0FF"]
+        self.ghost_m_colours = ["#FF70FF", "#FFC970", "#70C9FF"]
+        
+        self.set_axis_colours()
+        
+    #General plotting
+        
+    def plot_all(self):
+        """Plot all lines and markers indicated by self.data_on, self.model_on, self.primary_axis_on, and self.twin_axis_on. Handles both the main data/model and ghost data/model.
+        
+        To be called in the plot update method of the PlotFrame."""
+        if self.data_on:
+            if self.primary_axis_on:
+                self.plot_primary_data()
+                for i in range(min([len(self.ghost_data_visibility), 3])):
+                    self.plot_primary_ghost_data(self.ghost_data[self.ghost_data_visibility[i]])
+            if self.make_twinx and self.twin_axis_on:
+                self.plot_twin_data()
+                for i in range(min([len(self.ghost_data_visibility), 3])):
+                    self.plot_twin_ghost_data(self.ghost_data[self.ghost_data_visibility[i]])
+        if self.model_on and self.model != None:
+            if self.primary_axis_on:
+                self.plot_primary_model()
+                for i in range(min([len(self.ghost_data_visibility), 3])):
+                    self.plot_primary_ghost_model(self.ghost_data[self.ghost_data_visibility[i]])
+            if self.make_twinx and self.twin_axis_on:
+                self.plot_twin_model()
+                for i in range(min([len(self.ghost_data_visibility), 3])):
+                    self.plot_twin_ghost_model(self.ghost_data[self.ghost_data_visibility[i]])
+                    
+    #Aesthetics
+                    
+    def set_text(self):
+        """Placeholder function for title, x label, and y label. To be overridden in child classes and called at the end of their __init__ method and in the plot update method in the PlotFrame."""
+        raise NotImplementedError
+        
+    def set_axis_colours(self):
+        """Give the axis labels their proper place and colour. To be called in the plot update method in the PlotFrame."""
+        self.primary.tick_params(axis = "y", labelcolor = self.primary_data_colour)
+        self.primary.yaxis.label.set_color(self.primary_data_colour)
+        if self.make_twinx:
+            self.twin.tick_params(axis = "y", labelcolor = self.twin_data_colour)
+            self.twin.yaxis.tick_right()
+            self.twin.yaxis.set_label_position("right")
+            self.twin.yaxis.label.set_color(self.twin_data_colour)
+            
+    #Plotting sub-functions, to be overridden in child classes.
+            
+    def plot_primary_data(self):
+        """Placeholder function for plotting the data along the primary y-axis. Must be overridden in child classes."""
+        raise NotImplementedError
+        
+    def plot_primary_model(self):
+        """Placeholder function for plotting the model curve along the primary y-axis. Must be overridden in child classes."""
+        raise NotImplementedError
+
+    def plot_twin_data(self):
+        """Placeholder function for plotting the data along the self.twin y-axis. Must be overridden in child classes."""
+        if self.make_twinx:
+            raise NotImplementedError
+
+    def plot_twin_model(self):
+        """Placeholder function for plotting the model curve along the self.twin y-axis. Must be overridden in child classes."""
+        if self.make_twinx:
+            raise NotImplementedError
+        
+    def plot_primary_ghost_data(self, g, i):
+        """Placeholder function for plotting ghost data along the primary y-axis. Must be overridden in child classes.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        raise NotImplementedError
+    
+    def plot_primary_ghost_model(self, g, i):
+        """Placeholder function for plotting ghost model curve along the primary y-axis. Must be overridden in child classes.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        raise NotImplementedError
+        
+    def plot_twin_ghost_data(self, g, i):
+        """Placeholder function for plotting ghost data along the self.twin y-axis. Must be overridden in child classes.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        if self.make_twinx:
+            raise NotImplementedError
+        
+    def plot_twin_ghost_model(self, g, i):
+        """Placeholder function for plotting ghost model curve along the self.twin primary y-axis. Must be overridden in child classes.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        if self.make_twinx:
+            raise NotImplementedError
+        
+    #Safe self.twin axis limiting functions
+        
+    def set_twin_xlim(self, *kwargs):
+        """If it exists, set x limits on self.twin. Otherwise, do nothing."""
+        if self.make_twinx:
+            self.twin.set_xlim(kwargs)
+            
+    def set_twin_ylim(self, *kwargs):
+        """If it exists, set y limits on self.twin. Otherwise, do nothing."""
+        if self.make_twinx:
+            self.twin.set_ylim(kwargs)
+            
+    def set_twin_xscale(self, *kwargs):
+        """If it exists, set x scaling on self.twin. Otherwise, do nothing."""
+        if self.make_twinx:
+            self.twin.set_xscale(kwargs)
+            
+    def set_twin_yscale(self, *kwargs):
+        """If it exists, set y scaling on self.twin. Otherwise, do nothing."""
+        if self.make_twinx:
+            self.twin.set_yscale(kwargs)
+            
+    #Base limits
+    def set_base_limits(self):
+        """Set the base limits for all axes. May need to be redefined in child classes. Defaults to reasonable Bode plot limits."""
+        self.lim_x = (min(self.data.freq), max(self.data.freq))
+        self.lim_y1 = (self.d_extend(min(self.data.amplitude)), self.u_extend(max(self.data.amplitude)))
+        self.lim_y2 = (self.d_extend(min(self.data.phase)), self.u_extend(max(self.data.phase)))
+            
+    #Helper functions
+    def d_extend(self, vl):
+        """For a given minimum of an axis vl, min(vl), return a logical lower limit for the axis in the plot.
+        
+        Arguments:
+        self
+        vl -- list or NumPy array
+        
+        Returns:
+        lower limit for plot (float)"""
+        if vl > 0:
+            return 0.95*vl
+        elif vl == 0:
+            return vl
+        elif vl < 0:
+            return 1.066*vl
+
+    def u_extend(self, vl):
+        """For a given maximum of an axis vl, max(vl), return a logical upper limit for the axis in the plot.
+         
+        Arguments:
+        self
+        vl -- list or NumPy array
+        
+        Returns:
+        upper limit for plot (float)"""
+        if vl > 0:
+            return 1.066*vl
+        elif vl == 0:
+            return vl
+        elif vl < 0:
+            return 0.95*vl
+
+class ComplexPlaneImpedancePlot(ImpedancePlot):
+    def __init__(self, primary, data, model, ghost_data, ghost_data_visibility, make_twinx = False, data_on = True, model_on = True, primary_axis_on = True, twin_axis_on = False, primary_data_colour = "#000000", primary_model_colour = "#DD4444"):
+        """Complex plane plot of the impedance (Nyquist plot).
+        
+        Init arguments: see parent class ImpedancePlot
+        
+        Methods: see parent class ImpedancePlot
+        
+        Overridden methods:
+        plot_primary_data -- plot data along primary y axis
+        plot_primary_model -- plot model curve along primary y axis
+        
+        plot_primary_ghost_data -- plot ghost data along primary y axis
+        plot_primary_ghost_model -- plot ghost model curve along primary y axis
+        
+        set_text -- set axis labels and title
+        set_base_limits -- set self.lim_x, self.lim_y1, and self.lim_y2; these are (low, high) Tuples of plot limits that provide a view of the entire dataset for x, primary y, and twin y, respectively"""
+        super().__init__(primary, data, model, ghost_data, ghost_data_visibility, make_twinx = make_twinx, data_on = data_on, model_on = model_on, primary_axis_on = primary_axis_on, twin_axis_on = twin_axis_on, primary_data_colour = primary_data_colour, primary_model_colour = primary_model_colour)
+        self.set_text()
+        self.set_base_limits()
+    
+    def plot_primary_data(self):
+        """Function for plotting the data along the primary y-axis."""
+        self.primary.plot(self.data.real, -self.data.imag, marker = ".", linestyle = "None", color = self.primary_data_colour)
+        
+    def plot_primary_model(self):
+        """Function for plotting the model curve along the primary y-axis."""
+        self.primary.plot(self.model.real, -self.model.imag, marker = "None", linestyle = "-", color = self.primary_model_colour)
+
+    def plot_primary_ghost_data(self, g, i):
+        """Function for plotting ghost data along the primary y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.primary.plot(g.data.real, -g.data.imag, marker = ".", linestyle = "None", color = self.ghost_colours[i])
+    
+    def plot_primary_ghost_model(self, g, i):
+        """Function for plotting ghost model curve along the primary y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.primary.plot(g.model.real, -g.model.imag, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        
+    def set_text(self):
+        self.primary.set_title("Complex plane")
+        self.primary.set_xlabel("Re[Z] ($\Omega$)")
+        self.primary.set_ylabel("-Im[Z] ($\Omega$)")
+        
+    def set_base_limits(self):
+        self.lim_x = (self.d_extend(min(self.data.real)), self.u_extend(max(self.data.real)))
+        self.lim_y1 = (self.d_extend(min(-self.data.imag)), self.u_extend(max(-self.data.imag)))
+        self.lim_y2 = (self.d_extend(min(self.data.freq)), self.u_extend(max(self.data.freq)))
+        
+class ComplexPlaneAdmittancePlot(ImpedancePlot):
+    def __init__(self, primary, data, model, ghost_data, ghost_data_visibility, make_twinx = False, data_on = True, model_on = True, primary_axis_on = True, twin_axis_on = False, primary_data_colour = "#000000", primary_model_colour = "#DD4444"):
+        """Complex plane plot of the admittance (Nyquist plot).
+        
+        Init arguments: see parent class ImpedancePlot
+        
+        Methods: see parent class ImpedancePlot
+        
+        Overridden methods:
+        plot_primary_data -- plot data along primary y axis
+        plot_primary_model -- plot model curve along primary y axis
+        
+        plot_primary_ghost_data -- plot ghost data along primary y axis
+        plot_primary_ghost_model -- plot ghost model curve along primary y axis
+        
+        set_text -- set axis labels and title
+        set_base_limits -- set self.lim_x, self.lim_y1, and self.lim_y2; these are (low, high) Tuples of plot limits that provide a view of the entire dataset for x, primary y, and twin y, respectively"""
+        super().__init__(primary, data, model, ghost_data, ghost_data_visibility, make_twinx = make_twinx, data_on = data_on, model_on = model_on, primary_axis_on = primary_axis_on, twin_axis_on = twin_axis_on, primary_data_colour = primary_data_colour, primary_model_colour = primary_model_colour)
+        self.set_text()
+        self.set_base_limits()
+    
+    def plot_primary_data(self):
+        """Function for plotting the data along the primary y-axis."""
+        self.primary.plot(1/self.data.real, -1/self.data.imag, marker = ".", linestyle = "None", color = self.primary_data_colour)
+        
+    def plot_primary_model(self):
+        """Function for plotting the model curve along the primary y-axis."""
+        self.primary.plot(1/self.model.real, -1/self.model.imag, marker = "None", linestyle = "-", color = self.primary_model_colour)
+
+    def plot_primary_ghost_data(self, g, i):
+        """Function for plotting ghost data along the primary y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.primary.plot(1/g.data.real, -1/g.data.imag, marker = ".", linestyle = "None", color = self.ghost_colours[i])
+    
+    def plot_primary_ghost_model(self, g, i):
+        """Function for plotting ghost model curve along the primary y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.primary.plot(1/g.model.real, -1/g.model.imag, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        
+    def set_text(self):
+        self.primary.set_title("Complex plane")
+        self.primary.set_xlabel("Re[Y] ($\Omega^{-1}$)")
+        self.primary.set_ylabel("-Im[Y] ($\Omega^{-1}$)")
+        
+    def set_base_limits(self):
+        self.lim_x = (self.d_extend(min(1/self.data.real)), self.u_extend(max(1/self.data.real)))
+        self.lim_y1 = (self.d_extend(min(-1/self.data.imag)), self.u_extend(max(-1/self.data.imag)))
+        self.lim_y2 = (self.d_extend(min(self.data.freq)), self.u_extend(max(self.data.freq)))
+        
+class BodePhaseAmplitudePlot(ImpedancePlot):
+    def __init__(self, primary, data, model, ghost_data, ghost_data_visibility, make_twinx = True, data_on = True, model_on = True, primary_axis_on = True, twin_axis_on = True):
+        """Bode amplitude/phase plot.
+        
+        Init arguments: see parent class ImpedancePlot
+        
+        Methods: see parent class ImpedancePlot
+        
+        Overridden methods:
+        plot_primary_data -- plot data along primary y axis
+        plot_primary_model -- plot model curve along primary y axis
+        plot_twin_data -- plot data along twin y axis
+        plot_twin_model -- plot model curve along twin y axis
+        
+        plot_primary_ghost_data -- plot ghost data along primary y axis
+        plot_primary_ghost_model -- plot ghost model curve along primary y axis
+        plot_twin_ghost_data -- plot ghost data along twin y axis
+        plot_twin_ghost_model -- plot ghost model curve along twin y axis
+        
+        set_text -- set axis labels and title
+        set_base_limits -- set self.lim_x, self.lim_y1, and self.lim_y2; these are (low, high) Tuples of plot limits that provide a view of the entire dataset for x, primary y, and twin y, respectively"""
+        super().__init__(primary, data, model, ghost_data, ghost_data_visibility, make_twinx = make_twinx, data_on = data_on, model_on = model_on, primary_axis_on = primary_axis_on, twin_axis_on = twin_axis_on)
+        self.set_text()
+        self.set_base_limits()
+    
+    def plot_primary_data(self):
+        """Function for plotting the data along the primary y-axis."""
+        self.primary.plot(self.data.freq, self.data.amplitude, marker = ".", linestyle = "None", color = self.primary_data_colour)
+        
+    def plot_primary_model(self):
+        """Function for plotting the model curve along the primary y-axis."""
+        self.primary.plot(self.model.freq, self.model.amplitude, marker = "None", linestyle = "-", color = self.primary_model_colour)
+
+    def plot_primary_ghost_data(self, g, i):
+        """Function for plotting ghost data along the primary y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.primary.plot(g.data.freq, g.data.amplitude, marker = ".", linestyle = "None", color = self.ghost_colours[i])
+    
+    def plot_primary_ghost_model(self, g, i):
+        """Function for plotting ghost model curve along the primary y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.primary.plot(g.model.freq, g.model.freq, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        
+    def plot_twin_data(self):
+        """Function for plotting the data along the self.twin y-axis."""
+        self.twin.plot(self.data.freq, self.data.phase*180/np.pi, marker = ".", linestyle = "None", color = self.twin_data_colour)
+        
+    def plot_twin_model(self):
+        """Function for plotting the model curve along the self.twin y-axis."""
+        self.twin.plot(self.model.freq, self.model.phase*180/np.pi, marker = "None", linestyle = "-", color = self.twin_model_colour)
+
+    def plot_twin_ghost_data(self, g, i):
+        """Function for plotting ghost data along the self.twin y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.twin.plot(g.data.freq, g.data.phase*180/np.pi, marker = ".", linestyle = "None", color = self.ghost_colours[i])
+    
+    def plot_twin_ghost_model(self, g, i):
+        """Function for plotting ghost model curve along the self.twin y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.twin.plot(g.model.freq, -g.model.phase*180/np.pi, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        
+    def set_text(self):
+        self.primary.set_title("Bode amplitude and phase")
+        self.primary.set_xlabel("Frequency (Hz)")
+        self.primary.set_ylabel("|Z| ($\Omega$)")
+        self.twin.set_ylabel("$\phi$ (°)")
+        
+    def set_base_limits(self):
+        self.lim_x = (self.d_extend(min(self.data.freq)), self.u_extend(max(self.data.freq)))
+        self.lim_y1 = (self.d_extend(min(self.data.amplitude)), self.u_extend(max(self.data.amplitude)))
+        self.lim_y2 = (self.d_extend(min(self.data.phase*180/np.pi)), self.u_extend(max(self.data.phase*180/np.pi)))
+        
+class AdmittanceFrequencyPlot(ImpedancePlot):
+    def __init__(self, primary, data, model, ghost_data, ghost_data_visibility, make_twinx = True, data_on = True, model_on = True, primary_axis_on = True, twin_axis_on = True):
+        """Y', Y'' vs. frequency plot.
+        
+        Init arguments: see parent class ImpedancePlot
+        
+        Methods: see parent class ImpedancePlot
+        
+        Overridden methods:
+        plot_primary_data -- plot data along primary y axis
+        plot_primary_model -- plot model curve along primary y axis
+        plot_twin_data -- plot data along twin y axis
+        plot_twin_model -- plot model curve along twin y axis
+        
+        plot_primary_ghost_data -- plot ghost data along primary y axis
+        plot_primary_ghost_model -- plot ghost model curve along primary y axis
+        plot_twin_ghost_data -- plot ghost data along twin y axis
+        plot_twin_ghost_model -- plot ghost model curve along twin y axis
+        
+        set_text -- set axis labels and title
+        set_base_limits -- set self.lim_x, self.lim_y1, and self.lim_y2; these are (low, high) Tuples of plot limits that provide a view of the entire dataset for x, primary y, and twin y, respectively"""
+        super().__init__(primary, data, model, ghost_data, ghost_data_visibility, make_twinx = make_twinx, data_on = data_on, model_on = model_on, primary_axis_on = primary_axis_on, twin_axis_on = twin_axis_on)
+        self.set_text()
+        self.set_base_limits()
+    
+    def plot_primary_data(self):
+        """Function for plotting the data along the primary y-axis."""
+        self.primary.plot(self.data.freq, 1/self.data.real, marker = ".", linestyle = "None", color = self.primary_data_colour)
+        
+    def plot_primary_model(self):
+        """Function for plotting the model curve along the primary y-axis."""
+        self.primary.plot(self.model.freq, 1/self.model.real, marker = "None", linestyle = "-", color = self.primary_model_colour)
+
+    def plot_primary_ghost_data(self, g, i):
+        """Function for plotting ghost data along the primary y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.primary.plot(g.data.freq, 1/g.data.real, marker = ".", linestyle = "None", color = self.ghost_colours[i])
+    
+    def plot_primary_ghost_model(self, g, i):
+        """Function for plotting ghost model curve along the primary y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.primary.plot(g.model.freq, 1/g.model.real, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        
+    def plot_twin_data(self):
+        """Function for plotting the data along the self.twin y-axis."""
+        self.twin.plot(self.data.freq, -1/self.data.imag, marker = ".", linestyle = "None", color = self.twin_data_colour)
+        
+    def plot_twin_model(self):
+        """Function for plotting the model curve along the self.twin y-axis."""
+        self.twin.plot(self.model.freq, -1/self.model.imag, marker = "None", linestyle = "-", color = self.twin_model_colour)
+
+    def plot_twin_ghost_data(self, g, i):
+        """Function for plotting ghost data along the self.twin y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.twin.plot(g.data.freq, -1/g.data.imag, marker = ".", linestyle = "None", color = self.ghost_colours[i])
+    
+    def plot_twin_ghost_model(self, g, i):
+        """Function for plotting ghost model curve along the self.twin y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.twin.plot(g.model.freq, -1/g.model.imag, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        
+    def set_text(self):
+        self.primary.set_title("Admittance")
+        self.primary.set_xlabel("Frequency (Hz)")
+        self.primary.set_ylabel("Y\' ($\Omega^{-1}$)")
+        self.twin.set_ylabel("Y\'\' ($\Omega^{-1}$)")
+        
+    def set_base_limits(self):
+        self.lim_x = (self.d_extend(min(self.data.freq)), self.u_extend(max(self.data.freq)))
+        self.lim_y1 = (self.d_extend(min(1/self.data.real)), self.u_extend(max(1/self.data.real)))
+        self.lim_y2 = (self.d_extend(min(-1/self.data.imag)), self.u_extend(max(-1/self.data.imag)))
+        
+class ImpedanceFrequencyPlot(ImpedancePlot):
+    def __init__(self, primary, data, model, ghost_data, ghost_data_visibility, make_twinx = True, data_on = True, model_on = True, primary_axis_on = True, twin_axis_on = True):
+        """Z', Z'' vs. frequency plot.
+        
+        Init arguments: see parent class ImpedancePlot
+        
+        Methods: see parent class ImpedancePlot
+        
+        Overridden methods:
+        plot_primary_data -- plot data along primary y axis
+        plot_primary_model -- plot model curve along primary y axis
+        plot_twin_data -- plot data along twin y axis
+        plot_twin_model -- plot model curve along twin y axis
+        
+        plot_primary_ghost_data -- plot ghost data along primary y axis
+        plot_primary_ghost_model -- plot ghost model curve along primary y axis
+        plot_twin_ghost_data -- plot ghost data along twin y axis
+        plot_twin_ghost_model -- plot ghost model curve along twin y axis
+        
+        set_text -- set axis labels and title
+        set_base_limits -- set self.lim_x, self.lim_y1, and self.lim_y2; these are (low, high) Tuples of plot limits that provide a view of the entire dataset for x, primary y, and twin y, respectively"""
+        super().__init__(primary, data, model, ghost_data, ghost_data_visibility, make_twinx = make_twinx, data_on = data_on, model_on = model_on, primary_axis_on = primary_axis_on, twin_axis_on = twin_axis_on)
+        self.set_text()
+        self.set_base_limits()
+    
+    def plot_primary_data(self):
+        """Function for plotting the data along the primary y-axis."""
+        self.primary.plot(self.data.freq, self.data.real, marker = ".", linestyle = "None", color = self.primary_data_colour)
+        
+    def plot_primary_model(self):
+        """Function for plotting the model curve along the primary y-axis."""
+        self.primary.plot(self.model.freq, self.model.real, marker = "None", linestyle = "-", color = self.primary_model_colour)
+
+    def plot_primary_ghost_data(self, g, i):
+        """Function for plotting ghost data along the primary y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.primary.plot(g.data.freq, g.data.real, marker = ".", linestyle = "None", color = self.ghost_colours[i])
+    
+    def plot_primary_ghost_model(self, g, i):
+        """Function for plotting ghost model curve along the primary y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.primary.plot(g.model.freq, g.model.real, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        
+    def plot_twin_data(self):
+        """Function for plotting the data along the self.twin y-axis."""
+        self.twin.plot(self.data.freq, -self.data.imag, marker = ".", linestyle = "None", color = self.twin_data_colour)
+        
+    def plot_twin_model(self):
+        """Function for plotting the model curve along the self.twin y-axis."""
+        self.twin.plot(self.model.freq, -self.model.imag, marker = "None", linestyle = "-", color = self.twin_model_colour)
+
+    def plot_twin_ghost_data(self, g, i):
+        """Function for plotting ghost data along the self.twin y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.twin.plot(g.data.freq, -g.data.imag, marker = ".", linestyle = "None", color = self.ghost_colours[i])
+    
+    def plot_twin_ghost_model(self, g, i):
+        """Function for plotting ghost model curve along the self.twin y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.twin.plot(g.model.freq, -g.model.imag, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        
+    def set_text(self):
+        self.primary.set_title("Admittance")
+        self.primary.set_xlabel("Frequency (Hz)")
+        self.primary.set_ylabel("Z\' ($\Omega$)")
+        self.twin.set_ylabel("Z\'\' ($\Omega$)")
+        
+    def set_base_limits(self):
+        self.lim_x = (self.d_extend(min(self.data.freq)), self.u_extend(max(self.data.freq)))
+        self.lim_y1 = (self.d_extend(min(self.data.real)), self.u_extend(max(self.data.real)))
+        self.lim_y2 = (self.d_extend(min(-self.data.imag)), self.u_extend(max(-self.data.imag)))
+        
+
+###################
 ##PLOTTING CANVAS##
 ###################
 
@@ -82,21 +707,26 @@ class PlotFrame(ttk.Frame):
         
         Attributes:
         fig -- Matplotlib Figure
-        complex_plane, self.ampltiude, self.phase -- the different axes on fig
+        lhs, rhs -- axes on fig
+        left_plot, right_plot -- ImpedancePlots belonging to self.lhs and self.rhs
         title -- plot title
         canvas -- plotting canvas
         toolbar -- navigation toolbar
         limiter -- limiter for when the toolbar is being used by the user
-        base_lims -- limiter for when the toolbar is not being used by the user; contains limits that cover the extent of the whole measured dataSet
         
-        logamp -- Boolean, indicates if amplitude or real admittance axis should be log-scaled
-        logphase -- Boolean, indicates if phase or imaginary admittance axis should be log-scaled
+        logRY1 -- Boolean, indicates if primary RHS axis should be log-scaled
+        logRY2 -- Boolean, indicates if secondary RHS axis should be log-scaled
         datavis -- Boolean, data visibility
         fitvis -- Boolean, model visibility
-        ampvis -- Boolean, amplitude / real admittance visibility
-        phavis -- Boolean, phase / imaginary admittance visibility
-        admittance_plot -- Boolean, indicates if the Bode or real/imaginary admittance plot should be shown
+        visRY1 -- Boolean, primary RHS axis visibility
+        visRY2 -- Boolean, secondary RHS axis visibility
         
+        plot_types -- dict containing the different types of plots
+        rhs_type -- type of plot on the right (key in plot_types)
+        prev_rhs_type -- previous type of plot on the right (key in plot_types)
+        lhs_type -- type of plot on the left (key in plot_types)
+        prev_lhs_type -- previous type of plot on the left (key in plot_types)
+                
         ghost_colours -- list of color strings for History data
         ghost_m_colours -- list of color strings for History models
         mfreq_freq -- NumPy array of frequencies of points marked by the 'mark frequencies that are integer powers of 10' option
@@ -121,28 +751,32 @@ class PlotFrame(ttk.Frame):
         ghost_data -- dictionary of {'dataset name': ecm_history.expandedDataSet}; holds all data and models saved to History
         ghost_data_visibility -- list of names in ghost_data; all names in this list are of dataSets that should be visible"""
         self.fig = fg.Figure(figsize = (17*master_dim[0]/1280, 5*master_dim[1]/540), dpi = 82) #Create a Matplotlib figure based on the master's dimensions, which depends on the display size.
-        self.complex_plane = self.fig.add_subplot(1, 2, 1) #Create the complex plane subplot (commonly called Nyquist plot).
-        self.amplitude = self.fig.add_subplot(1, 2, 2) #Create the Bode amplitude subplot.
-        self.phase = self.amplitude.twinx() #Create the Bode phase plot in the same subplot at the Bode amplitude; they share a horizontal axis.
+        self.lhs = self.fig.add_subplot(1, 2, 1) #Create the LHS subplot (commonly called Nyquist plot).
+        self.rhs = self.fig.add_subplot(1, 2, 2) #Create the RHS subplot
         self.title = "" #Title.
         self.canvas = btk.FigureCanvasTkAgg(self.fig, self) #Create canvas on which to draw the Matplotlib figure, self.fig.
         self.toolbar = btk.NavigationToolbar2Tk(self.canvas, self) #Add navigation buttons to the canvas.
         self.toolbar.update() #Necessary.
         self.canvas.get_tk_widget().pack(side = tk.BOTTOM, fill = tk.BOTH, expand = True) #Place the canvas on the frame.
         self.limiter = limiter(enabled = False) #Create a limiter to set plot boundaries.
-        self.base_lims = limiter(enabled = True)
-        self.logamp = True #Setting for logarithmic scaling of the amplitude. Or in the AB plot, sigma'.
-        self.logphase = False #Setting for logarithmic scaling of the phase. Really meant for the AB plot, where it scales sigma''.
+        self.logRY1 = True #Setting for logarithmic scaling of the amplitude. Or in the AB plot, sigma'.
+        self.logRY2 = False #Setting for logarithmic scaling of the phase. Really meant for the AB plot, where it scales sigma''.
         self.datavis = True #Data visibility
         self.fitvis = True #Model curve visibility
-        self.ampvis = True #Amplitude/real AB visibility
-        self.phavis = True #Phase/imaginary AB visibility
-        self.admittance_plot = False #Plot the real and imaginary components of the admittance against frequency instead of the amplitude and phase of the impedance.
+        self.visRY1 = True #Amplitude/real AB visibility
+        self.visRY2 = True #Phase/imaginary AB visibility
+        self.lhs_type = "Complex plane Z"
+        self.rhs_type = "Bode amplitude/phase"
+        self.prev_lhs_type = "Complex plane Z"
+        self.prev_rhs_type = "Bode amplitude/phase"
         self.ghost_colours = ["#FF00FF", "#FFA000", "#00A0FF"]
         self.ghost_m_colours = ["#FF70FF", "#FFC970", "#70C9FF"]
         self.mfreq_freq = np.array([])
         self.mfreq_real = np.array([])
         self.mfreq_imag = np.array([])
+        self.plot_types = {"Complex plane Z": ComplexPlaneImpedancePlot, "Complex plane Y": ComplexPlaneAdmittancePlot, "Bode amplitude/phase": BodePhaseAmplitudePlot, "YY vs. f": AdmittanceFrequencyPlot, "ZZ vs. f": ImpedanceFrequencyPlot}
+        self.left_plot = self.plot_types[self.lhs_type](self.lhs, data, None, ghost_data, ghost_data_visibility)
+        self.right_plot = self.plot_types[self.rhs_type](self.rhs, data, None, ghost_data, ghost_data_visibility)
         self.fig.subplots_adjust(wspace = 0.3)
         self.updatePlots(data, ghost_data, ghost_data_visibility) #Update all plots with the given data.
 
@@ -181,18 +815,18 @@ class PlotFrame(ttk.Frame):
 
     def applyFrequencyMarking(self):
         """Based on which frequencies were found to be present in the measured dataSet (see DECiM core), draw circles around datapoints whose frequencies are integer powers of 10, write their frequencies in the plot and draw lines from the text to the circles."""
-        self.complex_plane.plot(self.mfreq_real, -self.mfreq_imag, marker = "o", fillstyle = "none", linestyle = "None", color = "#000000", markersize = 12)
+        self.lhs.plot(self.mfreq_real, -self.mfreq_imag, marker = "o", fillstyle = "none", linestyle = "None", color = "#000000", markersize = 12)
         mfreq_labels = {0.000001: "1 $\mu$Hz", 0.00001: "10 $\mu$Hz", 0.0001: "0.1 mHz", 0.001: "1 mHz", 0.01: "10 mHz", 0.1: "0.1 Hz", 1: "1 Hz", 10: "10 Hz", 100: "100 Hz", 1000: "1 kHz", 10000: "10 kHz", 100000: "100 kHz", 1000000: "1 MHz", 10000000: "10 MHz", 100000000: "100 MHz", 1000000000: "1 GHz", 10000000000: "10 GHz", 100000000000: "100 GHz", 1000000000000: "1 THz"}
         if self.limiter.enabled:
             where_x = self.limiter.real
             where_y = self.limiter.imag
         else:
-            where_x = self.complex_plane.get_xlim()
-            where_y = self.complex_plane.get_ylim()
+            where_x = self.lhs.get_xlim()
+            where_y = self.lhs.get_ylim()
         dx, dy = where_x[1] - where_x[0], where_y[1] - where_y[0]
         for m in range(len(self.mfreq_freq)):
-            self.complex_plane.text(self.mfreq_real[m] + 0.05*dx, -self.mfreq_imag[m] - 0.05*dy, mfreq_labels[self.mfreq_freq[m]])
-            self.complex_plane.plot([self.mfreq_real[m] + 0.02*dx, self.mfreq_real[m] + 0.045*dx], [-self.mfreq_imag[m] - 0.015*dy, -self.mfreq_imag[m] - 0.04*dy], marker = "None", linestyle = "-", linewidth = 1, color = "#000000")
+            self.lhs.text(self.mfreq_real[m] + 0.05*dx, -self.mfreq_imag[m] - 0.05*dy, mfreq_labels[self.mfreq_freq[m]])
+            self.lhs.plot([self.mfreq_real[m] + 0.02*dx, self.mfreq_real[m] + 0.045*dx], [-self.mfreq_imag[m] - 0.015*dy, -self.mfreq_imag[m] - 0.04*dy], marker = "None", linestyle = "-", linewidth = 1, color = "#000000")
 
     def updatePlots(self, data, ghost_data, ghost_data_visibility, model = None):
         """Clear and redraw the plots. All the checks for which data should be visible are handled here. This is also where the model curve finally comes in.
@@ -204,128 +838,70 @@ class PlotFrame(ttk.Frame):
         ghost_data -- dictionary of {'dataset name': ecm_history.expandedDataSet}; holds all data and models saved to History
         ghost_data_visibility -- list of names in ghost_data; all names in this list are of dataSets that should be visible
         model -- None or a dataSet containing the model curve"""
+        #Reset plot types
+        if self.rhs_type != self.prev_rhs_type or self.lhs_type != self.prev_lhs_type:
+            self.fig.clf()
+            self.lhs = self.fig.add_subplot(1, 2, 1) #Create the LHS subplot (commonly called Nyquist plot).
+            self.rhs = self.fig.add_subplot(1, 2, 2) #Create the RHS subplot
+            del self.right_plot
+            self.right_plot = self.plot_types[self.rhs_type](self.rhs, data, None, ghost_data, ghost_data_visibility)
+            del self.left_plot
+            self.left_plot = self.plot_types[self.lhs_type](self.lhs, data, None, ghost_data, ghost_data_visibility)
+        
         #Clear all subplots
-        self.complex_plane.cla()
-        self.amplitude.cla()
-        self.phase.cla()
+        self.left_plot.primary.cla()
+        self.right_plot.primary.cla()
+        self.right_plot.twin.cla()
 
         #Set some titles and labels
         self.fig.suptitle(self.title)
-        self.complex_plane.set_title("Complex plane")
-        self.complex_plane.set_xlabel("Re[Z] (Ohm)")
-        self.amplitude.set_xlabel("Frequency (Hz)")
-        self.phase.set_xlabel("Frequency (Hz)")
-        self.complex_plane.set_ylabel("-Im[Z] (Ohm)")
-        if self.admittance_plot: #This was Bernhard Gadermaier's suggestion. Now modified: no longer real/imaginary conductivity but admittance; this makes it more general.
-            self.amplitude.set_title("Real and imaginary admittance")
-            self.amplitude.set_ylabel("Y\' ($\Omega^{-1}$)", color = "#114077")
-            self.amplitude.tick_params(axis = "y", labelcolor = "#114077")
-            self.phase.set_ylabel("Y\'\' ($\Omega^{-1}$)", color = "#117740")
-            self.phase.tick_params(axis = "y", labelcolor = "#117740")
-            self.phase.yaxis.tick_right()
-            self.phase.yaxis.set_label_position("right")
-        else:
-            self.amplitude.set_title("Amplitude and phase angle")
-            self.amplitude.set_ylabel("|Z| (Ohm)", color = "#114077")
-            self.amplitude.tick_params(axis = "y", labelcolor = "#114077")
-            self.phase.set_ylabel("Phase angle (degrees)", color = "#117740")
-            self.phase.tick_params(axis = "y", labelcolor = "#117740")
-            self.phase.yaxis.tick_right()
-            self.phase.yaxis.set_label_position("right")
 
-        #Log-scale the amplitude if requested via self.logamp.
-        self.amplitude.set_xscale("log")
-        if self.logamp:
-            self.amplitude.set_yscale("log")
-        if self.logphase:
-            self.phase.set_yscale("log")
+        #Log-scaling of the RHS plot
+        self.right_plot.primary.set_xscale("log")
+        if self.logRY1:
+            self.right_plot.primary.set_yscale("log")
+        if self.logRY2:
+            self.right_plot.twin.set_yscale("log")
+        
+        #RHS visibility
+        self.right_plot.primary_axis_on = self.visRY1
+        self.right_plot.twin_axis_on = self.visRY2
+        
+        #Update plots
+        for panel in [self.left_plot, self.right_plot]:
+            #Visibilities
+            panel.data_on = self.datavis
+            panel.model_on = self.fitvis
+            #Data & model update
+            panel.data = data
+            panel.model = model
+            #Text update
+            panel.set_text()
+            panel.set_axis_colours()
+            #Limits update
+            panel.set_base_limits()
+            #Plotted data/model/ghost datasets/ghost models
+            panel.plot_all()
 
-        #Plot the data in all subplots, if we want it to be visible.
+        #Apply frequency marking in the LHS plot, if enabled
         if self.datavis:
-            #Standard complex plane plot
-            self.complex_plane.plot(data.real, -data.imag, marker = ".", linestyle = "None", color = "#000000")
             #Frequency labelling
             if len(self.mfreq_freq) > 0:
                 self.applyFrequencyMarking()
-            #Ghost data in complex plane
-            for i in range(min([len(ghost_data_visibility), 3])):
-                self.complex_plane.plot(ghost_data[ghost_data_visibility[i]].data.real, -ghost_data[ghost_data_visibility[i]].data.imag, marker = ".", linestyle = "None", color = self.ghost_colours[i])
-            #RHS plot style: AB-sigma
-            if self.admittance_plot:
-                if self.ampvis:
-                    self.amplitude.plot(data.freq, 1/data.real, marker = "^", linestyle = "None", color = "#114077")
-                if self.phavis:
-                    self.phase.plot(data.freq, -1/data.imag, marker = "v", linestyle = "None", color = "#117740")
-                #Ghost data RHS
-                for i in range(min([len(ghost_data_visibility), 3])):
-                    if self.ampvis:
-                        self.amplitude.plot(ghost_data[ghost_data_visibility[i]].data.freq, 1/ghost_data[ghost_data_visibility[i]].data.real, marker = "^", linestyle = "None", color = self.ghost_colours[i])
-                    if self.phavis:
-                        self.phase.plot(ghost_data[ghost_data_visibility[i]].data.freq, -1/ghost_data[ghost_data_visibility[i]].data.imag, marker = "v", linestyle = "None", color = self.ghost_colours[i])
-            #RHS plot style: Bode amplitude and phase
-            else:
-                if self.ampvis:
-                    self.amplitude.plot(data.freq, data.amplitude, marker = ".", linestyle = "None", color = "#114077")
-                if self.phavis:
-                    self.phase.plot(data.freq, (180/np.pi)*data.phase, marker = "s", linestyle = "None", color = "#117740")
-                #Ghost data RHS
-                for i in range(min([len(ghost_data_visibility), 3])):
-                    if self.ampvis:
-                        self.amplitude.plot(ghost_data[ghost_data_visibility[i]].data.freq, ghost_data[ghost_data_visibility[i]].data.amplitude, marker = ".", linestyle = "None", color = self.ghost_colours[i])
-                    if self.phavis:
-                        self.phase.plot(ghost_data[ghost_data_visibility[i]].data.freq, (180/np.pi)*ghost_data[ghost_data_visibility[i]].data.phase, marker = "s", linestyle = "None", color = self.ghost_colours[i])
-
-        #Plot the model in all subplots.
-        if self.fitvis and model != None: #...if the model exists, that is. And if we want it to be visible.
-            #model.phase, model.amplitude, model.real, model.imag = model.phase[1], model.amplitude[1], model.real[1], model.imag[1] #For some reason, the arrays are not returned cleanly, hence the [1].
-            #Plot the model impedance in the complex plane.
-            self.complex_plane.plot(model.real, -model.imag, marker = "None", linestyle = "-", color = "#DD4444")
-            for i in range(min([len(ghost_data_visibility), 3])):
-                self.complex_plane.plot(ghost_data[ghost_data_visibility[i]].model.real, -ghost_data[ghost_data_visibility[i]].model.imag, marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
-            #Plot either the real and imaginary conductivities versus frequency, or plot the absolute impedance and the phase against frequency
-            if self.admittance_plot:
-                if self.ampvis:
-                    self.amplitude.plot(model.freq, 1/model.real, marker = "None", linestyle = "-", color = "#4444DD") #Plot the real model admittance against the frequency
-                if self.phavis:
-                    self.phase.plot(model.freq, -1/model.imag, marker = "None", linestyle = "-", color = "#44DD44") #Plot the imaginary model admittance against the frequency.
-                for i in range(min([len(ghost_data_visibility), 3])):
-                    if self.ampvis:
-                        self.amplitude.plot(ghost_data[ghost_data_visibility[i]].model.freq, 1/ghost_data[ghost_data_visibility[i]].model.real, marker = "None", linestyle = "-", color = self.ghost_m_colours[i]) #Plot the real model admittance against the frequency
-                    if self.phavis:
-                        self.phase.plot(ghost_data[ghost_data_visibility[i]].model.freq, -1/ghost_data[ghost_data_visibility[i]].model.imag, marker = "None", linestyle = "-", color = self.ghost_m_colours[i]) #Plot the imaginary model admittance against the frequency.
-            else:
-                if self.ampvis:
-                    self.amplitude.plot(model.freq, model.amplitude, marker = "None", linestyle = "-", color = "#4444DD") #Plot the model impedance amplitude against the frequency.
-                if self.phavis:
-                    self.phase.plot(model.freq, (180/np.pi)*model.phase, marker = "None", linestyle = "-", color = "#44DD44") #Plot the model impedance phase against the frequency.
-                for i in range(min([len(ghost_data_visibility), 3])):
-                    if self.ampvis:
-                        self.amplitude.plot(ghost_data[ghost_data_visibility[i]].model.freq, ghost_data[ghost_data_visibility[i]].model.amplitude, marker = "None", linestyle = "-", color = self.ghost_m_colours[i]) #Plot the model impedance amplitude against the frequency.
-                    if self.phavis:
-                        self.phase.plot(ghost_data[ghost_data_visibility[i]].model.freq, (180/np.pi)*ghost_data[ghost_data_visibility[i]].model.phase, marker = "None", linestyle = "-", color = self.ghost_m_colours[i]) #Plot the model impedance phase against the frequency.
 
         #Set the subplots' boundaries.
-        self.base_lims.real = (self.d_extend(min(data.real)), self.u_extend(max(data.real)))
-        self.base_lims.imag = (self.d_extend(min(-data.imag)), self.u_extend(max(-data.imag)))
-        self.base_lims.freq = (self.d_extend(min(data.freq)), self.u_extend(max(data.freq)))
-        if self.admittance_plot:
-            self.base_lims.amp = (self.d_extend(min(1/data.real)), self.u_extend(max(1/data.real)))
-            self.base_lims.phase = (self.d_extend(min(-1/data.imag)), self.u_extend(max(-1/data.imag)))
-        else:
-            self.base_lims.amp = (self.d_extend(min(data.amplitude)), self.u_extend(max(data.amplitude)))
-            self.base_lims.phase = (self.d_extend(min((180/np.pi)*data.phase)), self.u_extend(max((180/np.pi)*data.phase)))
         if self.limiter.enabled: #If the limiter is enabled, use it to limit the subplots' boundaries.
-            self.complex_plane.set(xlim = self.limiter.real)
-            self.complex_plane.set(ylim = self.limiter.imag)
-            self.amplitude.set(xlim = self.limiter.freq)
-            self.amplitude.set(ylim = self.limiter.amp)
-            self.phase.set(ylim = self.limiter.phase)
+            self.left_plot.primary.set(xlim = self.limiter.real)
+            self.left_plot.primary.set(ylim = self.limiter.imag)
+            self.right_plot.primary.set(xlim = self.limiter.freq)
+            self.right_plot.primary.set(ylim = self.limiter.amp)
+            self.right_plot.twin.set(ylim = self.limiter.phase)
         else: #If the limiter is not enabled, apply automatic plot boundaries (defined a few lines above) via base_lims.
-            self.complex_plane.set(xlim = self.base_lims.real)
-            self.complex_plane.set(ylim = self.base_lims.imag)
-            self.amplitude.set(xlim = self.base_lims.freq)
-            self.amplitude.set(ylim = self.base_lims.amp)
-            self.phase.set(ylim = self.base_lims.phase)
+            self.left_plot.primary.set(xlim = self.left_plot.lim_x)
+            self.left_plot.primary.set(ylim = self.left_plot.lim_y1)
+            self.right_plot.primary.set(xlim = self.right_plot.lim_x)
+            self.right_plot.primary.set(ylim = self.right_plot.lim_y1)
+            self.right_plot.twin.set(ylim = self.right_plot.lim_y2)
 
         #Draw the new model, along with the data, on the canvas.
         self.canvas.draw()

@@ -11,7 +11,7 @@
 </tr></table>
     <p><span class="code">DECiM&nbsp;(Determination&nbsp;of&nbsp;Equivalent&nbsp;Circuit&nbsp;Models)&nbsp;is&nbsp;an&nbsp;equivalent&nbsp;circuit&nbsp;model&nbsp;fitting&nbsp;program&nbsp;for&nbsp;impedance&nbsp;data.&nbsp;It&nbsp;is&nbsp;a&nbsp;GUI-based&nbsp;program.<br>
 Much&nbsp;of&nbsp;the&nbsp;source&nbsp;code&nbsp;is&nbsp;spread&nbsp;over&nbsp;other&nbsp;python&nbsp;source&nbsp;files,&nbsp;all&nbsp;of&nbsp;which&nbsp;must&nbsp;be&nbsp;in&nbsp;the&nbsp;same&nbsp;folder&nbsp;as&nbsp;DECiM.py&nbsp;to&nbsp;ensure&nbsp;that&nbsp;the&nbsp;program&nbsp;works&nbsp;correctly.<br>
-DECiM&nbsp;was&nbsp;written&nbsp;and&nbsp;is&nbsp;maintained&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.&nbsp;Current&nbsp;version:&nbsp;1.2.12,&nbsp;3&nbsp;May&nbsp;2024.<br>
+DECiM&nbsp;was&nbsp;written&nbsp;and&nbsp;is&nbsp;maintained&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.&nbsp;Current&nbsp;version:&nbsp;1.2.13,&nbsp;4&nbsp;May&nbsp;2024.<br>
 &nbsp;<br>
 This&nbsp;is&nbsp;the&nbsp;core&nbsp;module&nbsp;--&nbsp;when&nbsp;launched,&nbsp;DECiM&nbsp;starts.&nbsp;This&nbsp;module&nbsp;also&nbsp;defines&nbsp;the&nbsp;<a href="#Window">Window</a>&nbsp;class.</span></p>
 <p>
@@ -105,7 +105,7 @@ on_screen&nbsp;--&nbsp;properly&nbsp;scale&nbsp;the&nbsp;window&nbsp;and&nbsp;fi
 &nbsp;<br>
 For&nbsp;file&nbsp;handling:&nbsp;loadData,&nbsp;loadResult,&nbsp;saveResult<br>
 &nbsp;<br>
-For&nbsp;plot&nbsp;layout:&nbsp;setAmpVisibility,&nbsp;setPhaseVisibility,&nbsp;setLogAmp,&nbsp;setLogPhase,&nbsp;toggleAdmittancePlot,&nbsp;toggleDataVisibility,&nbsp;toggleFitVisibility<br>
+For&nbsp;plot&nbsp;layout:&nbsp;setVisRY1,&nbsp;setVisRY2,&nbsp;setLogRY1,&nbsp;setLogRY2,&nbsp;setABAdmittance,&nbsp;setBodeZPhi,&nbsp;setComplexPlaneY,&nbsp;setComplexPlaneZ,&nbsp;set&nbsp;ABImpedance<br>
 &nbsp;<br>
 resetView&nbsp;--&nbsp;reset&nbsp;view&nbsp;limits&nbsp;of&nbsp;plots<br>
 generateFit&nbsp;--&nbsp;calculate&nbsp;the&nbsp;model&nbsp;curve<br>
@@ -184,13 +184,21 @@ Alternatively,&nbsp;update&nbsp;the&nbsp;error&nbsp;label&nbsp;in&nbsp;case&nbsp
 
 <dl><dt><a name="Window-selectOtherDataset"><strong>selectOtherDataset</strong></a>(self)</dt><dd><span class="code">Launch&nbsp;the&nbsp;dataset&nbsp;selector&nbsp;window&nbsp;and&nbsp;replace&nbsp;the&nbsp;current&nbsp;data&nbsp;and&nbsp;model&nbsp;with&nbsp;the&nbsp;selected&nbsp;model.</span></dd></dl>
 
-<dl><dt><a name="Window-setAmpVisibility"><strong>setAmpVisibility</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;visibility&nbsp;of&nbsp;the&nbsp;amplitude&nbsp;or&nbsp;real&nbsp;admittance.</span></dd></dl>
+<dl><dt><a name="Window-setABAdmittance"><strong>setABAdmittance</strong></a>(self)</dt><dd><span class="code">Switch&nbsp;to&nbsp;the&nbsp;real+imaginary&nbsp;admittance&nbsp;plot.</span></dd></dl>
+
+<dl><dt><a name="Window-setABImpedance"><strong>setABImpedance</strong></a>(self)</dt><dd><span class="code">Switch&nbsp;to&nbsp;the&nbsp;real+imaginary&nbsp;admittance&nbsp;plot.</span></dd></dl>
+
+<dl><dt><a name="Window-setBodeZPhi"><strong>setBodeZPhi</strong></a>(self)</dt><dd><span class="code">Switch&nbsp;to&nbsp;the&nbsp;Bode&nbsp;amplitude/phase&nbsp;plot.</span></dd></dl>
 
 <dl><dt><a name="Window-setCircuit"><strong>setCircuit</strong></a>(self, circuit_model)</dt><dd><span class="code">Change&nbsp;the&nbsp;circuit&nbsp;model&nbsp;to&nbsp;a&nbsp;new&nbsp;circuit&nbsp;whose&nbsp;impedance&nbsp;function&nbsp;matches&nbsp;the&nbsp;expected&nbsp;function&nbsp;from&nbsp;the&nbsp;circuit&nbsp;diagram.<br>
 &nbsp;<br>
 Arguments:<br>
 self&nbsp;--&nbsp;needs&nbsp;access&nbsp;to&nbsp;instance&nbsp;of&nbsp;<a href="#Window">Window</a>&nbsp;class,&nbsp;like&nbsp;all&nbsp;other&nbsp;functions&nbsp;defined&nbsp;in&nbsp;it<br>
 circuit_model&nbsp;--&nbsp;a&nbsp;Circuit&nbsp;object&nbsp;from&nbsp;ecm_circuits</span></dd></dl>
+
+<dl><dt><a name="Window-setComplexPlaneY"><strong>setComplexPlaneY</strong></a>(self)</dt><dd><span class="code">Switch&nbsp;to&nbsp;the&nbsp;complex&nbsp;plane&nbsp;admittance&nbsp;plot.</span></dd></dl>
+
+<dl><dt><a name="Window-setComplexPlaneZ"><strong>setComplexPlaneZ</strong></a>(self)</dt><dd><span class="code">Switch&nbsp;to&nbsp;the&nbsp;complex&nbsp;plane&nbsp;impedance&nbsp;plot.</span></dd></dl>
 
 <dl><dt><a name="Window-setCustomModel"><strong>setCustomModel</strong></a>(self, circuit_model, impedance_function_name)</dt><dd><span class="code">Change&nbsp;the&nbsp;circuit&nbsp;model&nbsp;to&nbsp;a&nbsp;new&nbsp;circuit&nbsp;with&nbsp;a&nbsp;custom&nbsp;impedance&nbsp;function.<br>
 &nbsp;<br>
@@ -200,17 +208,17 @@ circuit_model&nbsp;--&nbsp;a&nbsp;Circuit&nbsp;object&nbsp;from&nbsp;ecm_circuit
 impedance_function_name&nbsp;--&nbsp;any&nbsp;key&nbsp;in&nbsp;the&nbsp;custom_model_diagrams&nbsp;dictionary&nbsp;in&nbsp;ecm_custom_models<br>
 circuit_name&nbsp;--&nbsp;string&nbsp;containing&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;custom&nbsp;model</span></dd></dl>
 
-<dl><dt><a name="Window-setLogAmp"><strong>setLogAmp</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;log&nbsp;scale&nbsp;for&nbsp;the&nbsp;amplitude&nbsp;or&nbsp;real&nbsp;admittance.</span></dd></dl>
+<dl><dt><a name="Window-setLogRY1"><strong>setLogRY1</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;log&nbsp;scale&nbsp;for&nbsp;the&nbsp;RHS&nbsp;primary&nbsp;y&nbsp;axis.</span></dd></dl>
 
-<dl><dt><a name="Window-setLogPhase"><strong>setLogPhase</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;log&nbsp;scale&nbsp;for&nbsp;the&nbsp;phase&nbsp;(not&nbsp;recommended)&nbsp;or&nbsp;imaginary&nbsp;admittance.</span></dd></dl>
-
-<dl><dt><a name="Window-setPhaseVisibility"><strong>setPhaseVisibility</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;visibility&nbsp;of&nbsp;the&nbsp;phase&nbsp;or&nbsp;imaginary&nbsp;admittance.</span></dd></dl>
+<dl><dt><a name="Window-setLogRY2"><strong>setLogRY2</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;log&nbsp;scale&nbsp;for&nbsp;the&nbsp;RHS&nbsp;secondary&nbsp;y&nbsp;axis.</span></dd></dl>
 
 <dl><dt><a name="Window-setRefinementRange"><strong>setRefinementRange</strong></a>(self)</dt><dd><span class="code">Open&nbsp;a&nbsp;simple&nbsp;dialog&nbsp;box&nbsp;to&nbsp;set&nbsp;the&nbsp;frequency&nbsp;limits&nbsp;used&nbsp;in&nbsp;the&nbsp;minRefine&nbsp;function.</span></dd></dl>
 
-<dl><dt><a name="Window-showInstructions"><strong>showInstructions</strong></a>(self)</dt><dd><span class="code">Launch&nbsp;the&nbsp;help&nbsp;window.</span></dd></dl>
+<dl><dt><a name="Window-setVisRY1"><strong>setVisRY1</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;visibility&nbsp;of&nbsp;the&nbsp;amplitude&nbsp;or&nbsp;real&nbsp;admittance.</span></dd></dl>
 
-<dl><dt><a name="Window-toggleAdmittancePlot"><strong>toggleAdmittancePlot</strong></a>(self)</dt><dd><span class="code">Switch&nbsp;between&nbsp;the&nbsp;amplitude+phase&nbsp;impedance&nbsp;and&nbsp;real+imaginary&nbsp;admittance&nbsp;plots.</span></dd></dl>
+<dl><dt><a name="Window-setVisRY2"><strong>setVisRY2</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;visibility&nbsp;of&nbsp;the&nbsp;phase&nbsp;or&nbsp;imaginary&nbsp;admittance.</span></dd></dl>
+
+<dl><dt><a name="Window-showInstructions"><strong>showInstructions</strong></a>(self)</dt><dd><span class="code">Launch&nbsp;the&nbsp;help&nbsp;window.</span></dd></dl>
 
 <dl><dt><a name="Window-toggleDataVisibility"><strong>toggleDataVisibility</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;visibility&nbsp;of&nbsp;the&nbsp;data.</span></dd></dl>
 

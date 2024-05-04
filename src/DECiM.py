@@ -1,6 +1,6 @@
 """DECiM (Determination of Equivalent Circuit Models) is an equivalent circuit model fitting program for impedance data. It is a GUI-based program.
 Much of the source code is spread over other python source files, all of which must be in the same folder as DECiM.py to ensure that the program works correctly.
-DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.12, 3 May 2024.
+DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.13, 4 May 2024.
 
 This is the core module -- when launched, DECiM starts. This module also defines the Window class."""
 
@@ -120,7 +120,7 @@ class Window(ttk.Frame):
         
         For file handling: loadData, loadResult, saveResult
         
-        For plot layout: setAmpVisibility, setPhaseVisibility, setLogAmp, setLogPhase, toggleAdmittancePlot, toggleDataVisibility, toggleFitVisibility
+        For plot layout: setVisRY1, setVisRY2, setLogRY1, setLogRY2, setABAdmittance, setBodeZPhi, setComplexPlaneY, setComplexPlaneZ, set ABImpedance
         
         resetView -- reset view limits of plots
         generateFit -- calculate the model curve
@@ -206,12 +206,16 @@ class Window(ttk.Frame):
         plotMenu.add_separator()
         plotMenu.add_command(label = "Reset view", command = self.resetView)
         plotMenu.add_separator()
-        plotMenu.add_command(label = "Toggle amplitude/real admittance log-scale", command = self.setLogAmp)
-        plotMenu.add_command(label = "Toggle phase/imaginary admittance log-scale", command = self.setLogPhase)
-        plotMenu.add_command(label = "Toggle amplitude/real admittance visibility", command = self.setAmpVisibility)
-        plotMenu.add_command(label = "Toggle phase/imaginary admittance visibility", command = self.setPhaseVisibility)
+        plotMenu.add_command(label = "Toggle RHS primary log-scale", command = self.setLogRY1)
+        plotMenu.add_command(label = "Toggle RHS secondary log-scale", command = self.setLogRY2)
+        plotMenu.add_command(label = "Toggle RHS primary visibility", command = self.setVisRY1)
+        plotMenu.add_command(label = "Toggle RHS secondary visibility", command = self.setVisRY2)
         plotMenu.add_separator()
-        plotMenu.add_command(label = "Toggle Bode amplitude+phase impedance / real+imaginary admittance", command = self.toggleAdmittancePlot)
+        plotMenu.add_command(label = "Complex plane impedance", command = self.setComplexPlaneZ)
+        plotMenu.add_command(label = "Complex plane admittance", command = self.setComplexPlaneY)
+        plotMenu.add_command(label = "Bode amplitude/phase", command = self.setBodeZPhi)
+        plotMenu.add_command(label = "Y\' and Y\'\' vs. frequency", command = self.setABAdmittance)
+        plotMenu.add_command(label = "Z\' and Z\'\' vs. frequency", command = self.setABImpedance)
         in_menu.add_cascade(label = "Plot", menu = plotMenu)
 
     def make_calculatemenu(self, in_menu):
@@ -325,31 +329,63 @@ class Window(ttk.Frame):
 
     #Plot layout
     
-    def setLogAmp(self):
-        """Toggle log scale for the amplitude or real admittance."""
-        self.plots.logamp = not self.plots.logamp
-        self.canvasUpdate()
+    def setLogRY1(self):
+        """Toggle log scale for the RHS primary y axis."""
+        self.plots.logRY1 = not self.plots.logRY1
+        self.resetView()
 
-    def setLogPhase(self):
-        """Toggle log scale for the phase (not recommended) or imaginary admittance."""
-        self.plots.logphase = not self.plots.logphase
-        self.canvasUpdate()
+    def setLogRY2(self):
+        """Toggle log scale for the RHS secondary y axis."""
+        self.plots.logRY2 = not self.plots.logRY2
+        self.resetView()
         
-    def setAmpVisibility(self):
+    def setVisRY1(self):
         """Toggle visibility of the amplitude or real admittance."""
-        self.plots.ampvis = not self.plots.ampvis
+        self.plots.visRY1 = not self.plots.visRY1
         self.canvasUpdate()
         
-    def setPhaseVisibility(self):
+    def setVisRY2(self):
         """Toggle visibility of the phase or imaginary admittance."""
-        self.plots.phavis = not self.plots.phavis
+        self.plots.visRY2 = not self.plots.visRY2
         self.canvasUpdate()
     
-    def toggleAdmittancePlot(self):
-        """Switch between the amplitude+phase impedance and real+imaginary admittance plots."""
-        self.plots.admittance_plot = not self.plots.admittance_plot
-        self.plots.logphase = self.plots.admittance_plot
-        self.resetView()
+    def setABAdmittance(self):
+        """Switch to the real+imaginary admittance plot."""
+        if self.plots.rhs_type != "YY vs. f":
+            self.plots.prev_rhs_type = self.plots.rhs_type
+            self.plots.rhs_type = "YY vs. f"
+            self.setLogRY2()
+            self.resetView()
+            
+    def setABImpedance(self):
+        """Switch to the real+imaginary admittance plot."""
+        if self.plots.rhs_type != "ZZ vs. f":
+            self.plots.prev_rhs_type = self.plots.rhs_type
+            self.plots.rhs_type = "ZZ vs. f"
+            self.setLogRY2()
+            self.resetView()
+        
+    def setBodeZPhi(self):
+        """Switch to the Bode amplitude/phase plot."""
+        if self.plots.rhs_type != "Bode amplitude/phase":
+            self.plots.prev_rhs_type = self.plots.rhs_type
+            self.plots.rhs_type = "Bode amplitude/phase"
+            self.setLogRY2()
+            self.resetView()
+        
+    def setComplexPlaneY(self):
+        """Switch to the complex plane admittance plot."""
+        if self.plots.lhs_type != "Complex plane Y":
+            self.plots.prev_lhs_type = self.plots.lhs_type
+            self.plots.lhs_type = "Complex plane Y"
+            self.resetView()
+
+    def setComplexPlaneZ(self):
+        """Switch to the complex plane impedance plot."""
+        if self.plots.lhs_type != "Complex plane Z":
+            self.plots.prev_lhs_type = self.plots.lhs_type
+            self.plots.lhs_type = "Complex plane Z"
+            self.resetView()
     
     def toggleDataVisibility(self):
         """Toggle visibility of the data."""
@@ -397,7 +433,7 @@ class Window(ttk.Frame):
 
     def minRefine(self):
         """Optimize all model parameters using a unit weighting scheme and update the plots."""
-        self.plots.complex_plane.text(0.7, 0.9, "Refining...", transform = self.plots.complex_plane.transAxes)
+        self.plots.lhs.text(0.7, 0.9, "Refining...", transform = self.plots.lhs.transAxes)
         self.plots.canvas.draw()
         self.update()
         if self.fitlim:
@@ -449,9 +485,9 @@ class Window(ttk.Frame):
     
     def canvasUpdate(self):
         """General plot update function. Update all limits, generate the model line from the parameters and the circuit impedance function, and update the plots."""
-        amlims = self.plots.amplitude.viewLim.get_points()
-        comlims = self.plots.complex_plane.viewLim.get_points()
-        phalims = self.plots.phase.viewLim.get_points()
+        amlims = self.plots.right_plot.primary.viewLim.get_points()
+        comlims = self.plots.left_plot.primary.viewLim.get_points()
+        phalims = self.plots.right_plot.twin.viewLim.get_points()
         self.plots.limiter.freq = (amlims[0][0], amlims[1][0])
         self.plots.limiter.real = (comlims[0][0], comlims[1][0])
         self.plots.limiter.imag = (comlims[0][1], comlims[1][1])

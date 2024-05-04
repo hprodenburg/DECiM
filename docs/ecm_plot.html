@@ -9,10 +9,18 @@
 <tr class="heading-text decor">
 <td class="title">&nbsp;<br><strong class="title">ecm_plot</strong></td>
 </tr></table>
-    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;plotting&nbsp;canvas&nbsp;class&nbsp;and&nbsp;some&nbsp;additional&nbsp;plotting-related&nbsp;code.&nbsp;Last&nbsp;modified&nbsp;5&nbsp;April&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;plotting&nbsp;canvas&nbsp;class&nbsp;and&nbsp;some&nbsp;additional&nbsp;plotting-related&nbsp;code.&nbsp;Last&nbsp;modified&nbsp;4&nbsp;May&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
 &nbsp;<br>
 Classes:<br>
+<a href="#ImpedancePlot">ImpedancePlot</a>&nbsp;--&nbsp;base&nbsp;class&nbsp;for&nbsp;all&nbsp;plot&nbsp;panels;&nbsp;possible&nbsp;subclasses&nbsp;below:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ComplexPlaneImpedancePlot">ComplexPlaneImpedancePlot</a>&nbsp;--&nbsp;Z''&nbsp;vs.&nbsp;Z'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ComplexPlaneAdmittancePlot">ComplexPlaneAdmittancePlot</a>&nbsp;--&nbsp;Y''&nbsp;vs.&nbsp;Y'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ImpedanceFrequencyPlot">ImpedanceFrequencyPlot</a>&nbsp;--&nbsp;Z'&nbsp;and&nbsp;Z''&nbsp;vs.&nbsp;f<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#AdmittanceFrequencyPlot">AdmittanceFrequencyPlot</a>&nbsp;--&nbsp;Y'&nbsp;and&nbsp;Y''&nbsp;vs.&nbsp;f<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#BodePhaseAmplitudePlot">BodePhaseAmplitudePlot</a>&nbsp;--&nbsp;|Z|&nbsp;and&nbsp;phi&nbsp;vs.&nbsp;f<br>
+&nbsp;<br>
 <a href="#limiter">limiter</a>&nbsp;--&nbsp;handles&nbsp;the&nbsp;upper&nbsp;and&nbsp;lower&nbsp;limits&nbsp;of&nbsp;the&nbsp;plots<br>
+&nbsp;<br>
 <a href="#PlotFrame">PlotFrame</a>&nbsp;--&nbsp;ttk.<a href="tkinter.ttk.html#Frame">Frame</a>&nbsp;with&nbsp;the&nbsp;plot&nbsp;canvas&nbsp;and&nbsp;toolbar</span></p>
 <p>
 <table class="section">
@@ -38,6 +46,16 @@ Classes:<br>
 <dt class="heading-text"><a href="builtins.html#object">builtins.object</a>
 </dt><dd>
 <dl>
+<dt class="heading-text"><a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a>
+</dt><dd>
+<dl>
+<dt class="heading-text"><a href="ecm_plot.html#AdmittanceFrequencyPlot">AdmittanceFrequencyPlot</a>
+</dt><dt class="heading-text"><a href="ecm_plot.html#BodePhaseAmplitudePlot">BodePhaseAmplitudePlot</a>
+</dt><dt class="heading-text"><a href="ecm_plot.html#ComplexPlaneAdmittancePlot">ComplexPlaneAdmittancePlot</a>
+</dt><dt class="heading-text"><a href="ecm_plot.html#ComplexPlaneImpedancePlot">ComplexPlaneImpedancePlot</a>
+</dt><dt class="heading-text"><a href="ecm_plot.html#ImpedanceFrequencyPlot">ImpedanceFrequencyPlot</a>
+</dt></dl>
+</dd>
 <dt class="heading-text"><a href="ecm_plot.html#limiter">limiter</a>
 </dt></dl>
 </dd>
@@ -49,6 +67,729 @@ Classes:<br>
 </dd>
 </dl>
  <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="AdmittanceFrequencyPlot">class <strong>AdmittanceFrequencyPlot</strong></a>(<a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#AdmittanceFrequencyPlot">AdmittanceFrequencyPlot</a>(primary,&nbsp;data,&nbsp;model,&nbsp;ghost_data,&nbsp;ghost_data_visibility,&nbsp;make_twinx=True,&nbsp;data_on=True,&nbsp;model_on=True,&nbsp;primary_axis_on=True,&nbsp;twin_axis_on=True)<br>
+&nbsp;<br>
+<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn"><dl><dt>Method resolution order:</dt>
+<dd><a href="ecm_plot.html#AdmittanceFrequencyPlot">AdmittanceFrequencyPlot</a></dd>
+<dd><a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="AdmittanceFrequencyPlot-__init__"><strong>__init__</strong></a>(self, primary, data, model, ghost_data, ghost_data_visibility, make_twinx=True, data_on=True, model_on=True, primary_axis_on=True, twin_axis_on=True)</dt><dd><span class="code">Y',&nbsp;Y''&nbsp;vs.&nbsp;frequency&nbsp;plot.<br>
+&nbsp;<br>
+Init&nbsp;arguments:&nbsp;see&nbsp;parent&nbsp;class&nbsp;<a href="#ImpedancePlot">ImpedancePlot</a><br>
+&nbsp;<br>
+Methods:&nbsp;see&nbsp;parent&nbsp;class&nbsp;<a href="#ImpedancePlot">ImpedancePlot</a><br>
+&nbsp;<br>
+Overridden&nbsp;methods:<br>
+plot_primary_data&nbsp;--&nbsp;plot&nbsp;data&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_primary_model&nbsp;--&nbsp;plot&nbsp;model&nbsp;curve&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_twin_data&nbsp;--&nbsp;plot&nbsp;data&nbsp;along&nbsp;twin&nbsp;y&nbsp;axis<br>
+plot_twin_model&nbsp;--&nbsp;plot&nbsp;model&nbsp;curve&nbsp;along&nbsp;twin&nbsp;y&nbsp;axis<br>
+&nbsp;<br>
+plot_primary_ghost_data&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;data&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_primary_ghost_model&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_twin_ghost_data&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;data&nbsp;along&nbsp;twin&nbsp;y&nbsp;axis<br>
+plot_twin_ghost_model&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;twin&nbsp;y&nbsp;axis<br>
+&nbsp;<br>
+set_text&nbsp;--&nbsp;set&nbsp;axis&nbsp;labels&nbsp;and&nbsp;title<br>
+set_base_limits&nbsp;--&nbsp;set&nbsp;self.<strong>lim_x</strong>,&nbsp;self.<strong>lim_y1</strong>,&nbsp;and&nbsp;self.<strong>lim_y2</strong>;&nbsp;these&nbsp;are&nbsp;(low,&nbsp;high)&nbsp;Tuples&nbsp;of&nbsp;plot&nbsp;limits&nbsp;that&nbsp;provide&nbsp;a&nbsp;view&nbsp;of&nbsp;the&nbsp;entire&nbsp;dataset&nbsp;for&nbsp;x,&nbsp;primary&nbsp;y,&nbsp;and&nbsp;twin&nbsp;y,&nbsp;respectively</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-plot_primary_data"><strong>plot_primary_data</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;data&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-plot_primary_ghost_data"><strong>plot_primary_ghost_data</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;data&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-plot_primary_ghost_model"><strong>plot_primary_ghost_model</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-plot_primary_model"><strong>plot_primary_model</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-plot_twin_data"><strong>plot_twin_data</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;data&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-plot_twin_ghost_data"><strong>plot_twin_ghost_data</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;data&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-plot_twin_ghost_model"><strong>plot_twin_ghost_model</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-plot_twin_model"><strong>plot_twin_model</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-set_base_limits"><strong>set_base_limits</strong></a>(self)</dt><dd><span class="code">Set&nbsp;the&nbsp;base&nbsp;limits&nbsp;for&nbsp;all&nbsp;axes.&nbsp;May&nbsp;need&nbsp;to&nbsp;be&nbsp;redefined&nbsp;in&nbsp;child&nbsp;classes.&nbsp;Defaults&nbsp;to&nbsp;reasonable&nbsp;Bode&nbsp;plot&nbsp;limits.</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-set_text"><strong>set_text</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;title,&nbsp;x&nbsp;label,&nbsp;and&nbsp;y&nbsp;label.&nbsp;To&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes&nbsp;and&nbsp;called&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;their&nbsp;__init__&nbsp;method&nbsp;and&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;in&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<hr>
+Methods inherited from <a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a>:<br>
+<dl><dt><a name="AdmittanceFrequencyPlot-d_extend"><strong>d_extend</strong></a>(self, vl)</dt><dd><span class="code">For&nbsp;a&nbsp;given&nbsp;minimum&nbsp;of&nbsp;an&nbsp;axis&nbsp;vl,&nbsp;min(vl),&nbsp;return&nbsp;a&nbsp;logical&nbsp;lower&nbsp;limit&nbsp;for&nbsp;the&nbsp;axis&nbsp;in&nbsp;the&nbsp;plot.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+vl&nbsp;--&nbsp;list&nbsp;or&nbsp;NumPy&nbsp;array<br>
+&nbsp;<br>
+Returns:<br>
+lower&nbsp;limit&nbsp;for&nbsp;plot&nbsp;(float)</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-plot_all"><strong>plot_all</strong></a>(self)</dt><dd><span class="code">Plot&nbsp;all&nbsp;lines&nbsp;and&nbsp;markers&nbsp;indicated&nbsp;by&nbsp;self.<strong>data_on</strong>,&nbsp;self.<strong>model_on</strong>,&nbsp;self.<strong>primary_axis_on</strong>,&nbsp;and&nbsp;self.<strong>twin_axis_on</strong>.&nbsp;Handles&nbsp;both&nbsp;the&nbsp;main&nbsp;data/model&nbsp;and&nbsp;ghost&nbsp;data/model.<br>
+&nbsp;<br>
+To&nbsp;be&nbsp;called&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;of&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-set_axis_colours"><strong>set_axis_colours</strong></a>(self)</dt><dd><span class="code">Give&nbsp;the&nbsp;axis&nbsp;labels&nbsp;their&nbsp;proper&nbsp;place&nbsp;and&nbsp;colour.&nbsp;To&nbsp;be&nbsp;called&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;in&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-set_twin_xlim"><strong>set_twin_xlim</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;x&nbsp;limits&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-set_twin_xscale"><strong>set_twin_xscale</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;x&nbsp;scaling&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-set_twin_ylim"><strong>set_twin_ylim</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;y&nbsp;limits&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-set_twin_yscale"><strong>set_twin_yscale</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;y&nbsp;scaling&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="AdmittanceFrequencyPlot-u_extend"><strong>u_extend</strong></a>(self, vl)</dt><dd><span class="code">For&nbsp;a&nbsp;given&nbsp;maximum&nbsp;of&nbsp;an&nbsp;axis&nbsp;vl,&nbsp;max(vl),&nbsp;return&nbsp;a&nbsp;logical&nbsp;upper&nbsp;limit&nbsp;for&nbsp;the&nbsp;axis&nbsp;in&nbsp;the&nbsp;plot.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+vl&nbsp;--&nbsp;list&nbsp;or&nbsp;NumPy&nbsp;array<br>
+&nbsp;<br>
+Returns:<br>
+upper&nbsp;limit&nbsp;for&nbsp;plot&nbsp;(float)</span></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
+</td></tr></table> <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="BodePhaseAmplitudePlot">class <strong>BodePhaseAmplitudePlot</strong></a>(<a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#BodePhaseAmplitudePlot">BodePhaseAmplitudePlot</a>(primary,&nbsp;data,&nbsp;model,&nbsp;ghost_data,&nbsp;ghost_data_visibility,&nbsp;make_twinx=True,&nbsp;data_on=True,&nbsp;model_on=True,&nbsp;primary_axis_on=True,&nbsp;twin_axis_on=True)<br>
+&nbsp;<br>
+<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn"><dl><dt>Method resolution order:</dt>
+<dd><a href="ecm_plot.html#BodePhaseAmplitudePlot">BodePhaseAmplitudePlot</a></dd>
+<dd><a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="BodePhaseAmplitudePlot-__init__"><strong>__init__</strong></a>(self, primary, data, model, ghost_data, ghost_data_visibility, make_twinx=True, data_on=True, model_on=True, primary_axis_on=True, twin_axis_on=True)</dt><dd><span class="code">Bode&nbsp;amplitude/phase&nbsp;plot.<br>
+&nbsp;<br>
+Init&nbsp;arguments:&nbsp;see&nbsp;parent&nbsp;class&nbsp;<a href="#ImpedancePlot">ImpedancePlot</a><br>
+&nbsp;<br>
+Methods:&nbsp;see&nbsp;parent&nbsp;class&nbsp;<a href="#ImpedancePlot">ImpedancePlot</a><br>
+&nbsp;<br>
+Overridden&nbsp;methods:<br>
+plot_primary_data&nbsp;--&nbsp;plot&nbsp;data&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_primary_model&nbsp;--&nbsp;plot&nbsp;model&nbsp;curve&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_twin_data&nbsp;--&nbsp;plot&nbsp;data&nbsp;along&nbsp;twin&nbsp;y&nbsp;axis<br>
+plot_twin_model&nbsp;--&nbsp;plot&nbsp;model&nbsp;curve&nbsp;along&nbsp;twin&nbsp;y&nbsp;axis<br>
+&nbsp;<br>
+plot_primary_ghost_data&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;data&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_primary_ghost_model&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_twin_ghost_data&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;data&nbsp;along&nbsp;twin&nbsp;y&nbsp;axis<br>
+plot_twin_ghost_model&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;twin&nbsp;y&nbsp;axis<br>
+&nbsp;<br>
+set_text&nbsp;--&nbsp;set&nbsp;axis&nbsp;labels&nbsp;and&nbsp;title<br>
+set_base_limits&nbsp;--&nbsp;set&nbsp;self.<strong>lim_x</strong>,&nbsp;self.<strong>lim_y1</strong>,&nbsp;and&nbsp;self.<strong>lim_y2</strong>;&nbsp;these&nbsp;are&nbsp;(low,&nbsp;high)&nbsp;Tuples&nbsp;of&nbsp;plot&nbsp;limits&nbsp;that&nbsp;provide&nbsp;a&nbsp;view&nbsp;of&nbsp;the&nbsp;entire&nbsp;dataset&nbsp;for&nbsp;x,&nbsp;primary&nbsp;y,&nbsp;and&nbsp;twin&nbsp;y,&nbsp;respectively</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-plot_primary_data"><strong>plot_primary_data</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;data&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-plot_primary_ghost_data"><strong>plot_primary_ghost_data</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;data&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-plot_primary_ghost_model"><strong>plot_primary_ghost_model</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-plot_primary_model"><strong>plot_primary_model</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-plot_twin_data"><strong>plot_twin_data</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;data&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-plot_twin_ghost_data"><strong>plot_twin_ghost_data</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;data&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-plot_twin_ghost_model"><strong>plot_twin_ghost_model</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-plot_twin_model"><strong>plot_twin_model</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-set_base_limits"><strong>set_base_limits</strong></a>(self)</dt><dd><span class="code">Set&nbsp;the&nbsp;base&nbsp;limits&nbsp;for&nbsp;all&nbsp;axes.&nbsp;May&nbsp;need&nbsp;to&nbsp;be&nbsp;redefined&nbsp;in&nbsp;child&nbsp;classes.&nbsp;Defaults&nbsp;to&nbsp;reasonable&nbsp;Bode&nbsp;plot&nbsp;limits.</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-set_text"><strong>set_text</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;title,&nbsp;x&nbsp;label,&nbsp;and&nbsp;y&nbsp;label.&nbsp;To&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes&nbsp;and&nbsp;called&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;their&nbsp;__init__&nbsp;method&nbsp;and&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;in&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<hr>
+Methods inherited from <a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a>:<br>
+<dl><dt><a name="BodePhaseAmplitudePlot-d_extend"><strong>d_extend</strong></a>(self, vl)</dt><dd><span class="code">For&nbsp;a&nbsp;given&nbsp;minimum&nbsp;of&nbsp;an&nbsp;axis&nbsp;vl,&nbsp;min(vl),&nbsp;return&nbsp;a&nbsp;logical&nbsp;lower&nbsp;limit&nbsp;for&nbsp;the&nbsp;axis&nbsp;in&nbsp;the&nbsp;plot.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+vl&nbsp;--&nbsp;list&nbsp;or&nbsp;NumPy&nbsp;array<br>
+&nbsp;<br>
+Returns:<br>
+lower&nbsp;limit&nbsp;for&nbsp;plot&nbsp;(float)</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-plot_all"><strong>plot_all</strong></a>(self)</dt><dd><span class="code">Plot&nbsp;all&nbsp;lines&nbsp;and&nbsp;markers&nbsp;indicated&nbsp;by&nbsp;self.<strong>data_on</strong>,&nbsp;self.<strong>model_on</strong>,&nbsp;self.<strong>primary_axis_on</strong>,&nbsp;and&nbsp;self.<strong>twin_axis_on</strong>.&nbsp;Handles&nbsp;both&nbsp;the&nbsp;main&nbsp;data/model&nbsp;and&nbsp;ghost&nbsp;data/model.<br>
+&nbsp;<br>
+To&nbsp;be&nbsp;called&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;of&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-set_axis_colours"><strong>set_axis_colours</strong></a>(self)</dt><dd><span class="code">Give&nbsp;the&nbsp;axis&nbsp;labels&nbsp;their&nbsp;proper&nbsp;place&nbsp;and&nbsp;colour.&nbsp;To&nbsp;be&nbsp;called&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;in&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-set_twin_xlim"><strong>set_twin_xlim</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;x&nbsp;limits&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-set_twin_xscale"><strong>set_twin_xscale</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;x&nbsp;scaling&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-set_twin_ylim"><strong>set_twin_ylim</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;y&nbsp;limits&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-set_twin_yscale"><strong>set_twin_yscale</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;y&nbsp;scaling&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="BodePhaseAmplitudePlot-u_extend"><strong>u_extend</strong></a>(self, vl)</dt><dd><span class="code">For&nbsp;a&nbsp;given&nbsp;maximum&nbsp;of&nbsp;an&nbsp;axis&nbsp;vl,&nbsp;max(vl),&nbsp;return&nbsp;a&nbsp;logical&nbsp;upper&nbsp;limit&nbsp;for&nbsp;the&nbsp;axis&nbsp;in&nbsp;the&nbsp;plot.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+vl&nbsp;--&nbsp;list&nbsp;or&nbsp;NumPy&nbsp;array<br>
+&nbsp;<br>
+Returns:<br>
+upper&nbsp;limit&nbsp;for&nbsp;plot&nbsp;(float)</span></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
+</td></tr></table> <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="ComplexPlaneAdmittancePlot">class <strong>ComplexPlaneAdmittancePlot</strong></a>(<a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#ComplexPlaneAdmittancePlot">ComplexPlaneAdmittancePlot</a>(primary,&nbsp;data,&nbsp;model,&nbsp;ghost_data,&nbsp;ghost_data_visibility,&nbsp;make_twinx=False,&nbsp;data_on=True,&nbsp;model_on=True,&nbsp;primary_axis_on=True,&nbsp;twin_axis_on=False,&nbsp;primary_data_colour='#000000',&nbsp;primary_model_colour='#DD4444')<br>
+&nbsp;<br>
+<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn"><dl><dt>Method resolution order:</dt>
+<dd><a href="ecm_plot.html#ComplexPlaneAdmittancePlot">ComplexPlaneAdmittancePlot</a></dd>
+<dd><a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="ComplexPlaneAdmittancePlot-__init__"><strong>__init__</strong></a>(self, primary, data, model, ghost_data, ghost_data_visibility, make_twinx=False, data_on=True, model_on=True, primary_axis_on=True, twin_axis_on=False, primary_data_colour='#000000', primary_model_colour='#DD4444')</dt><dd><span class="code">Complex&nbsp;plane&nbsp;plot&nbsp;of&nbsp;the&nbsp;admittance&nbsp;(Nyquist&nbsp;plot).<br>
+&nbsp;<br>
+Init&nbsp;arguments:&nbsp;see&nbsp;parent&nbsp;class&nbsp;<a href="#ImpedancePlot">ImpedancePlot</a><br>
+&nbsp;<br>
+Methods:&nbsp;see&nbsp;parent&nbsp;class&nbsp;<a href="#ImpedancePlot">ImpedancePlot</a><br>
+&nbsp;<br>
+Overridden&nbsp;methods:<br>
+plot_primary_data&nbsp;--&nbsp;plot&nbsp;data&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_primary_model&nbsp;--&nbsp;plot&nbsp;model&nbsp;curve&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+&nbsp;<br>
+plot_primary_ghost_data&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;data&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_primary_ghost_model&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+&nbsp;<br>
+set_text&nbsp;--&nbsp;set&nbsp;axis&nbsp;labels&nbsp;and&nbsp;title<br>
+set_base_limits&nbsp;--&nbsp;set&nbsp;self.<strong>lim_x</strong>,&nbsp;self.<strong>lim_y1</strong>,&nbsp;and&nbsp;self.<strong>lim_y2</strong>;&nbsp;these&nbsp;are&nbsp;(low,&nbsp;high)&nbsp;Tuples&nbsp;of&nbsp;plot&nbsp;limits&nbsp;that&nbsp;provide&nbsp;a&nbsp;view&nbsp;of&nbsp;the&nbsp;entire&nbsp;dataset&nbsp;for&nbsp;x,&nbsp;primary&nbsp;y,&nbsp;and&nbsp;twin&nbsp;y,&nbsp;respectively</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-plot_primary_data"><strong>plot_primary_data</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;data&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-plot_primary_ghost_data"><strong>plot_primary_ghost_data</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;data&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-plot_primary_ghost_model"><strong>plot_primary_ghost_model</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-plot_primary_model"><strong>plot_primary_model</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-set_base_limits"><strong>set_base_limits</strong></a>(self)</dt><dd><span class="code">Set&nbsp;the&nbsp;base&nbsp;limits&nbsp;for&nbsp;all&nbsp;axes.&nbsp;May&nbsp;need&nbsp;to&nbsp;be&nbsp;redefined&nbsp;in&nbsp;child&nbsp;classes.&nbsp;Defaults&nbsp;to&nbsp;reasonable&nbsp;Bode&nbsp;plot&nbsp;limits.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-set_text"><strong>set_text</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;title,&nbsp;x&nbsp;label,&nbsp;and&nbsp;y&nbsp;label.&nbsp;To&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes&nbsp;and&nbsp;called&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;their&nbsp;__init__&nbsp;method&nbsp;and&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;in&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<hr>
+Methods inherited from <a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a>:<br>
+<dl><dt><a name="ComplexPlaneAdmittancePlot-d_extend"><strong>d_extend</strong></a>(self, vl)</dt><dd><span class="code">For&nbsp;a&nbsp;given&nbsp;minimum&nbsp;of&nbsp;an&nbsp;axis&nbsp;vl,&nbsp;min(vl),&nbsp;return&nbsp;a&nbsp;logical&nbsp;lower&nbsp;limit&nbsp;for&nbsp;the&nbsp;axis&nbsp;in&nbsp;the&nbsp;plot.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+vl&nbsp;--&nbsp;list&nbsp;or&nbsp;NumPy&nbsp;array<br>
+&nbsp;<br>
+Returns:<br>
+lower&nbsp;limit&nbsp;for&nbsp;plot&nbsp;(float)</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-plot_all"><strong>plot_all</strong></a>(self)</dt><dd><span class="code">Plot&nbsp;all&nbsp;lines&nbsp;and&nbsp;markers&nbsp;indicated&nbsp;by&nbsp;self.<strong>data_on</strong>,&nbsp;self.<strong>model_on</strong>,&nbsp;self.<strong>primary_axis_on</strong>,&nbsp;and&nbsp;self.<strong>twin_axis_on</strong>.&nbsp;Handles&nbsp;both&nbsp;the&nbsp;main&nbsp;data/model&nbsp;and&nbsp;ghost&nbsp;data/model.<br>
+&nbsp;<br>
+To&nbsp;be&nbsp;called&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;of&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-plot_twin_data"><strong>plot_twin_data</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;data&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-plot_twin_ghost_data"><strong>plot_twin_ghost_data</strong></a>(self, g, i)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;data&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-plot_twin_ghost_model"><strong>plot_twin_ghost_model</strong></a>(self, g, i)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;primary&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-plot_twin_model"><strong>plot_twin_model</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-set_axis_colours"><strong>set_axis_colours</strong></a>(self)</dt><dd><span class="code">Give&nbsp;the&nbsp;axis&nbsp;labels&nbsp;their&nbsp;proper&nbsp;place&nbsp;and&nbsp;colour.&nbsp;To&nbsp;be&nbsp;called&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;in&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-set_twin_xlim"><strong>set_twin_xlim</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;x&nbsp;limits&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-set_twin_xscale"><strong>set_twin_xscale</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;x&nbsp;scaling&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-set_twin_ylim"><strong>set_twin_ylim</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;y&nbsp;limits&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-set_twin_yscale"><strong>set_twin_yscale</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;y&nbsp;scaling&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneAdmittancePlot-u_extend"><strong>u_extend</strong></a>(self, vl)</dt><dd><span class="code">For&nbsp;a&nbsp;given&nbsp;maximum&nbsp;of&nbsp;an&nbsp;axis&nbsp;vl,&nbsp;max(vl),&nbsp;return&nbsp;a&nbsp;logical&nbsp;upper&nbsp;limit&nbsp;for&nbsp;the&nbsp;axis&nbsp;in&nbsp;the&nbsp;plot.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+vl&nbsp;--&nbsp;list&nbsp;or&nbsp;NumPy&nbsp;array<br>
+&nbsp;<br>
+Returns:<br>
+upper&nbsp;limit&nbsp;for&nbsp;plot&nbsp;(float)</span></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
+</td></tr></table> <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="ComplexPlaneImpedancePlot">class <strong>ComplexPlaneImpedancePlot</strong></a>(<a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#ComplexPlaneImpedancePlot">ComplexPlaneImpedancePlot</a>(primary,&nbsp;data,&nbsp;model,&nbsp;ghost_data,&nbsp;ghost_data_visibility,&nbsp;make_twinx=False,&nbsp;data_on=True,&nbsp;model_on=True,&nbsp;primary_axis_on=True,&nbsp;twin_axis_on=False,&nbsp;primary_data_colour='#000000',&nbsp;primary_model_colour='#DD4444')<br>
+&nbsp;<br>
+<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn"><dl><dt>Method resolution order:</dt>
+<dd><a href="ecm_plot.html#ComplexPlaneImpedancePlot">ComplexPlaneImpedancePlot</a></dd>
+<dd><a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="ComplexPlaneImpedancePlot-__init__"><strong>__init__</strong></a>(self, primary, data, model, ghost_data, ghost_data_visibility, make_twinx=False, data_on=True, model_on=True, primary_axis_on=True, twin_axis_on=False, primary_data_colour='#000000', primary_model_colour='#DD4444')</dt><dd><span class="code">Complex&nbsp;plane&nbsp;plot&nbsp;of&nbsp;the&nbsp;impedance&nbsp;(Nyquist&nbsp;plot).<br>
+&nbsp;<br>
+Init&nbsp;arguments:&nbsp;see&nbsp;parent&nbsp;class&nbsp;<a href="#ImpedancePlot">ImpedancePlot</a><br>
+&nbsp;<br>
+Methods:&nbsp;see&nbsp;parent&nbsp;class&nbsp;<a href="#ImpedancePlot">ImpedancePlot</a><br>
+&nbsp;<br>
+Overridden&nbsp;methods:<br>
+plot_primary_data&nbsp;--&nbsp;plot&nbsp;data&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_primary_model&nbsp;--&nbsp;plot&nbsp;model&nbsp;curve&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+&nbsp;<br>
+plot_primary_ghost_data&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;data&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_primary_ghost_model&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+&nbsp;<br>
+set_text&nbsp;--&nbsp;set&nbsp;axis&nbsp;labels&nbsp;and&nbsp;title<br>
+set_base_limits&nbsp;--&nbsp;set&nbsp;self.<strong>lim_x</strong>,&nbsp;self.<strong>lim_y1</strong>,&nbsp;and&nbsp;self.<strong>lim_y2</strong>;&nbsp;these&nbsp;are&nbsp;(low,&nbsp;high)&nbsp;Tuples&nbsp;of&nbsp;plot&nbsp;limits&nbsp;that&nbsp;provide&nbsp;a&nbsp;view&nbsp;of&nbsp;the&nbsp;entire&nbsp;dataset&nbsp;for&nbsp;x,&nbsp;primary&nbsp;y,&nbsp;and&nbsp;twin&nbsp;y,&nbsp;respectively</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-plot_primary_data"><strong>plot_primary_data</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;data&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-plot_primary_ghost_data"><strong>plot_primary_ghost_data</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;data&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-plot_primary_ghost_model"><strong>plot_primary_ghost_model</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-plot_primary_model"><strong>plot_primary_model</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-set_base_limits"><strong>set_base_limits</strong></a>(self)</dt><dd><span class="code">Set&nbsp;the&nbsp;base&nbsp;limits&nbsp;for&nbsp;all&nbsp;axes.&nbsp;May&nbsp;need&nbsp;to&nbsp;be&nbsp;redefined&nbsp;in&nbsp;child&nbsp;classes.&nbsp;Defaults&nbsp;to&nbsp;reasonable&nbsp;Bode&nbsp;plot&nbsp;limits.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-set_text"><strong>set_text</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;title,&nbsp;x&nbsp;label,&nbsp;and&nbsp;y&nbsp;label.&nbsp;To&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes&nbsp;and&nbsp;called&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;their&nbsp;__init__&nbsp;method&nbsp;and&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;in&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<hr>
+Methods inherited from <a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a>:<br>
+<dl><dt><a name="ComplexPlaneImpedancePlot-d_extend"><strong>d_extend</strong></a>(self, vl)</dt><dd><span class="code">For&nbsp;a&nbsp;given&nbsp;minimum&nbsp;of&nbsp;an&nbsp;axis&nbsp;vl,&nbsp;min(vl),&nbsp;return&nbsp;a&nbsp;logical&nbsp;lower&nbsp;limit&nbsp;for&nbsp;the&nbsp;axis&nbsp;in&nbsp;the&nbsp;plot.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+vl&nbsp;--&nbsp;list&nbsp;or&nbsp;NumPy&nbsp;array<br>
+&nbsp;<br>
+Returns:<br>
+lower&nbsp;limit&nbsp;for&nbsp;plot&nbsp;(float)</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-plot_all"><strong>plot_all</strong></a>(self)</dt><dd><span class="code">Plot&nbsp;all&nbsp;lines&nbsp;and&nbsp;markers&nbsp;indicated&nbsp;by&nbsp;self.<strong>data_on</strong>,&nbsp;self.<strong>model_on</strong>,&nbsp;self.<strong>primary_axis_on</strong>,&nbsp;and&nbsp;self.<strong>twin_axis_on</strong>.&nbsp;Handles&nbsp;both&nbsp;the&nbsp;main&nbsp;data/model&nbsp;and&nbsp;ghost&nbsp;data/model.<br>
+&nbsp;<br>
+To&nbsp;be&nbsp;called&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;of&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-plot_twin_data"><strong>plot_twin_data</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;data&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-plot_twin_ghost_data"><strong>plot_twin_ghost_data</strong></a>(self, g, i)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;data&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-plot_twin_ghost_model"><strong>plot_twin_ghost_model</strong></a>(self, g, i)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;primary&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-plot_twin_model"><strong>plot_twin_model</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-set_axis_colours"><strong>set_axis_colours</strong></a>(self)</dt><dd><span class="code">Give&nbsp;the&nbsp;axis&nbsp;labels&nbsp;their&nbsp;proper&nbsp;place&nbsp;and&nbsp;colour.&nbsp;To&nbsp;be&nbsp;called&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;in&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-set_twin_xlim"><strong>set_twin_xlim</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;x&nbsp;limits&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-set_twin_xscale"><strong>set_twin_xscale</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;x&nbsp;scaling&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-set_twin_ylim"><strong>set_twin_ylim</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;y&nbsp;limits&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-set_twin_yscale"><strong>set_twin_yscale</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;y&nbsp;scaling&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="ComplexPlaneImpedancePlot-u_extend"><strong>u_extend</strong></a>(self, vl)</dt><dd><span class="code">For&nbsp;a&nbsp;given&nbsp;maximum&nbsp;of&nbsp;an&nbsp;axis&nbsp;vl,&nbsp;max(vl),&nbsp;return&nbsp;a&nbsp;logical&nbsp;upper&nbsp;limit&nbsp;for&nbsp;the&nbsp;axis&nbsp;in&nbsp;the&nbsp;plot.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+vl&nbsp;--&nbsp;list&nbsp;or&nbsp;NumPy&nbsp;array<br>
+&nbsp;<br>
+Returns:<br>
+upper&nbsp;limit&nbsp;for&nbsp;plot&nbsp;(float)</span></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
+</td></tr></table> <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="ImpedanceFrequencyPlot">class <strong>ImpedanceFrequencyPlot</strong></a>(<a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#ImpedanceFrequencyPlot">ImpedanceFrequencyPlot</a>(primary,&nbsp;data,&nbsp;model,&nbsp;ghost_data,&nbsp;ghost_data_visibility,&nbsp;make_twinx=True,&nbsp;data_on=True,&nbsp;model_on=True,&nbsp;primary_axis_on=True,&nbsp;twin_axis_on=True)<br>
+&nbsp;<br>
+<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn"><dl><dt>Method resolution order:</dt>
+<dd><a href="ecm_plot.html#ImpedanceFrequencyPlot">ImpedanceFrequencyPlot</a></dd>
+<dd><a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="ImpedanceFrequencyPlot-__init__"><strong>__init__</strong></a>(self, primary, data, model, ghost_data, ghost_data_visibility, make_twinx=True, data_on=True, model_on=True, primary_axis_on=True, twin_axis_on=True)</dt><dd><span class="code">Z',&nbsp;Z''&nbsp;vs.&nbsp;frequency&nbsp;plot.<br>
+&nbsp;<br>
+Init&nbsp;arguments:&nbsp;see&nbsp;parent&nbsp;class&nbsp;<a href="#ImpedancePlot">ImpedancePlot</a><br>
+&nbsp;<br>
+Methods:&nbsp;see&nbsp;parent&nbsp;class&nbsp;<a href="#ImpedancePlot">ImpedancePlot</a><br>
+&nbsp;<br>
+Overridden&nbsp;methods:<br>
+plot_primary_data&nbsp;--&nbsp;plot&nbsp;data&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_primary_model&nbsp;--&nbsp;plot&nbsp;model&nbsp;curve&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_twin_data&nbsp;--&nbsp;plot&nbsp;data&nbsp;along&nbsp;twin&nbsp;y&nbsp;axis<br>
+plot_twin_model&nbsp;--&nbsp;plot&nbsp;model&nbsp;curve&nbsp;along&nbsp;twin&nbsp;y&nbsp;axis<br>
+&nbsp;<br>
+plot_primary_ghost_data&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;data&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_primary_ghost_model&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_twin_ghost_data&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;data&nbsp;along&nbsp;twin&nbsp;y&nbsp;axis<br>
+plot_twin_ghost_model&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;twin&nbsp;y&nbsp;axis<br>
+&nbsp;<br>
+set_text&nbsp;--&nbsp;set&nbsp;axis&nbsp;labels&nbsp;and&nbsp;title<br>
+set_base_limits&nbsp;--&nbsp;set&nbsp;self.<strong>lim_x</strong>,&nbsp;self.<strong>lim_y1</strong>,&nbsp;and&nbsp;self.<strong>lim_y2</strong>;&nbsp;these&nbsp;are&nbsp;(low,&nbsp;high)&nbsp;Tuples&nbsp;of&nbsp;plot&nbsp;limits&nbsp;that&nbsp;provide&nbsp;a&nbsp;view&nbsp;of&nbsp;the&nbsp;entire&nbsp;dataset&nbsp;for&nbsp;x,&nbsp;primary&nbsp;y,&nbsp;and&nbsp;twin&nbsp;y,&nbsp;respectively</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-plot_primary_data"><strong>plot_primary_data</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;data&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-plot_primary_ghost_data"><strong>plot_primary_ghost_data</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;data&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-plot_primary_ghost_model"><strong>plot_primary_ghost_model</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-plot_primary_model"><strong>plot_primary_model</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-plot_twin_data"><strong>plot_twin_data</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;data&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-plot_twin_ghost_data"><strong>plot_twin_ghost_data</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;data&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-plot_twin_ghost_model"><strong>plot_twin_ghost_model</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-plot_twin_model"><strong>plot_twin_model</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-set_base_limits"><strong>set_base_limits</strong></a>(self)</dt><dd><span class="code">Set&nbsp;the&nbsp;base&nbsp;limits&nbsp;for&nbsp;all&nbsp;axes.&nbsp;May&nbsp;need&nbsp;to&nbsp;be&nbsp;redefined&nbsp;in&nbsp;child&nbsp;classes.&nbsp;Defaults&nbsp;to&nbsp;reasonable&nbsp;Bode&nbsp;plot&nbsp;limits.</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-set_text"><strong>set_text</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;title,&nbsp;x&nbsp;label,&nbsp;and&nbsp;y&nbsp;label.&nbsp;To&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes&nbsp;and&nbsp;called&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;their&nbsp;__init__&nbsp;method&nbsp;and&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;in&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<hr>
+Methods inherited from <a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a>:<br>
+<dl><dt><a name="ImpedanceFrequencyPlot-d_extend"><strong>d_extend</strong></a>(self, vl)</dt><dd><span class="code">For&nbsp;a&nbsp;given&nbsp;minimum&nbsp;of&nbsp;an&nbsp;axis&nbsp;vl,&nbsp;min(vl),&nbsp;return&nbsp;a&nbsp;logical&nbsp;lower&nbsp;limit&nbsp;for&nbsp;the&nbsp;axis&nbsp;in&nbsp;the&nbsp;plot.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+vl&nbsp;--&nbsp;list&nbsp;or&nbsp;NumPy&nbsp;array<br>
+&nbsp;<br>
+Returns:<br>
+lower&nbsp;limit&nbsp;for&nbsp;plot&nbsp;(float)</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-plot_all"><strong>plot_all</strong></a>(self)</dt><dd><span class="code">Plot&nbsp;all&nbsp;lines&nbsp;and&nbsp;markers&nbsp;indicated&nbsp;by&nbsp;self.<strong>data_on</strong>,&nbsp;self.<strong>model_on</strong>,&nbsp;self.<strong>primary_axis_on</strong>,&nbsp;and&nbsp;self.<strong>twin_axis_on</strong>.&nbsp;Handles&nbsp;both&nbsp;the&nbsp;main&nbsp;data/model&nbsp;and&nbsp;ghost&nbsp;data/model.<br>
+&nbsp;<br>
+To&nbsp;be&nbsp;called&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;of&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-set_axis_colours"><strong>set_axis_colours</strong></a>(self)</dt><dd><span class="code">Give&nbsp;the&nbsp;axis&nbsp;labels&nbsp;their&nbsp;proper&nbsp;place&nbsp;and&nbsp;colour.&nbsp;To&nbsp;be&nbsp;called&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;in&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-set_twin_xlim"><strong>set_twin_xlim</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;x&nbsp;limits&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-set_twin_xscale"><strong>set_twin_xscale</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;x&nbsp;scaling&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-set_twin_ylim"><strong>set_twin_ylim</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;y&nbsp;limits&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-set_twin_yscale"><strong>set_twin_yscale</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;y&nbsp;scaling&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="ImpedanceFrequencyPlot-u_extend"><strong>u_extend</strong></a>(self, vl)</dt><dd><span class="code">For&nbsp;a&nbsp;given&nbsp;maximum&nbsp;of&nbsp;an&nbsp;axis&nbsp;vl,&nbsp;max(vl),&nbsp;return&nbsp;a&nbsp;logical&nbsp;upper&nbsp;limit&nbsp;for&nbsp;the&nbsp;axis&nbsp;in&nbsp;the&nbsp;plot.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+vl&nbsp;--&nbsp;list&nbsp;or&nbsp;NumPy&nbsp;array<br>
+&nbsp;<br>
+Returns:<br>
+upper&nbsp;limit&nbsp;for&nbsp;plot&nbsp;(float)</span></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="ecm_plot.html#ImpedancePlot">ImpedancePlot</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
+</td></tr></table> <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="ImpedancePlot">class <strong>ImpedancePlot</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#ImpedancePlot">ImpedancePlot</a>(primary,&nbsp;data,&nbsp;model,&nbsp;ghost_data,&nbsp;ghost_data_visibility,&nbsp;make_twinx=True,&nbsp;data_on=True,&nbsp;model_on=True,&nbsp;primary_axis_on=True,&nbsp;twin_axis_on=True,&nbsp;primary_data_colour='#114077',&nbsp;twin_data_colour='#117740',&nbsp;primary_model_colour='#4444DD',&nbsp;twin_model_colour='#44DD44')<br>
+&nbsp;<br>
+<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn">Methods defined here:<br>
+<dl><dt><a name="ImpedancePlot-__init__"><strong>__init__</strong></a>(self, primary, data, model, ghost_data, ghost_data_visibility, make_twinx=True, data_on=True, model_on=True, primary_axis_on=True, twin_axis_on=True, primary_data_colour='#114077', twin_data_colour='#117740', primary_model_colour='#4444DD', twin_model_colour='#44DD44')</dt><dd><span class="code">Base&nbsp;class&nbsp;for&nbsp;all&nbsp;plot&nbsp;panels:&nbsp;Nyquist&nbsp;plots,&nbsp;Bode&nbsp;plots,&nbsp;etc.<br>
+&nbsp;<br>
+Init&nbsp;arguments&nbsp;becoming&nbsp;attributes&nbsp;under&nbsp;the&nbsp;same&nbsp;name:<br>
+primary&nbsp;--&nbsp;Matplotlib&nbsp;Axes&nbsp;holding&nbsp;the&nbsp;primary&nbsp;y&nbsp;axis<br>
+data&nbsp;--&nbsp;dataSet&nbsp;of&nbsp;experimental&nbsp;data<br>
+model&nbsp;--&nbsp;dataSet&nbsp;of&nbsp;model&nbsp;curve<br>
+ghost_data&nbsp;--&nbsp;dictionary&nbsp;of&nbsp;{'dataset&nbsp;name':&nbsp;ecm_history.expandedDataSet};&nbsp;holds&nbsp;all&nbsp;data&nbsp;and&nbsp;models&nbsp;saved&nbsp;to&nbsp;History<br>
+ghost_data_visibility&nbsp;--&nbsp;list&nbsp;of&nbsp;names&nbsp;in&nbsp;ghost_data;&nbsp;all&nbsp;names&nbsp;in&nbsp;this&nbsp;list&nbsp;are&nbsp;of&nbsp;dataSets&nbsp;that&nbsp;should&nbsp;be&nbsp;visible<br>
+&nbsp;<br>
+make_twinx&nbsp;--&nbsp;Bool;&nbsp;indicates&nbsp;if&nbsp;a&nbsp;twinx&nbsp;plot&nbsp;should&nbsp;be&nbsp;made.&nbsp;This&nbsp;is&nbsp;done&nbsp;here&nbsp;in&nbsp;__init__<br>
+&nbsp;<br>
+data_on&nbsp;--&nbsp;Bool;&nbsp;display&nbsp;data<br>
+model_on&nbsp;--&nbsp;Bool;&nbsp;display&nbsp;model<br>
+primary_axis_on&nbsp;--&nbsp;Bool;&nbsp;display&nbsp;normal&nbsp;(x,&nbsp;y)&nbsp;data<br>
+twin_axis_on&nbsp;--&nbsp;Bool;&nbsp;display&nbsp;twinx&nbsp;(x,&nbsp;y)&nbsp;data<br>
+&nbsp;<br>
+Other&nbsp;attributes:<br>
+ghost_colours&nbsp;--&nbsp;colours&nbsp;for&nbsp;ghost&nbsp;data<br>
+ghost_m_colours&nbsp;--&nbsp;colours&nbsp;for&nbsp;ghost&nbsp;models<br>
+&nbsp;<br>
+twin&nbsp;--&nbsp;Axes,&nbsp;generated&nbsp;via&nbsp;self.<strong>twinx</strong><br>
+&nbsp;<br>
+Methods:<br>
+plot_all&nbsp;--&nbsp;plot&nbsp;all&nbsp;lines&nbsp;and&nbsp;markers&nbsp;indicated&nbsp;by&nbsp;data_on,&nbsp;model_on,&nbsp;primary_axis_on,&nbsp;twin_axis_on<br>
+&nbsp;<br>
+plot_primary_data&nbsp;--&nbsp;plot&nbsp;data&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_twin_data&nbsp;--&nbsp;plot&nbsp;data&nbsp;along&nbsp;self.<strong>twin</strong>&nbsp;y&nbsp;axis<br>
+plot_primary_model&nbsp;--&nbsp;plot&nbsp;model&nbsp;curve&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_twin_model&nbsp;--&nbsp;plot&nbsp;model&nbsp;curve&nbsp;along&nbsp;self.<strong>twin</strong>&nbsp;y&nbsp;axis<br>
+&nbsp;<br>
+plot_primary_ghost_data&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;data&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_twin_ghost_data&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;data&nbsp;along&nbsp;self.<strong>twin</strong>&nbsp;y&nbsp;axis<br>
+plot_primary_ghost_model&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;primary&nbsp;y&nbsp;axis<br>
+plot_twin_ghost_model&nbsp;--&nbsp;plot&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;self.<strong>twin</strong>&nbsp;y&nbsp;axis<br>
+&nbsp;<br>
+set_text&nbsp;--&nbsp;set&nbsp;axis&nbsp;labels&nbsp;and&nbsp;title&nbsp;(not&nbsp;implemented&nbsp;in&nbsp;base&nbsp;class)<br>
+set_axis_colours&nbsp;--&nbsp;set&nbsp;axis&nbsp;label&nbsp;colours&nbsp;and&nbsp;positions<br>
+&nbsp;<br>
+set_twin_xlim,&nbsp;set_twin_xscale,&nbsp;set_twin_ylim,&nbsp;set_twin_yscale&nbsp;--&nbsp;set_xlim,&nbsp;set_xscale,&nbsp;set_ylim,&nbsp;and&nbsp;set_yscale&nbsp;for&nbsp;self.<strong>twin</strong>,&nbsp;with&nbsp;consideration&nbsp;for&nbsp;self.<strong>make_twinx</strong><br>
+&nbsp;<br>
+set_base_limits&nbsp;--&nbsp;set&nbsp;self.<strong>lim_x</strong>,&nbsp;self.<strong>lim_y1</strong>,&nbsp;and&nbsp;self.<strong>lim_y2</strong>;&nbsp;these&nbsp;are&nbsp;(low,&nbsp;high)&nbsp;Tuples&nbsp;of&nbsp;plot&nbsp;limits&nbsp;that&nbsp;provide&nbsp;a&nbsp;view&nbsp;of&nbsp;the&nbsp;entire&nbsp;dataset&nbsp;for&nbsp;x,&nbsp;primary&nbsp;y,&nbsp;and&nbsp;twin&nbsp;y,&nbsp;respectively<br>
+&nbsp;<br>
+d_extend&nbsp;--&nbsp;provide&nbsp;reasonable&nbsp;lower&nbsp;limit&nbsp;for&nbsp;plot<br>
+u_extend&nbsp;--&nbsp;provide&nbsp;reasonable&nbsp;upper&nbsp;limit&nbsp;for&nbsp;plot</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-d_extend"><strong>d_extend</strong></a>(self, vl)</dt><dd><span class="code">For&nbsp;a&nbsp;given&nbsp;minimum&nbsp;of&nbsp;an&nbsp;axis&nbsp;vl,&nbsp;min(vl),&nbsp;return&nbsp;a&nbsp;logical&nbsp;lower&nbsp;limit&nbsp;for&nbsp;the&nbsp;axis&nbsp;in&nbsp;the&nbsp;plot.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+vl&nbsp;--&nbsp;list&nbsp;or&nbsp;NumPy&nbsp;array<br>
+&nbsp;<br>
+Returns:<br>
+lower&nbsp;limit&nbsp;for&nbsp;plot&nbsp;(float)</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-plot_all"><strong>plot_all</strong></a>(self)</dt><dd><span class="code">Plot&nbsp;all&nbsp;lines&nbsp;and&nbsp;markers&nbsp;indicated&nbsp;by&nbsp;self.<strong>data_on</strong>,&nbsp;self.<strong>model_on</strong>,&nbsp;self.<strong>primary_axis_on</strong>,&nbsp;and&nbsp;self.<strong>twin_axis_on</strong>.&nbsp;Handles&nbsp;both&nbsp;the&nbsp;main&nbsp;data/model&nbsp;and&nbsp;ghost&nbsp;data/model.<br>
+&nbsp;<br>
+To&nbsp;be&nbsp;called&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;of&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-plot_primary_data"><strong>plot_primary_data</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;data&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-plot_primary_ghost_data"><strong>plot_primary_ghost_data</strong></a>(self, g, i)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;data&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-plot_primary_ghost_model"><strong>plot_primary_ghost_model</strong></a>(self, g, i)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-plot_primary_model"><strong>plot_primary_model</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-plot_twin_data"><strong>plot_twin_data</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;data&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-plot_twin_ghost_data"><strong>plot_twin_ghost_data</strong></a>(self, g, i)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;data&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-plot_twin_ghost_model"><strong>plot_twin_ghost_model</strong></a>(self, g, i)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;primary&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+g&nbsp;--&nbsp;ghost&nbsp;data&nbsp;expandedDataSet<br>
+i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-plot_twin_model"><strong>plot_twin_model</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-set_axis_colours"><strong>set_axis_colours</strong></a>(self)</dt><dd><span class="code">Give&nbsp;the&nbsp;axis&nbsp;labels&nbsp;their&nbsp;proper&nbsp;place&nbsp;and&nbsp;colour.&nbsp;To&nbsp;be&nbsp;called&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;in&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-set_base_limits"><strong>set_base_limits</strong></a>(self)</dt><dd><span class="code">Set&nbsp;the&nbsp;base&nbsp;limits&nbsp;for&nbsp;all&nbsp;axes.&nbsp;May&nbsp;need&nbsp;to&nbsp;be&nbsp;redefined&nbsp;in&nbsp;child&nbsp;classes.&nbsp;Defaults&nbsp;to&nbsp;reasonable&nbsp;Bode&nbsp;plot&nbsp;limits.</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-set_text"><strong>set_text</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;title,&nbsp;x&nbsp;label,&nbsp;and&nbsp;y&nbsp;label.&nbsp;To&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes&nbsp;and&nbsp;called&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;their&nbsp;__init__&nbsp;method&nbsp;and&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;in&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-set_twin_xlim"><strong>set_twin_xlim</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;x&nbsp;limits&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-set_twin_xscale"><strong>set_twin_xscale</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;x&nbsp;scaling&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-set_twin_ylim"><strong>set_twin_ylim</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;y&nbsp;limits&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-set_twin_yscale"><strong>set_twin_yscale</strong></a>(self, *kwargs)</dt><dd><span class="code">If&nbsp;it&nbsp;exists,&nbsp;set&nbsp;y&nbsp;scaling&nbsp;on&nbsp;self.<strong>twin</strong>.&nbsp;Otherwise,&nbsp;do&nbsp;nothing.</span></dd></dl>
+
+<dl><dt><a name="ImpedancePlot-u_extend"><strong>u_extend</strong></a>(self, vl)</dt><dd><span class="code">For&nbsp;a&nbsp;given&nbsp;maximum&nbsp;of&nbsp;an&nbsp;axis&nbsp;vl,&nbsp;max(vl),&nbsp;return&nbsp;a&nbsp;logical&nbsp;upper&nbsp;limit&nbsp;for&nbsp;the&nbsp;axis&nbsp;in&nbsp;the&nbsp;plot.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+vl&nbsp;--&nbsp;list&nbsp;or&nbsp;NumPy&nbsp;array<br>
+&nbsp;<br>
+Returns:<br>
+upper&nbsp;limit&nbsp;for&nbsp;plot&nbsp;(float)</span></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
+</td></tr></table> <p>
 <table class="section">
 <tr class="decor title-decor heading-text">
 <td class="section-title" colspan=3>&nbsp;<br><a name="PlotFrame">class <strong>PlotFrame</strong></a>(<a href="tkinter.ttk.html#Frame">tkinter.ttk.Frame</a>)</td></tr>
@@ -82,21 +823,26 @@ ghost_data_visibility&nbsp;--&nbsp;list&nbsp;of&nbsp;names&nbsp;in&nbsp;ghost_da
 &nbsp;<br>
 Attributes:<br>
 fig&nbsp;--&nbsp;Matplotlib&nbsp;Figure<br>
-complex_plane,&nbsp;self.<strong>ampltiude</strong>,&nbsp;self.<strong>phase</strong>&nbsp;--&nbsp;the&nbsp;different&nbsp;axes&nbsp;on&nbsp;fig<br>
+lhs,&nbsp;rhs&nbsp;--&nbsp;axes&nbsp;on&nbsp;fig<br>
+left_plot,&nbsp;right_plot&nbsp;--&nbsp;ImpedancePlots&nbsp;belonging&nbsp;to&nbsp;self.<strong>lhs</strong>&nbsp;and&nbsp;self.<strong>rhs</strong><br>
 title&nbsp;--&nbsp;plot&nbsp;title<br>
 canvas&nbsp;--&nbsp;plotting&nbsp;canvas<br>
 toolbar&nbsp;--&nbsp;navigation&nbsp;toolbar<br>
 <a href="#limiter">limiter</a>&nbsp;--&nbsp;<a href="#limiter">limiter</a>&nbsp;for&nbsp;when&nbsp;the&nbsp;toolbar&nbsp;is&nbsp;being&nbsp;used&nbsp;by&nbsp;the&nbsp;user<br>
-base_lims&nbsp;--&nbsp;<a href="#limiter">limiter</a>&nbsp;for&nbsp;when&nbsp;the&nbsp;toolbar&nbsp;is&nbsp;not&nbsp;being&nbsp;used&nbsp;by&nbsp;the&nbsp;user;&nbsp;contains&nbsp;limits&nbsp;that&nbsp;cover&nbsp;the&nbsp;extent&nbsp;of&nbsp;the&nbsp;whole&nbsp;measured&nbsp;dataSet<br>
 &nbsp;<br>
-logamp&nbsp;--&nbsp;Boolean,&nbsp;indicates&nbsp;if&nbsp;amplitude&nbsp;or&nbsp;real&nbsp;admittance&nbsp;axis&nbsp;should&nbsp;be&nbsp;log-scaled<br>
-logphase&nbsp;--&nbsp;Boolean,&nbsp;indicates&nbsp;if&nbsp;phase&nbsp;or&nbsp;imaginary&nbsp;admittance&nbsp;axis&nbsp;should&nbsp;be&nbsp;log-scaled<br>
+logRY1&nbsp;--&nbsp;Boolean,&nbsp;indicates&nbsp;if&nbsp;primary&nbsp;RHS&nbsp;axis&nbsp;should&nbsp;be&nbsp;log-scaled<br>
+logRY2&nbsp;--&nbsp;Boolean,&nbsp;indicates&nbsp;if&nbsp;secondary&nbsp;RHS&nbsp;axis&nbsp;should&nbsp;be&nbsp;log-scaled<br>
 datavis&nbsp;--&nbsp;Boolean,&nbsp;data&nbsp;visibility<br>
 fitvis&nbsp;--&nbsp;Boolean,&nbsp;model&nbsp;visibility<br>
-ampvis&nbsp;--&nbsp;Boolean,&nbsp;amplitude&nbsp;/&nbsp;real&nbsp;admittance&nbsp;visibility<br>
-phavis&nbsp;--&nbsp;Boolean,&nbsp;phase&nbsp;/&nbsp;imaginary&nbsp;admittance&nbsp;visibility<br>
-admittance_plot&nbsp;--&nbsp;Boolean,&nbsp;indicates&nbsp;if&nbsp;the&nbsp;Bode&nbsp;or&nbsp;real/imaginary&nbsp;admittance&nbsp;plot&nbsp;should&nbsp;be&nbsp;shown<br>
+visRY1&nbsp;--&nbsp;Boolean,&nbsp;primary&nbsp;RHS&nbsp;axis&nbsp;visibility<br>
+visRY2&nbsp;--&nbsp;Boolean,&nbsp;secondary&nbsp;RHS&nbsp;axis&nbsp;visibility<br>
 &nbsp;<br>
+plot_types&nbsp;--&nbsp;dict&nbsp;containing&nbsp;the&nbsp;different&nbsp;types&nbsp;of&nbsp;plots<br>
+rhs_type&nbsp;--&nbsp;type&nbsp;of&nbsp;plot&nbsp;on&nbsp;the&nbsp;right&nbsp;(key&nbsp;in&nbsp;plot_types)<br>
+prev_rhs_type&nbsp;--&nbsp;previous&nbsp;type&nbsp;of&nbsp;plot&nbsp;on&nbsp;the&nbsp;right&nbsp;(key&nbsp;in&nbsp;plot_types)<br>
+lhs_type&nbsp;--&nbsp;type&nbsp;of&nbsp;plot&nbsp;on&nbsp;the&nbsp;left&nbsp;(key&nbsp;in&nbsp;plot_types)<br>
+prev_lhs_type&nbsp;--&nbsp;previous&nbsp;type&nbsp;of&nbsp;plot&nbsp;on&nbsp;the&nbsp;left&nbsp;(key&nbsp;in&nbsp;plot_types)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
 ghost_colours&nbsp;--&nbsp;list&nbsp;of&nbsp;color&nbsp;strings&nbsp;for&nbsp;History&nbsp;data<br>
 ghost_m_colours&nbsp;--&nbsp;list&nbsp;of&nbsp;color&nbsp;strings&nbsp;for&nbsp;History&nbsp;models<br>
 mfreq_freq&nbsp;--&nbsp;NumPy&nbsp;array&nbsp;of&nbsp;frequencies&nbsp;of&nbsp;points&nbsp;marked&nbsp;by&nbsp;the&nbsp;'mark&nbsp;frequencies&nbsp;that&nbsp;are&nbsp;integer&nbsp;powers&nbsp;of&nbsp;10'&nbsp;option<br>
