@@ -11,7 +11,7 @@
 </tr></table>
     <p><span class="code">DECiM&nbsp;(Determination&nbsp;of&nbsp;Equivalent&nbsp;Circuit&nbsp;Models)&nbsp;is&nbsp;an&nbsp;equivalent&nbsp;circuit&nbsp;model&nbsp;fitting&nbsp;program&nbsp;for&nbsp;impedance&nbsp;data.&nbsp;It&nbsp;is&nbsp;a&nbsp;GUI-based&nbsp;program.<br>
 Much&nbsp;of&nbsp;the&nbsp;source&nbsp;code&nbsp;is&nbsp;spread&nbsp;over&nbsp;other&nbsp;python&nbsp;source&nbsp;files,&nbsp;all&nbsp;of&nbsp;which&nbsp;must&nbsp;be&nbsp;in&nbsp;the&nbsp;same&nbsp;folder&nbsp;as&nbsp;DECiM.py&nbsp;to&nbsp;ensure&nbsp;that&nbsp;the&nbsp;program&nbsp;works&nbsp;correctly.<br>
-DECiM&nbsp;was&nbsp;written&nbsp;and&nbsp;is&nbsp;maintained&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.&nbsp;Current&nbsp;version:&nbsp;1.2.13,&nbsp;4&nbsp;May&nbsp;2024.<br>
+DECiM&nbsp;was&nbsp;written&nbsp;and&nbsp;is&nbsp;maintained&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.&nbsp;Current&nbsp;version:&nbsp;1.2.14,&nbsp;6&nbsp;May&nbsp;2024.<br>
 &nbsp;<br>
 This&nbsp;is&nbsp;the&nbsp;core&nbsp;module&nbsp;--&nbsp;when&nbsp;launched,&nbsp;DECiM&nbsp;starts.&nbsp;This&nbsp;module&nbsp;also&nbsp;defines&nbsp;the&nbsp;<a href="#Window">Window</a>&nbsp;class.</span></p>
 <p>
@@ -105,11 +105,13 @@ on_screen&nbsp;--&nbsp;properly&nbsp;scale&nbsp;the&nbsp;window&nbsp;and&nbsp;fi
 &nbsp;<br>
 For&nbsp;file&nbsp;handling:&nbsp;loadData,&nbsp;loadResult,&nbsp;saveResult<br>
 &nbsp;<br>
-For&nbsp;plot&nbsp;layout:&nbsp;setVisRY1,&nbsp;setVisRY2,&nbsp;setLogRY1,&nbsp;setLogRY2,&nbsp;setABAdmittance,&nbsp;setBodeZPhi,&nbsp;setComplexPlaneY,&nbsp;setComplexPlaneZ,&nbsp;set&nbsp;ABImpedance<br>
+For&nbsp;plot&nbsp;layout:&nbsp;setVisRY1,&nbsp;setVisRY2,&nbsp;setLogRY1,&nbsp;setLogRY2,&nbsp;setABAdmittance,&nbsp;setBodeZPhi,&nbsp;setComplexPlaneY,&nbsp;setComplexPlaneZ,&nbsp;setABImpedance,&nbsp;setABSigma,&nbsp;setABEpsilon<br>
 &nbsp;<br>
 resetView&nbsp;--&nbsp;reset&nbsp;view&nbsp;limits&nbsp;of&nbsp;plots<br>
 generateFit&nbsp;--&nbsp;calculate&nbsp;the&nbsp;model&nbsp;curve<br>
 canvasUpdate&nbsp;--&nbsp;update&nbsp;limits,&nbsp;calculate&nbsp;model&nbsp;curve,&nbsp;update&nbsp;view<br>
+&nbsp;<br>
+setSampleGeometry&nbsp;--&nbsp;set&nbsp;sample&nbsp;thickness&nbsp;and&nbsp;area<br>
 &nbsp;<br>
 Saving&nbsp;and&nbsp;loading&nbsp;data&nbsp;from&nbsp;measurements&nbsp;(RAM):&nbsp;selectOtherDataset,&nbsp;plotNonInteractive,&nbsp;saveToHistory<br>
 &nbsp;<br>
@@ -186,7 +188,11 @@ Alternatively,&nbsp;update&nbsp;the&nbsp;error&nbsp;label&nbsp;in&nbsp;case&nbsp
 
 <dl><dt><a name="Window-setABAdmittance"><strong>setABAdmittance</strong></a>(self)</dt><dd><span class="code">Switch&nbsp;to&nbsp;the&nbsp;real+imaginary&nbsp;admittance&nbsp;plot.</span></dd></dl>
 
+<dl><dt><a name="Window-setABEpsilon"><strong>setABEpsilon</strong></a>(self)</dt><dd><span class="code">Switch&nbsp;to&nbsp;the&nbsp;real+imaginary&nbsp;permittivity&nbsp;plot.</span></dd></dl>
+
 <dl><dt><a name="Window-setABImpedance"><strong>setABImpedance</strong></a>(self)</dt><dd><span class="code">Switch&nbsp;to&nbsp;the&nbsp;real+imaginary&nbsp;admittance&nbsp;plot.</span></dd></dl>
+
+<dl><dt><a name="Window-setABSigma"><strong>setABSigma</strong></a>(self)</dt><dd><span class="code">Switch&nbsp;to&nbsp;the&nbsp;real+imaginary&nbsp;conductivity&nbsp;plot.</span></dd></dl>
 
 <dl><dt><a name="Window-setBodeZPhi"><strong>setBodeZPhi</strong></a>(self)</dt><dd><span class="code">Switch&nbsp;to&nbsp;the&nbsp;Bode&nbsp;amplitude/phase&nbsp;plot.</span></dd></dl>
 
@@ -213,6 +219,8 @@ circuit_name&nbsp;--&nbsp;string&nbsp;containing&nbsp;the&nbsp;name&nbsp;of&nbsp
 <dl><dt><a name="Window-setLogRY2"><strong>setLogRY2</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;log&nbsp;scale&nbsp;for&nbsp;the&nbsp;RHS&nbsp;secondary&nbsp;y&nbsp;axis.</span></dd></dl>
 
 <dl><dt><a name="Window-setRefinementRange"><strong>setRefinementRange</strong></a>(self)</dt><dd><span class="code">Open&nbsp;a&nbsp;simple&nbsp;dialog&nbsp;box&nbsp;to&nbsp;set&nbsp;the&nbsp;frequency&nbsp;limits&nbsp;used&nbsp;in&nbsp;the&nbsp;minRefine&nbsp;function.</span></dd></dl>
+
+<dl><dt><a name="Window-setSampleGeometry"><strong>setSampleGeometry</strong></a>(self)</dt><dd><span class="code">Set&nbsp;the&nbsp;sample&nbsp;thickness&nbsp;and&nbsp;area,&nbsp;then&nbsp;reset&nbsp;the&nbsp;view.</span></dd></dl>
 
 <dl><dt><a name="Window-setVisRY1"><strong>setVisRY1</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;visibility&nbsp;of&nbsp;the&nbsp;amplitude&nbsp;or&nbsp;real&nbsp;admittance.</span></dd></dl>
 

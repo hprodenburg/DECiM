@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the plotting canvas class and some additional plotting-related code. Last modified 4 May 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the plotting canvas class and some additional plotting-related code. Last modified 6 May 2024 by Henrik Rodenburg.
 
 Classes:
 ImpedancePlot -- base class for all plot panels; possible subclasses below:
@@ -7,10 +7,14 @@ ImpedancePlot -- base class for all plot panels; possible subclasses below:
     ImpedanceFrequencyPlot -- Z' and Z'' vs. f
     AdmittanceFrequencyPlot -- Y' and Y'' vs. f
     BodePhaseAmplitudePlot -- |Z| and phi vs. f
+    ConductivityFrequencyPlot -- sigma' and sigma'' vs. f
+    PerimttivityFrequencyPlot -- epsilon' and epsilon'' vs. f
 
 limiter -- handles the upper and lower limits of the plots
 
-PlotFrame -- ttk.Frame with the plot canvas and toolbar"""
+PlotFrame -- ttk.Frame with the plot canvas and toolbar
+
+GeometryWindow -- window with two entries to set sample thickness and area"""
 
 ###########
 ##IMPORTS##
@@ -680,7 +684,7 @@ class ImpedanceFrequencyPlot(ImpedancePlot):
         self.twin.plot(g.model.freq, -g.model.imag, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
         
     def set_text(self):
-        self.primary.set_title("Admittance")
+        self.primary.set_title("Impedance")
         self.primary.set_xlabel("Frequency (Hz)")
         self.primary.set_ylabel("Z\' ($\Omega$)")
         self.twin.set_ylabel("Z\'\' ($\Omega$)")
@@ -690,6 +694,241 @@ class ImpedanceFrequencyPlot(ImpedancePlot):
         self.lim_y1 = (self.d_extend(min(self.data.real)), self.u_extend(max(self.data.real)))
         self.lim_y2 = (self.d_extend(min(-self.data.imag)), self.u_extend(max(-self.data.imag)))
         
+class ConductivityFrequencyPlot(ImpedancePlot):
+    def __init__(self, primary, data, model, ghost_data, ghost_data_visibility, make_twinx = True, data_on = True, model_on = True, primary_axis_on = True, twin_axis_on = True, sample_area = 1, sample_thickness = 1):
+        """sigma', sigma'' vs. frequency plot.
+        
+        Init arguments: see parent class ImpedancePlot, and:
+        sample_area -- area of sample/electrode interface in cm^2
+        sample_thickness -- thickness of sample in mm
+        
+        Other attributes:
+        geom -- sample_thickness/sample_area in units of 1/cm
+        
+        Methods: see parent class ImpedancePlot
+        
+        Overridden methods:
+        plot_all -- plot all data
+        plot_primary_data -- plot data along primary y axis
+        plot_primary_model -- plot model curve along primary y axis
+        plot_twin_data -- plot data along twin y axis
+        plot_twin_model -- plot model curve along twin y axis
+        
+        plot_primary_ghost_data -- plot ghost data along primary y axis
+        plot_primary_ghost_model -- plot ghost model curve along primary y axis
+        plot_twin_ghost_data -- plot ghost data along twin y axis
+        plot_twin_ghost_model -- plot ghost model curve along twin y axis
+        
+        set_text -- set axis labels and title
+        set_base_limits -- set self.lim_x, self.lim_y1, and self.lim_y2; these are (low, high) Tuples of plot limits that provide a view of the entire dataset for x, primary y, and twin y, respectively"""
+        super().__init__(primary, data, model, ghost_data, ghost_data_visibility, make_twinx = make_twinx, data_on = data_on, model_on = model_on, primary_axis_on = primary_axis_on, twin_axis_on = twin_axis_on)
+        self.sample_area = sample_area
+        self.sample_thickness = sample_thickness
+        self.geom = 0.1*sample_thickness/sample_area
+        self.set_text()
+        self.set_base_limits()
+        
+    def plot_all(self):
+        """Plot all data and update the sample geometry."""
+        self.geom = 0.1*self.sample_thickness/(self.sample_area)
+        super().plot_all()
+    
+    def plot_primary_data(self):
+        """Function for plotting the data along the primary y-axis."""
+        self.primary.plot(self.data.freq, self.geom/self.data.real, marker = ".", linestyle = "None", color = self.primary_data_colour)
+        
+    def plot_primary_model(self):
+        """Function for plotting the model curve along the primary y-axis."""
+        self.primary.plot(self.model.freq, self.geom/self.model.real, marker = "None", linestyle = "-", color = self.primary_model_colour)
+
+    def plot_primary_ghost_data(self, g, i):
+        """Function for plotting ghost data along the primary y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.primary.plot(g.data.freq, self.geom/g.data.real, marker = ".", linestyle = "None", color = self.ghost_colours[i])
+    
+    def plot_primary_ghost_model(self, g, i):
+        """Function for plotting ghost model curve along the primary y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.primary.plot(g.model.freq, self.geom/g.model.real, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        
+    def plot_twin_data(self):
+        """Function for plotting the data along the self.twin y-axis."""
+        self.twin.plot(self.data.freq, -self.geom/self.data.imag, marker = ".", linestyle = "None", color = self.twin_data_colour)
+        
+    def plot_twin_model(self):
+        """Function for plotting the model curve along the self.twin y-axis."""
+        self.twin.plot(self.model.freq, -self.geom/self.model.imag, marker = "None", linestyle = "-", color = self.twin_model_colour)
+
+    def plot_twin_ghost_data(self, g, i):
+        """Function for plotting ghost data along the self.twin y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.twin.plot(g.data.freq, -self.geom/g.data.imag, marker = ".", linestyle = "None", color = self.ghost_colours[i])
+    
+    def plot_twin_ghost_model(self, g, i):
+        """Function for plotting ghost model curve along the self.twin y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.twin.plot(g.model.freq, -self.geom/g.model.imag, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        
+    def set_text(self):
+        self.primary.set_title("Conductivity")
+        self.primary.set_xlabel("Frequency (Hz)")
+        self.primary.set_ylabel("$\sigma$\' (S cm$^{-1}$)")
+        self.twin.set_ylabel("$\sigma$\'\' (S cm$^{-1}$)")
+        
+    def set_base_limits(self):
+        self.geom = 0.1*self.sample_thickness/(self.sample_area)
+        self.lim_x = (self.d_extend(min(self.data.freq)), self.u_extend(max(self.data.freq)))
+        self.lim_y1 = (self.d_extend(min(self.geom/self.data.real)), self.u_extend(max(self.geom/self.data.real)))
+        self.lim_y2 = (self.d_extend(min(-self.geom/self.data.imag)), self.u_extend(max(-self.geom/self.data.imag)))
+
+class PerimttivityFrequencyPlot(ImpedancePlot):
+    def __init__(self, primary, data, model, ghost_data, ghost_data_visibility, make_twinx = True, data_on = True, model_on = True, primary_axis_on = True, twin_axis_on = True, sample_area = 1, sample_thickness = 1):
+        """sigma', sigma'' vs. frequency plot.
+        
+        Init arguments: see parent class ImpedancePlot, and:
+        sample_area -- area of sample/electrode interface in cm^2
+        sample_thickness -- thickness of sample in mm
+        
+        Other attributes:
+        geom -- sample_thickness/sample_area in units of 1/m
+        e0 -- electric constant, 8.854e-12 F/m
+        permittivity_data -- complex NumPy array of permittivities
+        permittivity_model
+        
+        Methods: see parent class ImpedancePlot, and:
+        permittivity -- calculate self.permittivity_data and self.permittivity_model
+        permittivity_generic -- calculate the complex permittivity of a dataSet
+        
+        Overridden methods:
+        plot_all -- plot all data
+        
+        plot_primary_data -- plot data along primary y axis
+        plot_primary_model -- plot model curve along primary y axis
+        plot_twin_data -- plot data along twin y axis
+        plot_twin_model -- plot model curve along twin y axis
+        
+        plot_primary_ghost_data -- plot ghost data along primary y axis
+        plot_primary_ghost_model -- plot ghost model curve along primary y axis
+        plot_twin_ghost_data -- plot ghost data along twin y axis
+        plot_twin_ghost_model -- plot ghost model curve along twin y axis
+        
+        set_text -- set axis labels and title
+        set_base_limits -- set self.lim_x, self.lim_y1, and self.lim_y2; these are (low, high) Tuples of plot limits that provide a view of the entire dataset for x, primary y, and twin y, respectively"""
+        super().__init__(primary, data, model, ghost_data, ghost_data_visibility, make_twinx = make_twinx, data_on = data_on, model_on = model_on, primary_axis_on = primary_axis_on, twin_axis_on = twin_axis_on)
+        self.geom = 0.001*sample_thickness/0.01*sample_area
+        self.sample_area = sample_area
+        self.sample_thickness = sample_thickness
+        self.e0 = 8.854e-12
+        self.set_text()
+        self.permittivity()
+        self.set_base_limits()
+        
+    def permittivity(self):
+        """Calculate the complex permittivity and save the data values to self.permittivity_data and the model values to self.permittivity_model."""
+        sigma_data = self.geom/(self.data.real + 1j*self.data.imag)
+        self.permittivity_data = sigma_data/(1j*2*np.pi*self.data.freq*self.e0)
+        if self.model != None:
+            sigma_model = self.geom/(self.model.real + 1j*self.model.imag)
+            self.permittivity_model = sigma_model/(1j*2*np.pi*self.model.freq*self.e0)
+        
+    def permittivity_generic(self, ds):
+        """Calculate complex permittivity data for a dataSet ds.
+        
+        Arguments:
+        self
+        ds -- dataSet
+        
+        Returns:
+        Complex permittivity (NumPy array)"""
+        sigma = self.geom/(ds.real + 1j*ds.imag)
+        return ds/(1j*ds.freq*2*np.pi*self.e0)
+        
+    def plot_all(self):
+        """Plot all data, but first calculate the new permittivity."""
+        self.geom = 0.001*self.sample_thickness/0.01*self.sample_area
+        self.permittivity()
+        super().plot_all()
+    
+    def plot_primary_data(self):
+        """Function for plotting the data along the primary y-axis."""
+        self.primary.plot(self.data.freq, np.real(self.permittivity_data), marker = ".", linestyle = "None", color = self.primary_data_colour)
+        
+    def plot_primary_model(self):
+        """Function for plotting the model curve along the primary y-axis."""
+        self.primary.plot(self.model.freq, np.real(self.permittivity_model), marker = "None", linestyle = "-", color = self.primary_model_colour)
+
+    def plot_primary_ghost_data(self, g, i):
+        """Function for plotting ghost data along the primary y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.primary.plot(g.data.freq, np.real(self.permittivity_generic(g.data)), marker = ".", linestyle = "None", color = self.ghost_colours[i])
+    
+    def plot_primary_ghost_model(self, g, i):
+        """Function for plotting ghost model curve along the primary y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.primary.plot(g.model.freq, np.real(self.permittivity_generic(g.model)), marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        
+    def plot_twin_data(self):
+        """Function for plotting the data along the self.twin y-axis."""
+        self.twin.plot(self.data.freq, -np.imag(self.permittivity_data), marker = ".", linestyle = "None", color = self.twin_data_colour)
+        
+    def plot_twin_model(self):
+        """Function for plotting the model curve along the self.twin y-axis."""
+        self.twin.plot(self.model.freq, -np.imag(self.permittivity_model), marker = "None", linestyle = "-", color = self.twin_model_colour)
+
+    def plot_twin_ghost_data(self, g, i):
+        """Function for plotting ghost data along the self.twin y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.twin.plot(g.data.freq, -np.imag(self.permittivity_generic(g.data)), marker = ".", linestyle = "None", color = self.ghost_colours[i])
+    
+    def plot_twin_ghost_model(self, g, i):
+        """Function for plotting ghost model curve along the self.twin y-axis.
+        
+        Arguments:
+        self
+        g -- ghost data expandedDataSet
+        i -- index to use for colour"""
+        self.twin.plot(g.model.freq, -np.imag(self.permittivity_generic(g.model)), marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        
+    def set_text(self):
+        self.primary.set_title("Permittivity")
+        self.primary.set_xlabel("Frequency (Hz)")
+        self.primary.set_ylabel("$\epsilon$\'")
+        self.twin.set_ylabel("$\epsilon$\'\'")
+        
+    def set_base_limits(self):
+        self.geom = 0.001*self.sample_thickness/0.01*self.sample_area
+        self.permittivity()
+        self.lim_x = (self.d_extend(min(self.data.freq)), self.u_extend(max(self.data.freq)))
+        self.lim_y1 = (self.d_extend(min(np.real(self.permittivity_data))), self.u_extend(max(np.real(self.permittivity_data))))
+        self.lim_y2 = (self.d_extend(min(-np.imag(self.permittivity_data))), self.u_extend(max(-np.imag(self.permittivity_data))))
 
 ###################
 ##PLOTTING CANVAS##
@@ -722,6 +961,7 @@ class PlotFrame(ttk.Frame):
         visRY2 -- Boolean, secondary RHS axis visibility
         
         plot_types -- dict containing the different types of plots
+        needs_geom -- dict with the same keys as self.plot_types, but keys are Booleans that indicate if the plot requires geometric information
         rhs_type -- type of plot on the right (key in plot_types)
         prev_rhs_type -- previous type of plot on the right (key in plot_types)
         lhs_type -- type of plot on the left (key in plot_types)
@@ -732,6 +972,9 @@ class PlotFrame(ttk.Frame):
         mfreq_freq -- NumPy array of frequencies of points marked by the 'mark frequencies that are integer powers of 10' option
         mfreq_real -- NumPy array of real components of marked points
         mfreq_imag -- NumPy array of imaginary components of marked points
+        
+        sample_thickness -- thickness of sample in mm
+        sample_area -- area of sample in cm^2
         
         Methods:
         makeFrame -- build up the PlotFrame
@@ -774,9 +1017,18 @@ class PlotFrame(ttk.Frame):
         self.mfreq_freq = np.array([])
         self.mfreq_real = np.array([])
         self.mfreq_imag = np.array([])
-        self.plot_types = {"Complex plane Z": ComplexPlaneImpedancePlot, "Complex plane Y": ComplexPlaneAdmittancePlot, "Bode amplitude/phase": BodePhaseAmplitudePlot, "YY vs. f": AdmittanceFrequencyPlot, "ZZ vs. f": ImpedanceFrequencyPlot}
-        self.left_plot = self.plot_types[self.lhs_type](self.lhs, data, None, ghost_data, ghost_data_visibility)
-        self.right_plot = self.plot_types[self.rhs_type](self.rhs, data, None, ghost_data, ghost_data_visibility)
+        self.sample_thickness = 1
+        self.sample_area = 1
+        self.plot_types = {"Complex plane Z": ComplexPlaneImpedancePlot, "Complex plane Y": ComplexPlaneAdmittancePlot, "Bode amplitude/phase": BodePhaseAmplitudePlot, "YY vs. f": AdmittanceFrequencyPlot, "ZZ vs. f": ImpedanceFrequencyPlot, "sigma vs. f": ConductivityFrequencyPlot, "epsilon vs. f": PerimttivityFrequencyPlot}
+        self.needs_geom = {"Complex plane Z": False, "Complex plane Y": False, "Bode amplitude/phase": False, "YY vs. f": False, "ZZ vs. f": False, "sigma vs. f": True, "epsilon vs. f": True}
+        if self.needs_geom[self.lhs_type]:
+            self.left_plot = self.plot_types[self.lhs_type](self.lhs, data, None, ghost_data, ghost_data_visibility, sample_area = self.sample_area, sample_thickness = self.sample_thickness)
+        else:
+            self.left_plot = self.plot_types[self.lhs_type](self.lhs, data, None, ghost_data, ghost_data_visibility)
+        if self.needs_geom[self.rhs_type]:
+            self.right_plot = self.plot_types[self.rhs_type](self.rhs, data, None, ghost_data, ghost_data_visibility, sample_area = self.sample_area, sample_thickness = self.sample_thickness)
+        else:
+            self.right_plot = self.plot_types[self.rhs_type](self.rhs, data, None, ghost_data, ghost_data_visibility)
         self.fig.subplots_adjust(wspace = 0.3)
         self.updatePlots(data, ghost_data, ghost_data_visibility) #Update all plots with the given data.
 
@@ -815,7 +1067,10 @@ class PlotFrame(ttk.Frame):
 
     def applyFrequencyMarking(self):
         """Based on which frequencies were found to be present in the measured dataSet (see DECiM core), draw circles around datapoints whose frequencies are integer powers of 10, write their frequencies in the plot and draw lines from the text to the circles."""
-        self.lhs.plot(self.mfreq_real, -self.mfreq_imag, marker = "o", fillstyle = "none", linestyle = "None", color = "#000000", markersize = 12)
+        if self.lhs_type == "Complex plane Z":
+            self.lhs.plot(self.mfreq_real, -self.mfreq_imag, marker = "o", fillstyle = "none", linestyle = "None", color = "#000000", markersize = 12)
+        elif self.lhs_type == "Complex plane Y":
+            self.lhs.plot(1/self.mfreq_real, -1/self.mfreq_imag, marker = "o", fillstyle = "none", linestyle = "None", color = "#000000", markersize = 12)
         mfreq_labels = {0.000001: "1 $\mu$Hz", 0.00001: "10 $\mu$Hz", 0.0001: "0.1 mHz", 0.001: "1 mHz", 0.01: "10 mHz", 0.1: "0.1 Hz", 1: "1 Hz", 10: "10 Hz", 100: "100 Hz", 1000: "1 kHz", 10000: "10 kHz", 100000: "100 kHz", 1000000: "1 MHz", 10000000: "10 MHz", 100000000: "100 MHz", 1000000000: "1 GHz", 10000000000: "10 GHz", 100000000000: "100 GHz", 1000000000000: "1 THz"}
         if self.limiter.enabled:
             where_x = self.limiter.real
@@ -825,8 +1080,12 @@ class PlotFrame(ttk.Frame):
             where_y = self.lhs.get_ylim()
         dx, dy = where_x[1] - where_x[0], where_y[1] - where_y[0]
         for m in range(len(self.mfreq_freq)):
-            self.lhs.text(self.mfreq_real[m] + 0.05*dx, -self.mfreq_imag[m] - 0.05*dy, mfreq_labels[self.mfreq_freq[m]])
-            self.lhs.plot([self.mfreq_real[m] + 0.02*dx, self.mfreq_real[m] + 0.045*dx], [-self.mfreq_imag[m] - 0.015*dy, -self.mfreq_imag[m] - 0.04*dy], marker = "None", linestyle = "-", linewidth = 1, color = "#000000")
+            if self.lhs_type == "Complex plane Z":
+                self.lhs.text(self.mfreq_real[m] + 0.05*dx, -self.mfreq_imag[m] - 0.05*dy, mfreq_labels[self.mfreq_freq[m]])
+                self.lhs.plot([self.mfreq_real[m] + 0.02*dx, self.mfreq_real[m] + 0.045*dx], [-self.mfreq_imag[m] - 0.015*dy, -self.mfreq_imag[m] - 0.04*dy], marker = "None", linestyle = "-", linewidth = 1, color = "#000000")
+            elif self.lhs_type == "Complex plane Y":
+                self.lhs.text(1/self.mfreq_real[m] + 0.05*dx, -1/self.mfreq_imag[m] - 0.05*dy, mfreq_labels[self.mfreq_freq[m]])
+                self.lhs.plot([1/self.mfreq_real[m] + 0.02*dx, 1/self.mfreq_real[m] + 0.045*dx], [-1/self.mfreq_imag[m] - 0.015*dy, -1/self.mfreq_imag[m] - 0.04*dy], marker = "None", linestyle = "-", linewidth = 1, color = "#000000")
 
     def updatePlots(self, data, ghost_data, ghost_data_visibility, model = None):
         """Clear and redraw the plots. All the checks for which data should be visible are handled here. This is also where the model curve finally comes in.
@@ -844,9 +1103,15 @@ class PlotFrame(ttk.Frame):
             self.lhs = self.fig.add_subplot(1, 2, 1) #Create the LHS subplot (commonly called Nyquist plot).
             self.rhs = self.fig.add_subplot(1, 2, 2) #Create the RHS subplot
             del self.right_plot
-            self.right_plot = self.plot_types[self.rhs_type](self.rhs, data, None, ghost_data, ghost_data_visibility)
+            if self.needs_geom[self.rhs_type]:
+                self.right_plot = self.plot_types[self.rhs_type](self.rhs, data, None, ghost_data, ghost_data_visibility, sample_area = self.sample_area, sample_thickness = self.sample_thickness)
+            else:
+                self.right_plot = self.plot_types[self.rhs_type](self.rhs, data, None, ghost_data, ghost_data_visibility)
             del self.left_plot
-            self.left_plot = self.plot_types[self.lhs_type](self.lhs, data, None, ghost_data, ghost_data_visibility)
+            if self.needs_geom[self.lhs_type]:
+                self.left_plot = self.plot_types[self.lhs_type](self.lhs, data, None, ghost_data, ghost_data_visibility, sample_area = self.sample_area, sample_thickness = self.sample_thickness)
+            else:
+                self.left_plot = self.plot_types[self.lhs_type](self.lhs, data, None, ghost_data, ghost_data_visibility)
         
         #Clear all subplots
         self.left_plot.primary.cla()
@@ -905,3 +1170,72 @@ class PlotFrame(ttk.Frame):
 
         #Draw the new model, along with the data, on the canvas.
         self.canvas.draw()
+
+##########################
+##SAMPLE GEOMETRY WINDOW##
+##########################
+
+class GeometryWindow(tk.Toplevel):
+    def __init__(self, plotframe):
+        """Sample geometry window. Used to set sample thickness and area
+        
+        Init arguments becoming attributes under the same name:
+        plotframe -- PlotFrame on which to alter plots
+        
+        Other attributes:
+        area -- tk.StringVar holding the area in cm^2
+        thickness - tk.StringVar holding the thickness in mm
+        
+        Methods:
+        make_UI -- create the UI
+        terminate -- close the window and transfer the sample thickness"""
+        super().__init__()
+        self.title("Sample geometry")
+        self.width = int(self.winfo_screenwidth()*0.25)
+        self.height = int(self.winfo_screenheight()*0.15)
+        self.geometry("{:d}x{:d}".format(self.width, self.height))
+        
+        self.plotframe = plotframe
+        
+        self.make_UI()
+        
+    def make_UI(self):
+        """Create the GeometryWindow UI."""
+        self.thickness = tk.StringVar()
+        self.thickness_frame = ttk.Frame(self)
+        self.thickness_frame.pack(side = tk.TOP, anchor = tk.CENTER)
+        
+        self.area = tk.StringVar()
+        self.area_frame = ttk.Frame(self)
+        self.area_frame.pack(side = tk.TOP, anchor = tk.CENTER)
+        
+        self.conclude_frame = ttk.Frame(self)
+        self.conclude_frame.pack(side = tk.TOP, anchor = tk.CENTER)
+        
+        self.thickness_label = tk.Label(self.thickness_frame, text = "Sample thickness (mm): ")
+        self.thickness_label.pack(side = tk.LEFT, anchor = tk.CENTER)
+        
+        self.area_label = tk.Label(self.area_frame, text = "Sample area (cm^2): ")
+        self.area_label.pack(side = tk.LEFT, anchor = tk.CENTER)
+        
+        self.thickness_entry = tk.Entry(self.thickness_frame, textvariable = self.thickness)
+        self.thickness_entry.pack(side = tk.LEFT, anchor = tk.CENTER)
+        
+        self.area_entry = tk.Entry(self.area_frame, textvariable = self.area)
+        self.area_entry.pack(side = tk.LEFT, anchor = tk.CENTER)
+        
+        self.end_button = tk.Button(self.conclude_frame, text = "Set sample dimensions and close", command = self.terminate)
+        self.end_button.pack(side = tk.TOP, anchor = tk.CENTER)
+        
+        self.thickness.set("1")
+        self.area.set("1")
+        
+    def terminate(self):
+        """Set self.plotframe's sample thickness and area and mark the current geometry-dependent plots for resetting."""
+        self.plotframe.sample_thickness = float(self.thickness.get())
+        self.plotframe.sample_area = float(self.area.get())
+        if self.plotframe.needs_geom[self.plotframe.rhs_type]:
+            self.plotframe.prev_rhs_type = "None"
+        if self.plotframe.needs_geom[self.plotframe.lhs_type]:
+            self.plotframe.prev_lhs_type = "None"
+        self.destroy()

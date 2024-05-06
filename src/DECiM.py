@@ -1,6 +1,6 @@
 """DECiM (Determination of Equivalent Circuit Models) is an equivalent circuit model fitting program for impedance data. It is a GUI-based program.
 Much of the source code is spread over other python source files, all of which must be in the same folder as DECiM.py to ensure that the program works correctly.
-DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.13, 4 May 2024.
+DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.14, 6 May 2024.
 
 This is the core module -- when launched, DECiM starts. This module also defines the Window class."""
 
@@ -51,7 +51,7 @@ from ecm_circuits import Circuit, CircuitManager, CircuitDefinitionWindow, Circu
 from ecm_helpers import nearest, maxima #Helper functions nearest(a, b) and maxima(b).
 from ecm_file_io import parseData, parseCircuitString, parseResult, createResultFile, parseCircuitPresets, DataSpecificationWindow #Functions related to parsing data files, creating result files and parsing result files.
 from ecm_datastructure import dataSet #dataSet class.
-from ecm_plot import PlotFrame, limiter #PlotFrame and limiter classes. DECiM's plots are plotted in a PlotFrame.
+from ecm_plot import PlotFrame, limiter, GeometryWindow #PlotFrame, limiter and GeometryWindow classes. DECiM's plots are plotted in a PlotFrame.
 from ecm_fit import SimpleRefinementEngine, RefinementWindow #The classes dealing with the refinement procedures.
 from ecm_user_input import InteractionFrame #Frame containing the various input fields, sliders, dropdowns, etc. that make up the interactive part of the program.
 from ecm_history import expandedDataSet, HistoryManager, DataSetSelectorWindow #For non-interactive plotting and quick switching between datasets.
@@ -120,11 +120,13 @@ class Window(ttk.Frame):
         
         For file handling: loadData, loadResult, saveResult
         
-        For plot layout: setVisRY1, setVisRY2, setLogRY1, setLogRY2, setABAdmittance, setBodeZPhi, setComplexPlaneY, setComplexPlaneZ, set ABImpedance
+        For plot layout: setVisRY1, setVisRY2, setLogRY1, setLogRY2, setABAdmittance, setBodeZPhi, setComplexPlaneY, setComplexPlaneZ, setABImpedance, setABSigma, setABEpsilon
         
         resetView -- reset view limits of plots
         generateFit -- calculate the model curve
         canvasUpdate -- update limits, calculate model curve, update view
+        
+        setSampleGeometry -- set sample thickness and area
         
         Saving and loading data from measurements (RAM): selectOtherDataset, plotNonInteractive, saveToHistory
         
@@ -206,6 +208,8 @@ class Window(ttk.Frame):
         plotMenu.add_separator()
         plotMenu.add_command(label = "Reset view", command = self.resetView)
         plotMenu.add_separator()
+        plotMenu.add_command(label = "Set sample geometry", command = self.setSampleGeometry)
+        plotMenu.add_separator()
         plotMenu.add_command(label = "Toggle RHS primary log-scale", command = self.setLogRY1)
         plotMenu.add_command(label = "Toggle RHS secondary log-scale", command = self.setLogRY2)
         plotMenu.add_command(label = "Toggle RHS primary visibility", command = self.setVisRY1)
@@ -216,6 +220,8 @@ class Window(ttk.Frame):
         plotMenu.add_command(label = "Bode amplitude/phase", command = self.setBodeZPhi)
         plotMenu.add_command(label = "Y\' and Y\'\' vs. frequency", command = self.setABAdmittance)
         plotMenu.add_command(label = "Z\' and Z\'\' vs. frequency", command = self.setABImpedance)
+        plotMenu.add_command(label = "Conductivity vs. frequency", command = self.setABSigma)
+        plotMenu.add_command(label = "Permittivity vs. frequency", command = self.setABEpsilon)
         in_menu.add_cascade(label = "Plot", menu = plotMenu)
 
     def make_calculatemenu(self, in_menu):
@@ -354,7 +360,10 @@ class Window(ttk.Frame):
         if self.plots.rhs_type != "YY vs. f":
             self.plots.prev_rhs_type = self.plots.rhs_type
             self.plots.rhs_type = "YY vs. f"
-            self.setLogRY2()
+            if not self.plots.logRY1:
+                self.plots.logRY1 = True
+            if not self.plots.logRY2:
+                self.plots.logRY2 = True
             self.resetView()
             
     def setABImpedance(self):
@@ -362,7 +371,10 @@ class Window(ttk.Frame):
         if self.plots.rhs_type != "ZZ vs. f":
             self.plots.prev_rhs_type = self.plots.rhs_type
             self.plots.rhs_type = "ZZ vs. f"
-            self.setLogRY2()
+            if not self.plots.logRY1:
+                self.plots.logRY1 = True
+            if not self.plots.logRY2:
+                self.plots.logRY2 = True
             self.resetView()
         
     def setBodeZPhi(self):
@@ -370,7 +382,32 @@ class Window(ttk.Frame):
         if self.plots.rhs_type != "Bode amplitude/phase":
             self.plots.prev_rhs_type = self.plots.rhs_type
             self.plots.rhs_type = "Bode amplitude/phase"
-            self.setLogRY2()
+            if not self.plots.logRY1:
+                self.plots.logRY1 = True
+            if self.plots.logRY2:
+                self.plots.logRY2 = False
+            self.resetView()
+            
+    def setABSigma(self):
+        """Switch to the real+imaginary conductivity plot."""
+        if self.plots.rhs_type != "sigma vs. f":
+            self.plots.prev_rhs_type = self.plots.rhs_type
+            self.plots.rhs_type = "sigma vs. f"
+            if not self.plots.logRY1:
+                self.plots.logRY1 = True
+            if not self.plots.logRY2:
+                self.plots.logRY2 = True
+            self.resetView()
+
+    def setABEpsilon(self):
+        """Switch to the real+imaginary permittivity plot."""
+        if self.plots.rhs_type != "epsilon vs. f":
+            self.plots.prev_rhs_type = self.plots.rhs_type
+            self.plots.rhs_type = "epsilon vs. f"
+            if not self.plots.logRY1:
+                self.plots.logRY1 = True
+            if not self.plots.logRY2:
+                self.plots.logRY2 = True
             self.resetView()
         
     def setComplexPlaneY(self):
@@ -402,6 +439,11 @@ class Window(ttk.Frame):
         self.plots.limiter.enabled = False
         self.canvasUpdate()
         self.plots.limiter.enabled = True
+        
+    def setSampleGeometry(self):
+        """Set the sample thickness and area, then reset the view."""
+        geometry_window = GeometryWindow(self.plots)
+        self.resetView()
 
     #History functions
 
