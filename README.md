@@ -4,16 +4,21 @@ DEC*i*M (Determination of Equivalent Circuit Models) is an equivalent circuit mo
 
 ## Prerequisites
 
-The current DEC*i*M version (1.2.14) requires the following software to already be installed on your computer:
+The current DEC*i*M version (1.2.15) requires the following software to already be installed on your computer:
 
 - Python 3.10 or higher (including copy, webbrowser, functools and tkinter as part of the Python Standard Library)
 - NumPy
 - SciPy
 - Matplotlib
+- Optax
+
+**WARNING: FROM VERSION 1.2.15 (7 May 2024), DEC*i*M requires Optax for part of the ecm_fit and ecm_circuits modules. Previously, this was not the case. Be sure to update your Python 3 installation if you do not have Optax installed.**
 
 ## Installation
 
-Download the entire project. If the prerequisites are already installed, DEC*i*M can be started immediately.
+If the prerequisites are not yet installed, install them. Begin with Python 3.10+ (it may be convenient to choose WinPython if you are using Windows, since this is the same distribution on which DEC*i*M was developed and you can expect few or no surprises). Then install the libraries.
+
+Once everything is ready, download the entire DEC*i*M project. DEC*i*M can be started immediately.
 
 ## Usage
 

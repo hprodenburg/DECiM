@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the interactive elements code. Last modified 6 May 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the interactive elements code. Last modified 7 May 2024 by Henrik Rodenburg.
 
 Classes:
 InteractionFrame -- contains all the controls for manual adjustment of fitting parameters
@@ -129,7 +129,7 @@ class InteractionFrame(ttk.Frame):
         #Label
         self.parameter_label = tk.Label(self.slider_frame, textvariable = self.parameter_value)
         self.parameter_label.pack(side = tk.TOP, anchor = tk.CENTER)
-        self.parameter_label.configure(state = tk.DISABLED)
+        self.parameter_value.set("No parameter selected")
         self.slider_frame.pack(side = tk.LEFT, anchor = tk.E, fill = tk.X, expand = True)
         
         #Slider upper limit input
@@ -200,13 +200,12 @@ class InteractionFrame(ttk.Frame):
         if len(self.parameter_listbox.get())> 0:
             if self.parameter_listbox.get()[0] in "RLCQOSGHklmntbg":
                 self.slider.configure(state = tk.NORMAL)
-                self.parameter_label.configure(state = tk.NORMAL)
                 self.chosen_parameter.set(self.parameter_listbox.get())
                 self.reset_parameter_listbox()
                 self.parameter_listbox.itemconfig(self.listbox_indices[list(self.chosen_parameter.get().split(":"))[0]], {"bg": "#00f", "fg": "#fff"})
         else:
             self.slider.configure(state = tk.DISABLED)
-            self.parameter_label.configure(state = tk.DISABLED)
+            self.parameter_value.set("No parameter selected")
             
     def update_label(self, new_value):
         """Update the label below the slider with the (new) parameter name, value and units.

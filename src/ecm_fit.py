@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the fitting classes. Last modified 30 April 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the fitting classes. Last modified 7 May 2024 by Henrik Rodenburg.
 
 Classes:
 RefinementEngine -- class for refinements in general, independent of the GUI
@@ -11,6 +11,10 @@ RefinementWindow -- class for the advanced refinement"""
 
 import numpy as np
 import scipy.optimize as op
+
+import jax.numpy as jnp
+from jax import grad
+import optax as ox
 
 import matplotlib as mp
 import matplotlib.pyplot as pt
@@ -29,11 +33,12 @@ from ecm_helpers import nearest
 ######################
 
 class RefinementEngine():
-    def __init__(self, function_to_fit, data, parameters, parameter_dict, to_refine, high_f, low_f, previous_parameters, opt_module = "scipy", opt_method = "Nelder-Mead", silent = False, nmaxiter = 500, weighting_scheme = "Unit"):
+    def __init__(self, function_to_fit, jnp_function_to_fit, data, parameters, parameter_dict, to_refine, high_f, low_f, previous_parameters, opt_module = "SciPy", opt_method = "Nelder-Mead", silent = False, nmaxiter = 500, weighting_scheme = "Unit"):
         """General handling of refinements.
         
         Init arguments (all of which become attributes with the same name):
-        function_to_fit -- function to fit; typically Circuit.diagram.Z
+        function_to_fit -- function to fit; typically Circuit.impedance
+        jnp_function_to_fit -- JAX.NumPy function to fit; typically Circuit.jnp_impedance
         data -- dataSet object containing measured data
         parameters -- list of parameters
         parameter_list -- dict of parameters; keys are are indices in self.parameters, values are names (e.g. 'R0', 'n1', ...)
@@ -41,7 +46,7 @@ class RefinementEngine():
         high_f -- upper frequency bound
         low_f -- lower frequency bound
         previous_parameters -- list of lists of parameters
-        opt_module -- string, module from which to import optimizer; only option for now is 'scipy'
+        opt_module -- string, module from which to import optimizer; only option for now is 'SciPy'
         opt_method -- string, optimizer to use
         nmaxiter -- maximum number of iterations per refineable parameter
         weighting_scheme -- weighting scheme, string; one of 'Unit', 'Observed modulus', 'Calculated modulus', 'Observed proportional', and 'Calculated proportional'
@@ -53,8 +58,10 @@ class RefinementEngine():
         Methods:
         refine_solution -- refine the solution and update self.parameters
         refine_solution_scipy -- refine the solution with scipy.optimize.minimize and update self.parameters
+        refine_solution_optax -- refine the solution with optax and update self.parameters
         error_function -- function that returns the error to be minimized by self.refine_solution"""
         self.function_to_fit = function_to_fit
+        self.jnp_function_to_fit = jnp_function_to_fit
         self.data = data
         self.parameters = parameters
         self.parameter_dict = parameter_dict
@@ -68,7 +75,7 @@ class RefinementEngine():
         self.nmaxiter = nmaxiter
         self.weighting_scheme = weighting_scheme
         
-        self.module_dict = {"scipy": self.refine_solution_scipy}
+        self.module_dict = {"SciPy": self.refine_solution_scipy, "Optax": self.refine_solution_optax}
         
     def refine_solution(self):
         """Choose the correct refinement method based on self.opt_module."""
@@ -103,6 +110,33 @@ class RefinementEngine():
         opt_res = op.minimize(self.error_function, np.array(self.parameters), method = self.opt_method, options = {"maxiter": self.nmaxiter*ref_par_count}, bounds = boundaries, callback = self.optimisation_callback) #Minimise the error
         self.parameters = opt_res["x"] #Save new parameters
         
+    def refine_solution_optax(self):
+        """Apply boundaries, update the parameter history and use the optax.adam optimizer to find a solution."""
+        #Frequency limits
+        self.h_idx, self.l_idx = nearest(self.high_f, self.data.freq), nearest(self.low_f, self.data.freq)
+        #Number of refineable parameters (for maximum iterations)
+        ref_par_count = len(self.parameters)
+        #Save previous refinement
+        self.previous_parameters.append(self.parameters)
+        #Convert sliced (frequency boundaries applied) NumPy arrays to JAX.NumPy arrays
+        self.jnp_freq = jnp.asarray(self.data.freq[self.l_idx:self.h_idx])
+        self.jnp_real = jnp.asarray(self.data.real[self.l_idx:self.h_idx])
+        self.jnp_imag = jnp.asarray(self.data.imag[self.l_idx:self.h_idx])
+        #Convert parameters array to JAX.NumPy array
+        jnp_parameters = jnp.asarray(self.parameters)
+        #Solver initialization
+        solvers = {"Adam": ox.adam}
+        solver = solvers[self.opt_method](learning_rate = 0.005)
+        opt_state = solver.init(jnp_parameters)
+        #Solution
+        self.iter = 0
+        for i in range(int(ref_par_count*self.nmaxiter/10)):
+            gradient = grad(self.error_function_jnp)(jnp_parameters)
+            updates, opt_state = solver.update(gradient, opt_state, jnp_parameters)
+            jnp_parameters = ox.apply_updates(jnp_parameters, updates)
+            #self.optimisation_callback(jnp_parameters)
+        self.parameters = np.asarray(jnp_parameters)
+        
     def error_function(self, params):
         """Function to be minimized in the refinement. Weighting schemes are applied here.
         
@@ -131,6 +165,35 @@ class RefinementEngine():
         if self.weighting_scheme not in ["", "Unit"]:
             w_re, w_im = w_re[self.l_idx:self.h_idx], w_im[self.l_idx:self.h_idx]
         return sum(w_re*(np.real(self.function_to_fit(params, self.data.freq[self.l_idx:self.h_idx])) - self.data.real[self.l_idx:self.h_idx])**2) + sum(w_im*(np.imag(self.function_to_fit(params, self.data.freq[self.l_idx:self.h_idx])) - self.data.imag[self.l_idx:self.h_idx])**2)
+        
+    def error_function_jnp(self, params):
+        """Function to be minimized in the refinement. Weighting schemes are applied here.
+        
+        Arguments:
+        self
+        params -- list of fit parameters
+        
+        Returns:
+        JAX.NumPy array; sum of the squared differences in the impedance; this is done separately for the real and imaginary components, which are then added."""
+        w_re, w_im = 1, 1 #Unit weighting is default
+        if self.weighting_scheme == "Calculated modulus":
+            w_re = jnp.sqrt(np.real(self.jnp_function_to_fit(params, self.jnp_freq))**2 + np.imag(self.jnp_function_to_fit(params, self.jnp_freq))**2)
+            w_im = w_re
+        elif self.weighting_scheme == "Observed modulus":
+            w_re = jnp.sqrt(self.jnp_real**2 + self.jnp_imag**2)
+            w_im = w_re
+        elif self.weighting_scheme == "Calculated proportional":
+            w_re = 1/(jnp.real(self.jnp_function_to_fit(params, self.jnp_freq))**2)
+            w_im = 1/(jnp.imag(self.jnp_function_to_fit(params, self.jnp_freq))**2)
+        elif self.weighting_scheme == "Observed proportional":
+            w_re = 1/(self.jnp_real**2)
+            w_im = 1/(self.jnp_imag**2)
+        if self.l_idx == 0 and self.h_idx == -1:
+            return sum(w_re*(np.real(self.jnp_function_to_fit(params, self.jnp_freq)) - self.jnp_real)**2) + sum(w_im*(np.imag(self.jnp_function_to_fit(params, self.jnp_freq)) - self.jnp_imag)**2)
+        #If limits are set, return the limited result (with weights being taken care of first)
+        if self.weighting_scheme not in ["", "Unit"]:
+            w_re, w_im = w_re, w_im
+        return jnp.sum(w_re*(np.real(self.jnp_function_to_fit(params, self.jnp_freq)) - self.jnp_real)**2) + jnp.sum(w_im*(np.imag(self.jnp_function_to_fit(params, self.jnp_freq)) - self.jnp_imag)**2)
         
     def optimisation_callback(self, params):
         """Print the output of the refinement function to the command line for each iteration."""
@@ -202,7 +265,7 @@ class SimpleRefinementEngine():
 #######################
 
 class RefinementWindow(tk.Toplevel):
-    def __init__(self, function_to_fit, element_list, initial_parameters, data):
+    def __init__(self, function_to_fit, jnp_function_to_fit, element_list, initial_parameters, data):
         """Advanced refinement window.
         
         Init arguments:
@@ -247,7 +310,9 @@ class RefinementWindow(tk.Toplevel):
         reset_parameters -- change the parameters back to what they were when the refinement window was launched
         accept_refinement -- close the window and change the model parameters to the refinement result
         reject_refinement -- close the window and do not change the model parameters
-        flip_parameter_values_keys -- flip self.parameter_dict keys and values"""
+        flip_parameter_values_keys -- flip self.parameter_dict keys and values
+        toggle_all_parameters -- toggle all tick boxes on/off
+        optimizer_tick_correction -- disable or enable tick boxes depending on chosen optimizer"""
         super().__init__()
         self.title("Equivalent circuit model refinement")
         self.width = int(self.winfo_screenwidth()*0.85)
@@ -256,6 +321,7 @@ class RefinementWindow(tk.Toplevel):
         
         #Variables
         self.function_to_fit = function_to_fit
+        self.jnp_function_to_fit = jnp_function_to_fit
         self.element_list = element_list
         self.parameter_dict = {}
         indices = []
@@ -335,8 +401,12 @@ class RefinementWindow(tk.Toplevel):
         self.tick_states = [] #Saves the on/off states of the tick boxes
         self.parameter_labels = [] #List of labels to display current values
         self.parameter_values = [] #List of StringVars to hold parameter values
-        self.tick_label = tk.Label(self.tick_frame, text = "Parameters to refine")
-        self.tick_label.pack(side = tk.TOP, anchor = tk.W)
+        self.tick_header_frame = ttk.Frame(self.tick_frame)
+        self.tick_header_frame.pack(side = tk.TOP, anchor = tk.W)
+        self.tick_label = tk.Label(self.tick_header_frame, text = "Parameters to refine")
+        self.tick_label.pack(side = tk.LEFT, anchor = tk.W)
+        self.toggle_all_button = tk.Button(self.tick_header_frame, text = "Toggle all", command = self.toggle_all_parameters)
+        self.toggle_all_button.pack(side = tk.RIGHT, anchor = tk.W)
         self.tick_box_frame = ttk.Frame(self.tick_frame) #The frame is subdivided into two colums. One for boxes...
         self.tick_box_frame.pack(side = tk.LEFT, anchor = tk.W)
         self.tick_label_frame = ttk.Frame(self.tick_frame) #... and one for labels.
@@ -352,7 +422,7 @@ class RefinementWindow(tk.Toplevel):
         self.set_param_labels()
         
     def make_limit_frame(self):
-        """Create tk.Entries and tk.Labels for setting the refinement frequency limits, as well as a tk.OptionMenu from which the weighting schemes can be chosen."""
+        """Create tk.Entries and tk.Labels for setting the refinement frequency limits, as well as a tk.OptionMenu from which the weighting schemes can be chosen and a tk.OptionMenu from which the optimizer can be chosen."""
         #Upper limit
         self.high_lim_label = tk.Label(self.limit_frame, text = "Upper frequency limit (Hz)")
         self.high_lim_label.pack(side = tk.TOP, anchor = tk.W)
@@ -379,6 +449,19 @@ class RefinementWindow(tk.Toplevel):
         self.expanded_weighting_schemes = ["Calculated modulus", "Observed modulus", "Calculated proportional", "Observed proportional"]
         for w in self.expanded_weighting_schemes:
             self.weighting_dropdown["menu"].add_command(label = w, command = tk._setit(self.chosen_weighting, w))
+        #Optimizers
+        self.chosen_module_and_optimizer = tk.StringVar()
+        self.chosen_module_and_optimizer.trace("w", self.optimizer_tick_correction) #Disable tickboxes with Optax
+        self.optimizer_frame = ttk.Frame(self.limit_frame)
+        self.optimizer_frame.pack(side = tk.BOTTOM, anchor = tk.W)
+        self.optimizer_label = tk.Label(self.optimizer_frame, text = "Optimizer: ")
+        self.optimizer_label.pack(side = tk.LEFT, anchor = tk.W)
+        self.optimizer_dropdown = tk.OptionMenu(self.optimizer_frame, self.chosen_module_and_optimizer, "", command = self.optimizer_tick_correction)
+        self.optimizer_dropdown["menu"].delete(0, "end")
+        self.optimizer_dropdown.pack(side = tk.RIGHT, anchor = tk.W)
+        self.expanded_optimizers = ["SciPy: Nelder-Mead", "Optax: Adam"]
+        for o in self.expanded_optimizers:
+            self.optimizer_dropdown["menu"].add_command(label = o, command = tk._setit(self.chosen_module_and_optimizer, o))
         
     def make_residuals_frame(self):
         """Create the plotting canvas, the plots on it and the toolbar of the residuals frame."""
@@ -435,8 +518,8 @@ class RefinementWindow(tk.Toplevel):
             if str(p)[0] in ["k", "l", "m"]:
                 units = " s^(1/2)"
             if str(p)[0] == "t":
-                units = "s^(beta*gamma)"
-            if str(p)[0] in "RLCQnOSGklm":
+                units = " s^(b*g)"
+            if str(p)[0] in "RLCQnOSGklmHtbg":
                 self.parameter_values[self.parameter_dict[p]].set(p + " = {:5g}".format(self.refined_parameters[self.parameter_dict[p]]) + units)
     
     def toggle_lim_vis(self):
@@ -536,7 +619,9 @@ class RefinementWindow(tk.Toplevel):
         for t in self.tick_states:
             to_be_refined.append(t.get())
         #Refinement engine
-        self.refinement_engine = RefinementEngine(self.function_to_fit, self.data, self.refined_parameters, self.flipped_parameter_dict, to_be_refined, float(self.high_lim_value.get()), float(self.low_lim_value.get()), self.parameter_history, weighting_scheme = self.chosen_weighting.get())
+        chosen_module = list(self.chosen_module_and_optimizer.get().split(":"))[0]
+        chosen_method = list(self.chosen_module_and_optimizer.get().split(":"))[1].lstrip(" ")
+        self.refinement_engine = RefinementEngine(self.function_to_fit, self.jnp_function_to_fit, self.data, self.refined_parameters, self.flipped_parameter_dict, to_be_refined, float(self.high_lim_value.get()), float(self.low_lim_value.get()), self.parameter_history, weighting_scheme = self.chosen_weighting.get(), opt_module = chosen_module, opt_method = chosen_method)
         #Refinement
         self.refinement_engine.refine_solution()
         self.refined_parameters = self.refinement_engine.parameters
@@ -573,7 +658,36 @@ class RefinementWindow(tk.Toplevel):
         self.destroy() #Close the window
         
     def flip_parameter_values_keys(self):
+        """Flip the keys and values of self.parameter_dict and store the new dict as self.flipped_parameter_dict."""
         self.flipped_parameter_dict = {}
         for p in self.parameter_dict:
             self.flipped_parameter_dict[self.parameter_dict[p]] = p
+                    
+    def toggle_all_parameters(self):
+        """Disable or enable the refinement of ALL parameters."""
+        on = 0
+        off = 0
+        for s in self.tick_states:
+            if s.get() == 0:
+                off += 1
+            elif s.get() == 1:
+                on += 1
+        if on > off:
+            for t in self.tick_boxes:
+                t.deselect()
+        else:
+            for t in self.tick_boxes:
+                t.select()
+                
+    def optimizer_tick_correction(self, *ev_args):
+        """Disable tick boxes for parameter selection for incompatible modules/optimizers; enable them again for compatible ones.
         
+        Arguments:
+        self
+        ev_args -- arguments given by the tk.StringVar trace"""
+        if list(self.chosen_module_and_optimizer.get().split(":"))[0] == "Optax":
+            for t in self.tick_boxes:
+                t.configure(state = tk.DISABLED)
+        elif list(self.chosen_module_and_optimizer.get().split(":"))[0] == "SciPy":
+            for t in self.tick_boxes:
+                t.configure(state = tk.NORMAL)

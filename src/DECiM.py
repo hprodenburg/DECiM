@@ -1,6 +1,6 @@
 """DECiM (Determination of Equivalent Circuit Models) is an equivalent circuit model fitting program for impedance data. It is a GUI-based program.
 Much of the source code is spread over other python source files, all of which must be in the same folder as DECiM.py to ensure that the program works correctly.
-DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.14, 6 May 2024.
+DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.15, 7 May 2024.
 
 This is the core module -- when launched, DECiM starts. This module also defines the Window class."""
 
@@ -15,7 +15,7 @@ import matplotlib.backends.backend_tkagg as btk
 import matplotlib.figure as fg
 import matplotlib.animation as anim
 
-#Numpy (calculations)
+#NumPy (calculations)
 import numpy as np
 
 #Scipy (optimization)
@@ -499,7 +499,7 @@ class Window(ttk.Frame):
     
     def advancedRefinement(self):
         """Launch the refinement window and wait for the result. If the user accepts the result, replace the model parameters with the result and update the plots."""
-        refinement_window = RefinementWindow(self.interactive.circuit.impedance, self.interactive.circuit.diagram.list_elements(), self.interactive.parameters, self.data)
+        refinement_window = RefinementWindow(self.interactive.circuit.impedance, self.interactive.circuit.jnp_impedance, self.interactive.circuit.diagram.list_elements(), self.interactive.parameters, self.data)
         refinement_window.wait_window()
         if refinement_window.refinement_accepted:
             self.prevparams.append(self.interactive.parameters) #Save the previous parameters to allow the refinement to be undone.

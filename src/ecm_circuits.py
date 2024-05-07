@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains circuit arrangement code, impedance calculations and circuit selection UI code. Last modified 24 April 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains circuit arrangement code, impedance calculations and circuit selection UI code. Last modified 7 May 2024 by Henrik Rodenburg.
 
 Classes:
 Circuit elements:
@@ -25,6 +25,8 @@ CircuitDefinitionWindow"""
 ###########
 ##IMPORTS##
 ###########
+
+import jax.numpy as jnp
 
 import numpy as np
 import copy
@@ -57,7 +59,7 @@ class Resistor():
         
         Methods:
         Z -- returns the impedance for this element
-        """
+        jnp_Z -- returns the JAX.NumPy impedance for this element"""
         self.tag = "R"
         self.R = resistance
         self.number = number #Element number. This gives the name of the element when combined with its tag.
@@ -72,6 +74,17 @@ class Resistor():
         Arguments:
         self -- circuit element
         frequency -- NumPy array of frequencies
+        
+        Returns:
+        value of resistance"""
+        return self.R
+        
+    def jnp_Z(self, frequency):
+        """Impedance function.
+        
+        Arguments:
+        self -- circuit element
+        frequency -- JAX.NumPy array of frequencies
         
         Returns:
         value of resistance"""
@@ -97,7 +110,7 @@ class Capacitor():
         
         Methods:
         Z -- returns the impedance for this element
-        """
+        jnp_Z -- returns the JAX.NumPy impedance for this element"""
         self.tag = "C"
         self.C = capacitance
         self.number = number
@@ -116,6 +129,18 @@ class Capacitor():
         Returns:
         Complex NumPy array of impedances"""
         return 1/(1j*frequency*2*np.pi*self.C)
+        
+    def jnp_Z(self, frequency):
+        """Impedance function.
+        
+        Arguments:
+        self -- circuit element
+        frequency -- JAX.NumPy array of frequencies
+        
+        Returns:
+        Complex NumPy array of impedances"""
+        return 1/(1j*frequency*2*np.pi*self.C)
+
         
 class Inductor():
     def __init__(self, inductance, number, idx, parent_unit):
@@ -137,7 +162,7 @@ class Inductor():
         
         Methods:
         Z -- returns the impedance for this element
-        """
+        jnp_Z -- returns the JAX.NumPy impedance for this element"""
         self.tag = "L"
         self.L = inductance
         self.number = number
@@ -155,6 +180,17 @@ class Inductor():
         
         Returns:
         Complex NumPy array of impedances"""
+        return 1j*self.L*2*np.pi*frequency
+        
+    def jnp_Z(self, frequency):
+        """Impedance function.
+        
+        Arguments:
+        self -- circuit element
+        frequency -- NumPy array of frequencies
+        
+        Returns:
+        Complex JAX.NumPy array of impedances"""
         return 1j*self.L*2*np.pi*frequency
 
 class ConstantPhaseElement():
@@ -180,7 +216,7 @@ class ConstantPhaseElement():
         
         Methods:
         Z -- returns the impedance for this element
-        """
+        jnp_Z -- returns the JAX.NumPy impedance for this element"""
         self.tag = "Q"
         self.Q = base
         self.n = exponent
@@ -201,6 +237,18 @@ class ConstantPhaseElement():
         Returns:
         Complex NumPy array of impedances"""
         return 1/(self.Q*(1j*frequency*2*np.pi)**self.n)
+        
+    def jnp_Z(self, frequency):
+        """Impedance function.
+        
+        Arguments:
+        self -- circuit element
+        frequency -- NumPy array of frequencies
+        
+        Returns:
+        Complex JAX.NumPy array of impedances"""
+        return 1/(self.Q*(1j*frequency*2*np.pi)**self.n)
+
         
 class WarburgOpen():
     def __init__(self, magnitude, k, number, idx, parent_unit):
@@ -225,7 +273,7 @@ class WarburgOpen():
         
         Methods:
         Z -- returns the impedance for this element
-        """
+        jnp_Z -- returns the JAX.NumPy impedance for this element"""
         self.tag = "O"
         self.O = magnitude
         self.k = k
@@ -246,6 +294,18 @@ class WarburgOpen():
         Returns:
         Complex NumPy array of impedances"""
         return self.O * (1j*frequency*self.k*2*np.pi)**-0.5 * (1/np.tanh((1j*frequency*self.k)**0.5))
+        
+    def jnp_Z(self, frequency):
+        """Impedance function.
+        
+        Arguments:
+        self -- circuit element
+        frequency -- NumPy array of frequencies
+        
+        Returns:
+        Complex JAX.NumPy array of impedances"""
+        return self.O * (1j*frequency*self.k*2*np.pi)**-0.5 * (1/jnp.tanh((1j*frequency*self.k)**0.5))
+
         
 class WarburgShort():
     def __init__(self, magnitude, l, number, idx, parent_unit):
@@ -270,7 +330,7 @@ class WarburgShort():
         
         Methods:
         Z -- returns the impedance for this element
-        """
+        jnp_Z -- returns the JAX.NumPy impedance for this element"""
         self.tag = "S"
         self.S = magnitude
         self.l = l
@@ -291,6 +351,18 @@ class WarburgShort():
         Returns:
         Complex NumPy array of impedances"""
         return self.S * (1j*frequency*self.l*2*np.pi)**-0.5 * np.tanh((1j*frequency*self.l)**0.5)
+        
+    def jnp_Z(self, frequency):
+        """Impedance function.
+        
+        Arguments:
+        self -- circuit element
+        frequency -- NumPy array of frequencies
+        
+        Returns:
+        Complex JAX.NumPy array of impedances"""
+        return self.S * (1j*frequency*self.l*2*np.pi)**-0.5 * jnp.tanh((1j*frequency*self.l)**0.5)
+
 
 class HavriliakNegami():
     def __init__(self, magnitude, m, beta, gamma, number, idx, parent_unit):
@@ -315,7 +387,8 @@ class HavriliakNegami():
         parent_units -- list of Units that contain this object; parent_units[0] is the lowest level Unit that contains it
         
         Methods:
-        Z -- returns the impedance for this element"""
+        Z -- returns the impedance for this element
+        jnp_Z -- returns the JAX.NumPy impedance for this element"""
         self.tag = "H"
         self.G = magnitude
         self.m = m
@@ -341,6 +414,17 @@ class HavriliakNegami():
         Complex NumPy array of impedances"""
         return self.G/((1 + (1j*frequency*self.m)**self.beta)**self.gamma)
         
+    def jnp_Z(self, frequency):
+        """Impedance function.
+        
+        Arguments:
+        self -- circuit element
+        frequency -- NumPy array of frequencies
+        
+        Returns:
+        Complex JAX.NumPy array of impedances"""
+        return self.G/((1 + (1j*frequency*self.m)**self.beta)**self.gamma)
+        
 class GerischerElement(HavriliakNegami):
     def __init__(self, magnitude, m, number, idx, parent_unit):
         """GerischerElement circuit element. Special case of HavriliakNegami.
@@ -356,7 +440,8 @@ class GerischerElement(HavriliakNegami):
         See HavriliakNegami class.
         
         Methods:
-        Z -- returns the impedance for this element (inherited from HavriliakNegami)"""
+        Z -- returns the impedance for this element (inherited from HavriliakNegami)
+        jnp_Z -- returns the JAX.NumPy impedance for this element"""
         super().__init__(magnitude, m, 1, 0.5, number, idx, parent_unit)
         self.tag = "G"
 
@@ -383,7 +468,8 @@ class Unit():
         generate_circuit_string -- create the circuit string which describes this Unit
         ZSER -- impedance function for series Units
         ZPAR -- impedance function for parallel Units
-        Z -- general impedance function"""
+        Z -- general impedance function
+        jnp_Z -- JAX.NumPy impedance function"""
         self.tag = "U"
         self.elements = []
         self.tags = []
@@ -499,6 +585,49 @@ class Unit():
             return self.ZPAR(self.elements, frequency)
         if self.arrangement == "series":
             return self.ZSER(self.elements, frequency)
+            
+    def jnp_ZSER(self, elements, frequency):
+        """Series impedance function.
+        
+        Arguments:
+        elements -- list of elements
+        frequency -- NumPy array of frequencies
+        
+        Returns:
+        JAX.NumPy array of complex impedances"""
+        sres = 0
+        for elem in elements:
+            sres += elem.jnp_Z(frequency)
+        return sres
+        
+    #Parallel circuit function
+    def jnp_ZPAR(self, elements, frequency):
+        """Parallel impedance function.
+        
+        Arguments:
+        elements -- list of elements
+        frequency -- NumPy array of frequencies
+        
+        Returns:
+        JAX.NumPy array of complex impedances"""
+        sres = 0
+        for elem in elements:
+            sres += 1/elem.jnp_Z(frequency)
+        return 1/sres
+        
+    #Impedance function for the unit
+    def jnp_Z(self, frequency):
+        """General impedance function for a Unit.
+        
+        Arguments:
+        frequency -- NumPy array of frequencies
+        
+        Returns:
+        The Unit's impedance: a JAX.NumPy array of complex impedances"""
+        if self.arrangement == "parallel" and len(self.list_elements()) > 0:
+            return self.jnp_ZPAR(self.elements, frequency)
+        if self.arrangement == "series":
+            return self.jnp_ZSER(self.elements, frequency)
 
 #################
 ##CIRCUIT CLASS##
@@ -573,6 +702,8 @@ class Circuit():
     def impedance(self, fp, freq):
         """Impedance function for the circuit. This is also where the program check if the standard impedance function self.diagram.Z is being overridden by the custom impedance function ecm.custom_model.
         
+        Note that a custom model using JAX.NumPy WILL FAIL if called via this method.
+        
         Arguments:
         self
         fp -- list of fit parameters
@@ -584,6 +715,23 @@ class Circuit():
         if ecmcm.override_impedance_method:
             return ecmcm.custom_model_diagrams[ecmcm.custom_model_name][1](fp, freq)
         return self.diagram.Z(freq)
+        
+    def jnp_impedance(self, fp, freq):
+        """JAX.NumPy impedance function for the circuit. This is also where the program check if the standard impedance function self.diagram.Z is being overridden by the custom impedance function ecm.custom_model.
+        
+        Note that a custom model not using JAX.NumPy (but using ordinary NumPy instead) WILL FAIL if called via this method.
+        
+        Arguments:
+        self
+        fp -- list of fit parameters
+        freq -- NumPy array of frequencies
+        
+        Returns:
+        JAX.NumPy array of complex impedances."""
+        self.set_element_values(fp)
+        if ecmcm.override_impedance_method:
+            return ecmcm.custom_model_diagrams[ecmcm.custom_model_name][1](fp, freq)
+        return self.diagram.jnp_Z(freq)
 
 ###############################
 ##HELPER CLASS FOR DECiM CORE##
