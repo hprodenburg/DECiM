@@ -1,8 +1,9 @@
-"""Part of DECiM. This file contains the fitting classes. Last modified 7 May 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the fitting classes. Last modified 8 May 2024 by Henrik Rodenburg.
 
 Classes:
 RefinementEngine -- class for refinements in general, independent of the GUI
 SimpleRefinementEngine -- class for the simple refinement
+MultistartEngine -- class for automatic initial guesses
 RefinementWindow -- class for the advanced refinement"""
 
 ###########
@@ -42,7 +43,7 @@ class RefinementEngine():
         data -- dataSet object containing measured data
         parameters -- list of parameters
         parameter_list -- dict of parameters; keys are are indices in self.parameters, values are names (e.g. 'R0', 'n1', ...)
-        to_refine -- list of ones and zeros; 1 means that the value in self.parameters at the same index should be refined, 0 means that it should not
+        to_refine -- list of ones and zeros; 1 means that the value in self.parameters at the same index should be refined, 0 means that it should not; does not work with optax.adam
         high_f -- upper frequency bound
         low_f -- lower frequency bound
         previous_parameters -- list of lists of parameters
@@ -99,7 +100,7 @@ class RefinementEngine():
                 if self.parameter_dict[t][0] in ["n", "b", "g"]:
                     boundaries.append((0, 1)) #Refine the parameter (n, b, g bounded between 0 and 1)
                 else:  
-                    boundaries.append((0, 1e15)) #Refine the parameter (other parameters bounded between 0 and 1e15)
+                    boundaries.append((1e-30, 1e15)) #Refine the parameter (other parameters bounded between 0 and 1e15)
             else:
                 print("Warning: forbidden refinement option. Constraining parameter {:s}.".format(self.parameters[t]))
                 boundaries.append((self.parameters[t], self.parameters[t]))
@@ -259,6 +260,100 @@ class SimpleRefinementEngine():
         else:
             opt_res = op.minimize(self.errorFunction, np.array(self.input_params), method="Nelder-Mead", options = {"maxiter": 10000})
         self.output_params = opt_res["x"]
+
+############################
+##MULTISTART INITIAL GUESS##
+############################
+
+class MultistartEngine():
+    def __init__(self, function_to_fit, jnp_function_to_fit, data, parameters, parameter_dict, previous_parameters, opt_module = "SciPy", opt_method = "Nelder-Mead", silent = True, nmaxiter = 100, weighting_scheme = "Unit", starts_per_par = 3, nmaxstarts = 30):
+        """Multistart approach for global optimization; used for automatic initial guesses.
+        
+        Init arguments (all of which become attributes with the same name):
+        function_to_fit -- function to fit; typically Circuit.impedance
+        jnp_function_to_fit -- JAX.NumPy function to fit; typically Circuit.jnp_impedance
+        data -- dataSet object containing measured data
+        parameters -- list of parameters
+        parameter_list -- dict of parameters; keys are are indices in self.parameters, values are names (e.g. 'R0', 'n1', ...)
+        previous_parameters -- list of lists of parameters
+        opt_module -- string, module from which to import optimizer; only option for now is 'SciPy'
+        opt_method -- string, optimizer to use
+        nmaxiter -- maximum number of iterations per refineable parameter in each RefinementEngine
+        weighting_scheme -- weighting scheme, string; one of 'Unit', 'Observed modulus', 'Calculated modulus', 'Observed proportional', and 'Calculated proportional'
+        starts_per_par -- number of starting positions generated per parameter; default 3
+        nmaxstarts -- maximum number of RefinementEngines started by the MultistartEngine; default 30
+        
+        Other attributes:
+        to_refine -- list of ones and zeros; 1 means that the value in self.parameters at the same index should be refined, 0 means that it should not; does not work with optax.adam
+        high_f -- upper frequency bound
+        low_f -- lower frequency bound
+        
+        Methods:
+        initial_value -- for a given element, randomly generate a reasonable starting value
+        initial_parameters -- generate reasonable starting values for all parameters; return a new array
+        generate_solution -- generate random starting positions, refine each, and choose the best solution"""
+        self.function_to_fit = function_to_fit
+        self.jnp_function_to_fit = jnp_function_to_fit
+        self.data = data
+        self.parameters = parameters
+        self.parameter_dict = parameter_dict
+        self.to_refine = list(np.ones(len(parameters)))
+        self.high_f = max(self.data.freq)
+        self.low_f = min(self.data.freq)
+        self.previous_parameters = previous_parameters
+        self.opt_module = opt_module
+        self.opt_method = opt_method
+        self.silent = silent
+        self.nmaxiter = nmaxiter
+        self.weighting_scheme = weighting_scheme
+        self.starts_per_par = starts_per_par
+        self.nmaxstarts = nmaxstarts
+        
+    def initial_value(self, parameter_tag_or_name):
+        """For any valid parameter tag ('R', 'C', 'L', ..., 'H'), generate a reasonable starting value.
+        Reasonable starting values are exponentially (base 10) distributed, covering a wide range of starting values.
+        
+        Arguments:
+        self
+        parameter_tag_or_name -- name or tag of parameter
+        
+        Returns:
+        float; reasonable initial value"""
+        random_number = np.random.random()
+        par_id = parameter_tag_or_name[0]
+        if par_id in "ROSGH":
+            return min(10**(10*random_number), 10**(np.log10(max(self.data.real)))*random_number)
+        elif par_id in "CLQmt":
+            return 10**(-12*random_number)
+        elif par_id in "kl":
+            return 10**(6*random_number)
+        elif par_id in "nbg":
+            return random_number
+            
+    def initial_parameters(self):
+        """Generate a new array of parameters, with random starting values according to self.initial_value.
+        
+        Arguments:
+        self
+        
+        Returns:
+        NumPy array of parameter values"""
+        new_params = np.zeros(len(self.parameters))
+        for idx in self.parameter_dict:
+            new_params[idx] = self.initial_value(self.parameter_dict[idx])
+        return new_params
+        
+    def generate_solution(self):
+        """Fit the model to the data from all starting positions and save the best set of parameters as self.parameters."""
+        engines = []
+        scores = []
+        for i in range(min([len(self.parameters)*self.starts_per_par, self.nmaxstarts])):
+            engines.append(RefinementEngine(self.function_to_fit, self.jnp_function_to_fit, self.data, self.initial_parameters(), self.parameter_dict, self.to_refine, self.high_f, self.low_f, self.previous_parameters, opt_module = self.opt_module, opt_method = self.opt_method, silent = self.silent, nmaxiter = self.nmaxiter, weighting_scheme = self.weighting_scheme))
+            engines[-1].refine_solution()
+            scores.append(engines[-1].error_function(engines[-1].parameters))
+        best_idx = scores.index(min(scores))
+        self.previous_parameters.append(self.parameters)
+        self.parameters = engines[best_idx].parameters
 
 #######################
 ##ADVANCED REFINEMENT##

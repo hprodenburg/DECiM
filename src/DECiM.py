@@ -1,6 +1,6 @@
 """DECiM (Determination of Equivalent Circuit Models) is an equivalent circuit model fitting program for impedance data. It is a GUI-based program.
 Much of the source code is spread over other python source files, all of which must be in the same folder as DECiM.py to ensure that the program works correctly.
-DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.15, 7 May 2024.
+DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.16, 8 May 2024.
 
 This is the core module -- when launched, DECiM starts. This module also defines the Window class."""
 
@@ -52,7 +52,7 @@ from ecm_helpers import nearest, maxima #Helper functions nearest(a, b) and maxi
 from ecm_file_io import parseData, parseCircuitString, parseResult, createResultFile, parseCircuitPresets, DataSpecificationWindow #Functions related to parsing data files, creating result files and parsing result files.
 from ecm_datastructure import dataSet #dataSet class.
 from ecm_plot import PlotFrame, limiter, GeometryWindow #PlotFrame, limiter and GeometryWindow classes. DECiM's plots are plotted in a PlotFrame.
-from ecm_fit import SimpleRefinementEngine, RefinementWindow #The classes dealing with the refinement procedures.
+from ecm_fit import MultistartEngine, SimpleRefinementEngine, RefinementWindow #The classes dealing with the fitting procedures.
 from ecm_user_input import InteractionFrame #Frame containing the various input fields, sliders, dropdowns, etc. that make up the interactive part of the program.
 from ecm_history import expandedDataSet, HistoryManager, DataSetSelectorWindow #For non-interactive plotting and quick switching between datasets.
 from ecm_manual import HelpWindow #User instructions.
@@ -227,6 +227,7 @@ class Window(ttk.Frame):
     def make_calculatemenu(self, in_menu):
         """Create the Calculate menu in the menu bar."""
         calculateMenu = tk.Menu(in_menu)
+        calculateMenu.add_command(label = "Automatic initial guess", command = self.automaticInitialGuess)
         calculateMenu.add_command(label = "Refine solution (simple)", command = self.minRefine)
         calculateMenu.add_command(label = "Set simple refinement frequency range", command = self.setRefinementRange)
         calculateMenu.add_command(label = "Advanced refinement...", command = self.advancedRefinement)
@@ -472,6 +473,37 @@ class Window(ttk.Frame):
         self.history_manager.add_dataset(full_dataset)
 
     #Fitting functions
+    
+    def automaticInitialGuess(self):
+        """Create an automatic initial guess using a MultistartEngine."""
+        #Indicate that the initial guess is being calculated
+        self.plots.lhs.text(0.7, 0.9, "Guessing...", transform = self.plots.lhs.transAxes)
+        self.plots.canvas.draw()
+        self.update()
+        #Create a dictionary of the parameters (as in ecm_fit.RefinementWindow, but opposite)
+        par_dict = {}
+        for p in self.circuit_manager.circuit.diagram.list_elements(): #Tie parameter names to parameter array indices and count the parameters
+            par_dict[p.idx] = p.name
+            if p.tag in "QSOGH":
+                if p.tag == "Q":
+                    par_dict[p.idx2] = "n" + str(p.number)
+                if p.tag == "O":
+                    par_dict[p.idx2] = "k" + str(p.number)
+                if p.tag == "S":
+                    par_dict[p.idx2] = "l" + str(p.number)
+                if p.tag == "G":
+                    par_dict[p.idx2] = "m" + str(p.number)
+                if p.tag == "H":
+                    par_dict[p.idx2] = "t" + str(p.number)
+                    par_dict[p.idx3] = "b" + str(p.number)
+                    par_dict[p.idx4] = "g" + str(p.number)
+        #Calculate the initial guess and update previous parameters
+        guess_engine = MultistartEngine(self.circuit_manager.circuit.impedance, self.circuit_manager.circuit.jnp_impedance, self.data, list(np.ones(len(par_dict))), par_dict, self.prevparams, opt_module = "SciPy", opt_method = "Nelder-Mead", silent = True, nmaxiter = 100, weighting_scheme = "Unit", starts_per_par = 3, nmaxstarts = 30)
+        guess_engine.generate_solution()
+        #Update current parameters and the canvas
+        for p in par_dict:
+            self.interactive.parameters[p] = guess_engine.parameters[p]
+        self.canvasUpdate()
 
     def minRefine(self):
         """Optimize all model parameters using a unit weighting scheme and update the plots."""

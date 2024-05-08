@@ -9,11 +9,12 @@
 <tr class="heading-text decor">
 <td class="title">&nbsp;<br><strong class="title">ecm_fit</strong></td>
 </tr></table>
-    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;fitting&nbsp;classes.&nbsp;Last&nbsp;modified&nbsp;7&nbsp;May&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;fitting&nbsp;classes.&nbsp;Last&nbsp;modified&nbsp;8&nbsp;May&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
 &nbsp;<br>
 Classes:<br>
 <a href="#RefinementEngine">RefinementEngine</a>&nbsp;--&nbsp;class&nbsp;for&nbsp;refinements&nbsp;in&nbsp;general,&nbsp;independent&nbsp;of&nbsp;the&nbsp;GUI<br>
 <a href="#SimpleRefinementEngine">SimpleRefinementEngine</a>&nbsp;--&nbsp;class&nbsp;for&nbsp;the&nbsp;simple&nbsp;refinement<br>
+<a href="#MultistartEngine">MultistartEngine</a>&nbsp;--&nbsp;class&nbsp;for&nbsp;automatic&nbsp;initial&nbsp;guesses<br>
 <a href="#RefinementWindow">RefinementWindow</a>&nbsp;--&nbsp;class&nbsp;for&nbsp;the&nbsp;advanced&nbsp;refinement</span></p>
 <p>
 <table class="section">
@@ -42,7 +43,8 @@ Classes:<br>
 <dt class="heading-text"><a href="builtins.html#object">builtins.object</a>
 </dt><dd>
 <dl>
-<dt class="heading-text"><a href="ecm_fit.html#RefinementEngine">RefinementEngine</a>
+<dt class="heading-text"><a href="ecm_fit.html#MultistartEngine">MultistartEngine</a>
+</dt><dt class="heading-text"><a href="ecm_fit.html#RefinementEngine">RefinementEngine</a>
 </dt><dt class="heading-text"><a href="ecm_fit.html#SimpleRefinementEngine">SimpleRefinementEngine</a>
 </dt></dl>
 </dd>
@@ -54,6 +56,71 @@ Classes:<br>
 </dd>
 </dl>
  <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="MultistartEngine">class <strong>MultistartEngine</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#MultistartEngine">MultistartEngine</a>(function_to_fit,&nbsp;jnp_function_to_fit,&nbsp;data,&nbsp;parameters,&nbsp;parameter_dict,&nbsp;previous_parameters,&nbsp;opt_module='SciPy',&nbsp;opt_method='Nelder-Mead',&nbsp;silent=True,&nbsp;nmaxiter=100,&nbsp;weighting_scheme='Unit',&nbsp;starts_per_par=3,&nbsp;nmaxstarts=30)<br>
+&nbsp;<br>
+<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn">Methods defined here:<br>
+<dl><dt><a name="MultistartEngine-__init__"><strong>__init__</strong></a>(self, function_to_fit, jnp_function_to_fit, data, parameters, parameter_dict, previous_parameters, opt_module='SciPy', opt_method='Nelder-Mead', silent=True, nmaxiter=100, weighting_scheme='Unit', starts_per_par=3, nmaxstarts=30)</dt><dd><span class="code">Multistart&nbsp;approach&nbsp;for&nbsp;global&nbsp;optimization;&nbsp;used&nbsp;for&nbsp;automatic&nbsp;initial&nbsp;guesses.<br>
+&nbsp;<br>
+Init&nbsp;arguments&nbsp;(all&nbsp;of&nbsp;which&nbsp;become&nbsp;attributes&nbsp;with&nbsp;the&nbsp;same&nbsp;name):<br>
+function_to_fit&nbsp;--&nbsp;function&nbsp;to&nbsp;fit;&nbsp;typically&nbsp;Circuit.impedance<br>
+jnp_function_to_fit&nbsp;--&nbsp;JAX.NumPy&nbsp;function&nbsp;to&nbsp;fit;&nbsp;typically&nbsp;Circuit.jnp_impedance<br>
+data&nbsp;--&nbsp;dataSet&nbsp;<a href="builtins.html#object">object</a>&nbsp;containing&nbsp;measured&nbsp;data<br>
+parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;parameters<br>
+parameter_list&nbsp;--&nbsp;dict&nbsp;of&nbsp;parameters;&nbsp;keys&nbsp;are&nbsp;are&nbsp;indices&nbsp;in&nbsp;self.<strong>parameters</strong>,&nbsp;values&nbsp;are&nbsp;names&nbsp;(e.g.&nbsp;'R0',&nbsp;'n1',&nbsp;...)<br>
+previous_parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;lists&nbsp;of&nbsp;parameters<br>
+opt_module&nbsp;--&nbsp;string,&nbsp;module&nbsp;from&nbsp;which&nbsp;to&nbsp;import&nbsp;optimizer;&nbsp;only&nbsp;option&nbsp;for&nbsp;now&nbsp;is&nbsp;'SciPy'<br>
+opt_method&nbsp;--&nbsp;string,&nbsp;optimizer&nbsp;to&nbsp;use<br>
+nmaxiter&nbsp;--&nbsp;maximum&nbsp;number&nbsp;of&nbsp;iterations&nbsp;per&nbsp;refineable&nbsp;parameter&nbsp;in&nbsp;each&nbsp;<a href="#RefinementEngine">RefinementEngine</a><br>
+weighting_scheme&nbsp;--&nbsp;weighting&nbsp;scheme,&nbsp;string;&nbsp;one&nbsp;of&nbsp;'Unit',&nbsp;'Observed&nbsp;modulus',&nbsp;'Calculated&nbsp;modulus',&nbsp;'Observed&nbsp;proportional',&nbsp;and&nbsp;'Calculated&nbsp;proportional'<br>
+starts_per_par&nbsp;--&nbsp;number&nbsp;of&nbsp;starting&nbsp;positions&nbsp;generated&nbsp;per&nbsp;parameter;&nbsp;default&nbsp;3<br>
+nmaxstarts&nbsp;--&nbsp;maximum&nbsp;number&nbsp;of&nbsp;RefinementEngines&nbsp;started&nbsp;by&nbsp;the&nbsp;<a href="#MultistartEngine">MultistartEngine</a>;&nbsp;default&nbsp;30<br>
+&nbsp;<br>
+Other&nbsp;attributes:<br>
+to_refine&nbsp;--&nbsp;list&nbsp;of&nbsp;ones&nbsp;and&nbsp;zeros;&nbsp;1&nbsp;means&nbsp;that&nbsp;the&nbsp;value&nbsp;in&nbsp;self.<strong>parameters</strong>&nbsp;at&nbsp;the&nbsp;same&nbsp;index&nbsp;should&nbsp;be&nbsp;refined,&nbsp;0&nbsp;means&nbsp;that&nbsp;it&nbsp;should&nbsp;not;&nbsp;does&nbsp;not&nbsp;work&nbsp;with&nbsp;optax.adam<br>
+high_f&nbsp;--&nbsp;upper&nbsp;frequency&nbsp;bound<br>
+low_f&nbsp;--&nbsp;lower&nbsp;frequency&nbsp;bound<br>
+&nbsp;<br>
+Methods:<br>
+initial_value&nbsp;--&nbsp;for&nbsp;a&nbsp;given&nbsp;element,&nbsp;randomly&nbsp;generate&nbsp;a&nbsp;reasonable&nbsp;starting&nbsp;value<br>
+initial_parameters&nbsp;--&nbsp;generate&nbsp;reasonable&nbsp;starting&nbsp;values&nbsp;for&nbsp;all&nbsp;parameters;&nbsp;return&nbsp;a&nbsp;new&nbsp;array<br>
+generate_solution&nbsp;--&nbsp;generate&nbsp;random&nbsp;starting&nbsp;positions,&nbsp;refine&nbsp;each,&nbsp;and&nbsp;choose&nbsp;the&nbsp;best&nbsp;solution</span></dd></dl>
+
+<dl><dt><a name="MultistartEngine-generate_solution"><strong>generate_solution</strong></a>(self)</dt><dd><span class="code">Fit&nbsp;the&nbsp;model&nbsp;to&nbsp;the&nbsp;data&nbsp;from&nbsp;all&nbsp;starting&nbsp;positions&nbsp;and&nbsp;save&nbsp;the&nbsp;best&nbsp;set&nbsp;of&nbsp;parameters&nbsp;as&nbsp;self.<strong>parameters</strong>.</span></dd></dl>
+
+<dl><dt><a name="MultistartEngine-initial_parameters"><strong>initial_parameters</strong></a>(self)</dt><dd><span class="code">Generate&nbsp;a&nbsp;new&nbsp;array&nbsp;of&nbsp;parameters,&nbsp;with&nbsp;random&nbsp;starting&nbsp;values&nbsp;according&nbsp;to&nbsp;self.<strong>initial_value</strong>.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+&nbsp;<br>
+Returns:<br>
+NumPy&nbsp;array&nbsp;of&nbsp;parameter&nbsp;values</span></dd></dl>
+
+<dl><dt><a name="MultistartEngine-initial_value"><strong>initial_value</strong></a>(self, parameter_tag_or_name)</dt><dd><span class="code">For&nbsp;any&nbsp;valid&nbsp;parameter&nbsp;tag&nbsp;('R',&nbsp;'C',&nbsp;'L',&nbsp;...,&nbsp;'H'),&nbsp;generate&nbsp;a&nbsp;reasonable&nbsp;starting&nbsp;value.<br>
+Reasonable&nbsp;starting&nbsp;values&nbsp;are&nbsp;exponentially&nbsp;(base&nbsp;10)&nbsp;distributed,&nbsp;covering&nbsp;a&nbsp;wide&nbsp;range&nbsp;of&nbsp;starting&nbsp;values.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+parameter_tag_or_name&nbsp;--&nbsp;name&nbsp;or&nbsp;tag&nbsp;of&nbsp;parameter<br>
+&nbsp;<br>
+Returns:<br>
+float;&nbsp;reasonable&nbsp;initial&nbsp;value</span></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
+</td></tr></table> <p>
 <table class="section">
 <tr class="decor title-decor heading-text">
 <td class="section-title" colspan=3>&nbsp;<br><a name="RefinementEngine">class <strong>RefinementEngine</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
@@ -72,7 +139,7 @@ jnp_function_to_fit&nbsp;--&nbsp;JAX.NumPy&nbsp;function&nbsp;to&nbsp;fit;&nbsp;
 data&nbsp;--&nbsp;dataSet&nbsp;<a href="builtins.html#object">object</a>&nbsp;containing&nbsp;measured&nbsp;data<br>
 parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;parameters<br>
 parameter_list&nbsp;--&nbsp;dict&nbsp;of&nbsp;parameters;&nbsp;keys&nbsp;are&nbsp;are&nbsp;indices&nbsp;in&nbsp;self.<strong>parameters</strong>,&nbsp;values&nbsp;are&nbsp;names&nbsp;(e.g.&nbsp;'R0',&nbsp;'n1',&nbsp;...)<br>
-to_refine&nbsp;--&nbsp;list&nbsp;of&nbsp;ones&nbsp;and&nbsp;zeros;&nbsp;1&nbsp;means&nbsp;that&nbsp;the&nbsp;value&nbsp;in&nbsp;self.<strong>parameters</strong>&nbsp;at&nbsp;the&nbsp;same&nbsp;index&nbsp;should&nbsp;be&nbsp;refined,&nbsp;0&nbsp;means&nbsp;that&nbsp;it&nbsp;should&nbsp;not<br>
+to_refine&nbsp;--&nbsp;list&nbsp;of&nbsp;ones&nbsp;and&nbsp;zeros;&nbsp;1&nbsp;means&nbsp;that&nbsp;the&nbsp;value&nbsp;in&nbsp;self.<strong>parameters</strong>&nbsp;at&nbsp;the&nbsp;same&nbsp;index&nbsp;should&nbsp;be&nbsp;refined,&nbsp;0&nbsp;means&nbsp;that&nbsp;it&nbsp;should&nbsp;not;&nbsp;does&nbsp;not&nbsp;work&nbsp;with&nbsp;optax.adam<br>
 high_f&nbsp;--&nbsp;upper&nbsp;frequency&nbsp;bound<br>
 low_f&nbsp;--&nbsp;lower&nbsp;frequency&nbsp;bound<br>
 previous_parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;lists&nbsp;of&nbsp;parameters<br>

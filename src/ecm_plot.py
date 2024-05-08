@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the plotting canvas class and some additional plotting-related code. Last modified 6 May 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the plotting canvas class and some additional plotting-related code. Last modified 8 May 2024 by Henrik Rodenburg.
 
 Classes:
 ImpedancePlot -- base class for all plot panels; possible subclasses below:
@@ -165,20 +165,20 @@ class ImpedancePlot():
             if self.primary_axis_on:
                 self.plot_primary_data()
                 for i in range(min([len(self.ghost_data_visibility), 3])):
-                    self.plot_primary_ghost_data(self.ghost_data[self.ghost_data_visibility[i]])
+                    self.plot_primary_ghost_data(self.ghost_data[self.ghost_data_visibility[i]], i)
             if self.make_twinx and self.twin_axis_on:
                 self.plot_twin_data()
                 for i in range(min([len(self.ghost_data_visibility), 3])):
-                    self.plot_twin_ghost_data(self.ghost_data[self.ghost_data_visibility[i]])
+                    self.plot_twin_ghost_data(self.ghost_data[self.ghost_data_visibility[i]], i)
         if self.model_on and self.model != None:
             if self.primary_axis_on:
                 self.plot_primary_model()
                 for i in range(min([len(self.ghost_data_visibility), 3])):
-                    self.plot_primary_ghost_model(self.ghost_data[self.ghost_data_visibility[i]])
+                    self.plot_primary_ghost_model(self.ghost_data[self.ghost_data_visibility[i]], i)
             if self.make_twinx and self.twin_axis_on:
                 self.plot_twin_model()
                 for i in range(min([len(self.ghost_data_visibility), 3])):
-                    self.plot_twin_ghost_model(self.ghost_data[self.ghost_data_visibility[i]])
+                    self.plot_twin_ghost_model(self.ghost_data[self.ghost_data_visibility[i]], i)
                     
     #Aesthetics
                     
@@ -361,7 +361,7 @@ class ComplexPlaneImpedancePlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.primary.plot(g.model.real, -g.model.imag, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        self.primary.plot(g.model.real, -g.model.imag, marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
         
     def set_text(self):
         self.primary.set_title("Complex plane")
@@ -418,7 +418,7 @@ class ComplexPlaneAdmittancePlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.primary.plot(1/g.model.real, -1/g.model.imag, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        self.primary.plot(1/g.model.real, -1/g.model.imag, marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
         
     def set_text(self):
         self.primary.set_title("Complex plane")
@@ -479,7 +479,7 @@ class BodePhaseAmplitudePlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.primary.plot(g.model.freq, g.model.freq, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        self.primary.plot(g.model.freq, g.model.amplitude, marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
         
     def plot_twin_data(self):
         """Function for plotting the data along the self.twin y-axis."""
@@ -505,7 +505,7 @@ class BodePhaseAmplitudePlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.twin.plot(g.model.freq, -g.model.phase*180/np.pi, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        self.twin.plot(g.model.freq, g.model.phase*180/np.pi, marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
         
     def set_text(self):
         self.primary.set_title("Bode amplitude and phase")
@@ -567,7 +567,7 @@ class AdmittanceFrequencyPlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.primary.plot(g.model.freq, 1/g.model.real, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        self.primary.plot(g.model.freq, 1/g.model.real, marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
         
     def plot_twin_data(self):
         """Function for plotting the data along the self.twin y-axis."""
@@ -593,7 +593,7 @@ class AdmittanceFrequencyPlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.twin.plot(g.model.freq, -1/g.model.imag, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        self.twin.plot(g.model.freq, -1/g.model.imag, marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
         
     def set_text(self):
         self.primary.set_title("Admittance")
@@ -655,7 +655,7 @@ class ImpedanceFrequencyPlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.primary.plot(g.model.freq, g.model.real, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        self.primary.plot(g.model.freq, g.model.real, marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
         
     def plot_twin_data(self):
         """Function for plotting the data along the self.twin y-axis."""
@@ -681,7 +681,7 @@ class ImpedanceFrequencyPlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.twin.plot(g.model.freq, -g.model.imag, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        self.twin.plot(g.model.freq, -g.model.imag, marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
         
     def set_text(self):
         self.primary.set_title("Impedance")
@@ -757,7 +757,7 @@ class ConductivityFrequencyPlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.primary.plot(g.model.freq, self.geom/g.model.real, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        self.primary.plot(g.model.freq, self.geom/g.model.real, marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
         
     def plot_twin_data(self):
         """Function for plotting the data along the self.twin y-axis."""
@@ -783,7 +783,7 @@ class ConductivityFrequencyPlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.twin.plot(g.model.freq, -self.geom/g.model.imag, marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        self.twin.plot(g.model.freq, -self.geom/g.model.imag, marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
         
     def set_text(self):
         self.primary.set_title("Conductivity")
@@ -857,7 +857,7 @@ class PerimttivityFrequencyPlot(ImpedancePlot):
         Returns:
         Complex permittivity (NumPy array)"""
         sigma = self.geom/(ds.real + 1j*ds.imag)
-        return ds/(1j*ds.freq*2*np.pi*self.e0)
+        return sigma/(1j*ds.freq*2*np.pi*self.e0)
         
     def plot_all(self):
         """Plot all data, but first calculate the new permittivity."""
@@ -889,7 +889,7 @@ class PerimttivityFrequencyPlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.primary.plot(g.model.freq, np.real(self.permittivity_generic(g.model)), marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        self.primary.plot(g.model.freq, np.real(self.permittivity_generic(g.model)), marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
         
     def plot_twin_data(self):
         """Function for plotting the data along the self.twin y-axis."""
@@ -915,7 +915,7 @@ class PerimttivityFrequencyPlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.twin.plot(g.model.freq, -np.imag(self.permittivity_generic(g.model)), marker = ".", linestyle = "None", color = self.ghost_m_colours[i])
+        self.twin.plot(g.model.freq, -np.imag(self.permittivity_generic(g.model)), marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
         
     def set_text(self):
         self.primary.set_title("Permittivity")
