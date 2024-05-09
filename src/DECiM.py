@@ -1,6 +1,6 @@
 """DECiM (Determination of Equivalent Circuit Models) is an equivalent circuit model fitting program for impedance data. It is a GUI-based program.
 Much of the source code is spread over other python source files, all of which must be in the same folder as DECiM.py to ensure that the program works correctly.
-DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.16, 8 May 2024.
+DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.2.17, 9 May 2024.
 
 This is the core module -- when launched, DECiM starts. This module also defines the Window class."""
 
@@ -33,6 +33,9 @@ import webbrowser
 #OS (help)
 import os
 
+#Sys (font sizes)
+import sys
+
 #Tkinter (GUI)
 import tkinter as tk
 import tkinter.ttk as ttk
@@ -64,6 +67,10 @@ import ecm_custom_models as ecmcm #For custom models.
 #########################
 
 font_sizes = {"small": 12, "medium": 16, "large": 18}
+if len(sys.argv) > 1:
+    if sys.argv[1] == "-b":
+        font_sizes = {"small": 22, "medium": 26, "large": 28}
+
 #Taken from https://stackoverflow.com/questions/3899980/how-to-change-the-font-size-on-a-matplotlib-plot
 pt.rc('font', size = font_sizes["medium"])
 pt.rc('axes', titlesize = font_sizes["large"])
@@ -87,7 +94,7 @@ pt.rc('figure', titlesize = font_sizes["large"])
 #o https://stackoverflow.com/questions/4098131/how-to-update-a-plot-in-matplotlib
 
 class Window(ttk.Frame):
-    def __init__(self, width, height):
+    def __init__(self, width, height, fontsize = ""):
         """Core class of DECiM. From here, all other parts of the program are accessed.
         
         Init arguments:
@@ -143,6 +150,8 @@ class Window(ttk.Frame):
         #Frame width and height
         self.width = width
         self.height = height
+        #Font size
+        self.fontsize = fontsize
         #Defining a circuit
         self.circuit_manager = CircuitManager()
         #Saving of datasets in memory
@@ -501,6 +510,7 @@ class Window(ttk.Frame):
         guess_engine = MultistartEngine(self.circuit_manager.circuit.impedance, self.circuit_manager.circuit.jnp_impedance, self.data, list(np.ones(len(par_dict))), par_dict, self.prevparams, opt_module = "SciPy", opt_method = "Nelder-Mead", silent = True, nmaxiter = 100, weighting_scheme = "Unit", starts_per_par = 3, nmaxstarts = 30)
         guess_engine.generate_solution()
         #Update current parameters and the canvas
+        self.prevparams.append(self.interactive.parameters)
         for p in par_dict:
             self.interactive.parameters[p] = guess_engine.parameters[p]
         self.canvasUpdate()

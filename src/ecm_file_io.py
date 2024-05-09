@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains all functions related to file I/O. Last modified 24 April 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains all functions related to file I/O. Last modified 9 May 2024 by Henrik Rodenburg.
 
 Classes:
 DataSpecificationFile -- settings file that holds information about data file layout.
@@ -120,7 +120,7 @@ class DataSpecificationWindow(tk.Toplevel):
 ##DATA FILE PARSING##
 #####################
 
-def parseData(filename, dataspec_filename = "ecm_datafiles.decim_specification", reverse = True):
+def parseData(filename, dataspec_filename = "ecm_datafiles.decim_specification"):
     """Read a data file. The assumed structure is three columns: linear frequency (Hz), real part of impedance (Ohm), imaginary part of impedance (Ohm).
     
     Non-keyword arguments:
@@ -128,7 +128,6 @@ def parseData(filename, dataspec_filename = "ecm_datafiles.decim_specification",
     
     Keyword arguments:
     dataspec_filename -- Name of file that specificies which information is in which column of the datafile.
-    reverse -- Boolean, reverse the order of the imported data if True. Default is True. Should be True if the input file begins with the highest frequencies, otherwise it should be False.
     
     Returns:
     dataSet object"""
@@ -152,15 +151,21 @@ def parseData(filename, dataspec_filename = "ecm_datafiles.decim_specification",
                     xq = True
                 continue
     file.close()
-    ndata = []
-    for d in data:
-        if reverse:
-            d.reverse()
-        ndata.append(np.array(d))
-    data = ndata
     #Establish what information is in each column and return a dataSet
     dataspec_file = DataSpecificationFile(dataspec_filename)
     dataspec_file.read()
+    #Reverse the data if necessary
+    ndata = []
+    if "FREQ" in dataspec_file.columns:
+        if data[dataspec_file.columns.index("FREQ")][0] > data[dataspec_file.columns.index("FREQ")][-1]:
+            for d in data:
+                d.reverse()
+                ndata.append(np.array(d))
+        else:
+            for d in data:
+                ndata.append(np.array(d))
+    data = ndata
+    #Return the data
     if "FREQ" in dataspec_file.columns and "REAL" in dataspec_file.columns and "-IMAG" in dataspec_file.columns:
         return dataSet(freq = data[dataspec_file.columns.index("FREQ")], real = data[dataspec_file.columns.index("REAL")], imag = -data[dataspec_file.columns.index("-IMAG")])
     elif "FREQ" in dataspec_file.columns and "REAL" in dataspec_file.columns and "IMAG" in dataspec_file.columns:

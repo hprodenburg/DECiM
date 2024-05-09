@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the Z-HIT maths and window. Last modified 3 May 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the Z-HIT maths and window. Last modified 9 May 2024 by Henrik Rodenburg.
 
 Classes:
 ZHITEngine -- handles the Z-HIT transform

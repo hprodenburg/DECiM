@@ -9,7 +9,7 @@
 <tr class="heading-text decor">
 <td class="title">&nbsp;<br><strong class="title">ecm_file_io</strong></td>
 </tr></table>
-    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;all&nbsp;functions&nbsp;related&nbsp;to&nbsp;file&nbsp;I/O.&nbsp;Last&nbsp;modified&nbsp;24&nbsp;April&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;all&nbsp;functions&nbsp;related&nbsp;to&nbsp;file&nbsp;I/O.&nbsp;Last&nbsp;modified&nbsp;9&nbsp;May&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
 &nbsp;<br>
 Classes:<br>
 <a href="#DataSpecificationFile">DataSpecificationFile</a>&nbsp;--&nbsp;settings&nbsp;file&nbsp;that&nbsp;holds&nbsp;information&nbsp;about&nbsp;data&nbsp;file&nbsp;layout.<br>
@@ -928,14 +928,13 @@ circuit_string&nbsp;--&nbsp;the&nbsp;string&nbsp;defining&nbsp;a&nbsp;circuit<br
 &nbsp;<br>
 Returns:<br>
 ecm_circuits.Circuit&nbsp;<a href="builtins.html#object">object</a>&nbsp;whose&nbsp;diagram&nbsp;matches&nbsp;the&nbsp;one&nbsp;described&nbsp;by&nbsp;the&nbsp;circuit&nbsp;string.</span></dd></dl>
- <dl><dt><a name="-parseData"><strong>parseData</strong></a>(filename, dataspec_filename='ecm_datafiles.decim_specification', reverse=True)</dt><dd><span class="code">Read&nbsp;a&nbsp;data&nbsp;file.&nbsp;The&nbsp;assumed&nbsp;structure&nbsp;is&nbsp;three&nbsp;columns:&nbsp;linear&nbsp;frequency&nbsp;(Hz),&nbsp;real&nbsp;part&nbsp;of&nbsp;impedance&nbsp;(Ohm),&nbsp;imaginary&nbsp;part&nbsp;of&nbsp;impedance&nbsp;(Ohm).<br>
+ <dl><dt><a name="-parseData"><strong>parseData</strong></a>(filename, dataspec_filename='ecm_datafiles.decim_specification')</dt><dd><span class="code">Read&nbsp;a&nbsp;data&nbsp;file.&nbsp;The&nbsp;assumed&nbsp;structure&nbsp;is&nbsp;three&nbsp;columns:&nbsp;linear&nbsp;frequency&nbsp;(Hz),&nbsp;real&nbsp;part&nbsp;of&nbsp;impedance&nbsp;(Ohm),&nbsp;imaginary&nbsp;part&nbsp;of&nbsp;impedance&nbsp;(Ohm).<br>
 &nbsp;<br>
 Non-keyword&nbsp;arguments:<br>
 filename&nbsp;--&nbsp;relative&nbsp;path&nbsp;to&nbsp;file&nbsp;and&nbsp;name&nbsp;of&nbsp;file<br>
 &nbsp;<br>
 Keyword&nbsp;arguments:<br>
 dataspec_filename&nbsp;--&nbsp;Name&nbsp;of&nbsp;file&nbsp;that&nbsp;specificies&nbsp;which&nbsp;information&nbsp;is&nbsp;in&nbsp;which&nbsp;column&nbsp;of&nbsp;the&nbsp;datafile.<br>
-reverse&nbsp;--&nbsp;Boolean,&nbsp;reverse&nbsp;the&nbsp;order&nbsp;of&nbsp;the&nbsp;imported&nbsp;data&nbsp;if&nbsp;True.&nbsp;Default&nbsp;is&nbsp;True.&nbsp;Should&nbsp;be&nbsp;True&nbsp;if&nbsp;the&nbsp;input&nbsp;file&nbsp;begins&nbsp;with&nbsp;the&nbsp;highest&nbsp;frequencies,&nbsp;otherwise&nbsp;it&nbsp;should&nbsp;be&nbsp;False.<br>
 &nbsp;<br>
 Returns:<br>
 dataSet&nbsp;<a href="builtins.html#object">object</a></span></dd></dl>

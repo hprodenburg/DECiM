@@ -11,7 +11,7 @@
 </tr></table>
     <p><span class="code">DECiM&nbsp;(Determination&nbsp;of&nbsp;Equivalent&nbsp;Circuit&nbsp;Models)&nbsp;is&nbsp;an&nbsp;equivalent&nbsp;circuit&nbsp;model&nbsp;fitting&nbsp;program&nbsp;for&nbsp;impedance&nbsp;data.&nbsp;It&nbsp;is&nbsp;a&nbsp;GUI-based&nbsp;program.<br>
 Much&nbsp;of&nbsp;the&nbsp;source&nbsp;code&nbsp;is&nbsp;spread&nbsp;over&nbsp;other&nbsp;python&nbsp;source&nbsp;files,&nbsp;all&nbsp;of&nbsp;which&nbsp;must&nbsp;be&nbsp;in&nbsp;the&nbsp;same&nbsp;folder&nbsp;as&nbsp;DECiM.py&nbsp;to&nbsp;ensure&nbsp;that&nbsp;the&nbsp;program&nbsp;works&nbsp;correctly.<br>
-DECiM&nbsp;was&nbsp;written&nbsp;and&nbsp;is&nbsp;maintained&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.&nbsp;Current&nbsp;version:&nbsp;1.2.16,&nbsp;8&nbsp;May&nbsp;2024.<br>
+DECiM&nbsp;was&nbsp;written&nbsp;and&nbsp;is&nbsp;maintained&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.&nbsp;Current&nbsp;version:&nbsp;1.2.17,&nbsp;9&nbsp;May&nbsp;2024.<br>
 &nbsp;<br>
 This&nbsp;is&nbsp;the&nbsp;core&nbsp;module&nbsp;--&nbsp;when&nbsp;launched,&nbsp;DECiM&nbsp;starts.&nbsp;This&nbsp;module&nbsp;also&nbsp;defines&nbsp;the&nbsp;<a href="#Window">Window</a>&nbsp;class.</span></p>
 <p>
@@ -32,7 +32,8 @@ This&nbsp;is&nbsp;the&nbsp;core&nbsp;module&nbsp;--&nbsp;when&nbsp;launched,&nbs
 <a href="os.html">os</a><br>
 <a href="matplotlib.pyplot.html">matplotlib.pyplot</a><br>
 <a href="tkinter.simpledialog.html">tkinter.simpledialog</a><br>
-</td><td class="multicolumn"><a href="tkinter.html">tkinter</a><br>
+</td><td class="multicolumn"><a href="sys.html">sys</a><br>
+<a href="tkinter.html">tkinter</a><br>
 <a href="tkinter.ttk.html">tkinter.ttk</a><br>
 <a href="webbrowser.html">webbrowser</a><br>
 </td></tr></table></td></tr></table><p>
@@ -55,7 +56,7 @@ This&nbsp;is&nbsp;the&nbsp;core&nbsp;module&nbsp;--&nbsp;when&nbsp;launched,&nbs
 <td class="section-title" colspan=3>&nbsp;<br><a name="Window">class <strong>Window</strong></a>(<a href="tkinter.ttk.html#Frame">tkinter.ttk.Frame</a>)</td></tr>
     
 <tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
-<td class="decor title-decor" colspan=2><span class="code"><a href="#Window">Window</a>(width,&nbsp;height)<br>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#Window">Window</a>(width,&nbsp;height,&nbsp;fontsize='')<br>
 &nbsp;<br>
 <br>&nbsp;</span></td></tr>
 <tr><td>&nbsp;</td>
@@ -73,7 +74,7 @@ This&nbsp;is&nbsp;the&nbsp;core&nbsp;module&nbsp;--&nbsp;when&nbsp;launched,&nbs
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="Window-__init__"><strong>__init__</strong></a>(self, width, height)</dt><dd><span class="code">Core&nbsp;class&nbsp;of&nbsp;DECiM.&nbsp;From&nbsp;here,&nbsp;all&nbsp;other&nbsp;parts&nbsp;of&nbsp;the&nbsp;program&nbsp;are&nbsp;accessed.<br>
+<dl><dt><a name="Window-__init__"><strong>__init__</strong></a>(self, width, height, fontsize='')</dt><dd><span class="code">Core&nbsp;class&nbsp;of&nbsp;DECiM.&nbsp;From&nbsp;here,&nbsp;all&nbsp;other&nbsp;parts&nbsp;of&nbsp;the&nbsp;program&nbsp;are&nbsp;accessed.<br>
 &nbsp;<br>
 Init&nbsp;arguments:<br>
 width&nbsp;--&nbsp;<a href="#Window">Window</a>&nbsp;width<br>
