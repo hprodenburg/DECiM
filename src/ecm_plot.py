@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the plotting canvas class and some additional plotting-related code. Last modified 8 May 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the plotting canvas class and some additional plotting-related code. Last modified 17 June 2024 by Henrik Rodenburg.
 
 Classes:
 ImpedancePlot -- base class for all plot panels; possible subclasses below:
@@ -972,6 +972,7 @@ class PlotFrame(ttk.Frame):
         mfreq_freq -- NumPy array of frequencies of points marked by the 'mark frequencies that are integer powers of 10' option
         mfreq_real -- NumPy array of real components of marked points
         mfreq_imag -- NumPy array of imaginary components of marked points
+        decades -- Boolean, whether to indicate frequencies with decades (True) or frequency values (False); default False
         
         sample_thickness -- thickness of sample in mm
         sample_area -- area of sample in cm^2
@@ -1017,6 +1018,7 @@ class PlotFrame(ttk.Frame):
         self.mfreq_freq = np.array([])
         self.mfreq_real = np.array([])
         self.mfreq_imag = np.array([])
+        self.decades = False
         self.sample_thickness = 1
         self.sample_area = 1
         self.plot_types = {"Complex plane Z": ComplexPlaneImpedancePlot, "Complex plane Y": ComplexPlaneAdmittancePlot, "Bode amplitude/phase": BodePhaseAmplitudePlot, "YY vs. f": AdmittanceFrequencyPlot, "ZZ vs. f": ImpedanceFrequencyPlot, "sigma vs. f": ConductivityFrequencyPlot, "epsilon vs. f": PerimttivityFrequencyPlot}
@@ -1071,7 +1073,12 @@ class PlotFrame(ttk.Frame):
             self.lhs.plot(self.mfreq_real, -self.mfreq_imag, marker = "o", fillstyle = "none", linestyle = "None", color = "#000000", markersize = 12)
         elif self.lhs_type == "Complex plane Y":
             self.lhs.plot(1/self.mfreq_real, -1/self.mfreq_imag, marker = "o", fillstyle = "none", linestyle = "None", color = "#000000", markersize = 12)
-        mfreq_labels = {0.000001: "1 $\mu$Hz", 0.00001: "10 $\mu$Hz", 0.0001: "0.1 mHz", 0.001: "1 mHz", 0.01: "10 mHz", 0.1: "0.1 Hz", 1: "1 Hz", 10: "10 Hz", 100: "100 Hz", 1000: "1 kHz", 10000: "10 kHz", 100000: "100 kHz", 1000000: "1 MHz", 10000000: "10 MHz", 100000000: "100 MHz", 1000000000: "1 GHz", 10000000000: "10 GHz", 100000000000: "100 GHz", 1000000000000: "1 THz"}
+        if self.decades:
+            mfreq_labels = {}
+            for i in range(-6, 13, 1):
+                mfreq_labels[10**i] = str(i)
+        else:
+            mfreq_labels = {0.000001: "1 $\mu$Hz", 0.00001: "10 $\mu$Hz", 0.0001: "0.1 mHz", 0.001: "1 mHz", 0.01: "10 mHz", 0.1: "0.1 Hz", 1: "1 Hz", 10: "10 Hz", 100: "100 Hz", 1000: "1 kHz", 10000: "10 kHz", 100000: "100 kHz", 1000000: "1 MHz", 10000000: "10 MHz", 100000000: "100 MHz", 1000000000: "1 GHz", 10000000000: "10 GHz", 100000000000: "100 GHz", 1000000000000: "1 THz"}
         if self.limiter.enabled:
             where_x = self.limiter.real
             where_y = self.limiter.imag
@@ -1081,11 +1088,19 @@ class PlotFrame(ttk.Frame):
         dx, dy = where_x[1] - where_x[0], where_y[1] - where_y[0]
         for m in range(len(self.mfreq_freq)):
             if self.lhs_type == "Complex plane Z":
-                self.lhs.text(self.mfreq_real[m] + 0.05*dx, -self.mfreq_imag[m] - 0.05*dy, mfreq_labels[self.mfreq_freq[m]])
-                self.lhs.plot([self.mfreq_real[m] + 0.02*dx, self.mfreq_real[m] + 0.045*dx], [-self.mfreq_imag[m] - 0.015*dy, -self.mfreq_imag[m] - 0.04*dy], marker = "None", linestyle = "-", linewidth = 1, color = "#000000")
+                if self.decades:
+                    self.lhs.text(self.mfreq_real[m] + 0.05*dx, -self.mfreq_imag[m] - 0.075*dy, mfreq_labels[self.mfreq_freq[m]])
+                    self.lhs.plot([self.mfreq_real[m] + 0.02*dx, self.mfreq_real[m] + 0.045*dx], [-self.mfreq_imag[m] - 0.015*dy, -self.mfreq_imag[m] - 0.025*dy], marker = "None", linestyle = "-", linewidth = 1, color = "#000000")
+                else:
+                    self.lhs.text(self.mfreq_real[m] + 0.05*dx, -self.mfreq_imag[m] - 0.05*dy, mfreq_labels[self.mfreq_freq[m]])
+                    self.lhs.plot([self.mfreq_real[m] + 0.02*dx, self.mfreq_real[m] + 0.045*dx], [-self.mfreq_imag[m] - 0.015*dy, -self.mfreq_imag[m] - 0.04*dy], marker = "None", linestyle = "-", linewidth = 1, color = "#000000")
             elif self.lhs_type == "Complex plane Y":
-                self.lhs.text(1/self.mfreq_real[m] + 0.05*dx, -1/self.mfreq_imag[m] - 0.05*dy, mfreq_labels[self.mfreq_freq[m]])
-                self.lhs.plot([1/self.mfreq_real[m] + 0.02*dx, 1/self.mfreq_real[m] + 0.045*dx], [-1/self.mfreq_imag[m] - 0.015*dy, -1/self.mfreq_imag[m] - 0.04*dy], marker = "None", linestyle = "-", linewidth = 1, color = "#000000")
+                if self.decades:
+                    self.lhs.text(1/self.mfreq_real[m] + 0.05*dx, -1/self.mfreq_imag[m] - 0.075*dy, mfreq_labels[self.mfreq_freq[m]])
+                    self.lhs.plot([1/self.mfreq_real[m] + 0.02*dx, 1/self.mfreq_real[m] + 0.045*dx], [-1/self.mfreq_imag[m] - 0.015*dy, -1/self.mfreq_imag[m] - 0.025*dy], marker = "None", linestyle = "-", linewidth = 1, color = "#000000")
+                else:
+                    self.lhs.text(1/self.mfreq_real[m] + 0.05*dx, -1/self.mfreq_imag[m] - 0.05*dy, mfreq_labels[self.mfreq_freq[m]])
+                    self.lhs.plot([1/self.mfreq_real[m] + 0.02*dx, 1/self.mfreq_real[m] + 0.045*dx], [-1/self.mfreq_imag[m] - 0.015*dy, -1/self.mfreq_imag[m] - 0.04*dy], marker = "None", linestyle = "-", linewidth = 1, color = "#000000")
 
     def updatePlots(self, data, ghost_data, ghost_data_visibility, model = None):
         """Clear and redraw the plots. All the checks for which data should be visible are handled here. This is also where the model curve finally comes in.

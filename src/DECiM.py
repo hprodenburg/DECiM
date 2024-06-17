@@ -1,6 +1,6 @@
 """DECiM (Determination of Equivalent Circuit Models) is an equivalent circuit model fitting program for impedance data. It is a GUI-based program.
 Much of the source code is spread over other python source files, all of which must be in the same folder as DECiM.py to ensure that the program works correctly.
-DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.3.0, 14 May 2024.
+DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.3.1, 17 June 2024.
 
 This is the core module -- when launched, DECiM starts. This module also defines the Window class."""
 
@@ -145,7 +145,8 @@ class Window(ttk.Frame):
         
         showInstructions -- launch the Help window
         
-        markFrequencies -- mark frequencies that are integer powers of 10"""
+        markFrequencies -- mark frequencies that are integer powers of 10
+        toggleDecades -- change the label appearance for marked frequencies to decade or frequency value form"""
         super().__init__()
         #Frame width and height
         self.width = width
@@ -213,7 +214,9 @@ class Window(ttk.Frame):
         plotMenu = tk.Menu(in_menu)
         plotMenu.add_command(label = "Toggle data visibility", command = self.toggleDataVisibility)
         plotMenu.add_command(label = "Toggle fit visibility", command = self.toggleFitVisibility)
+        plotMenu.add_separator()
         plotMenu.add_command(label = "Mark frequencies that are integer powers of 10", command = self.markFrequencies)
+        plotMenu.add_command(label = "Toggle decades/frequency values", command = self.toggleDecades)
         plotMenu.add_separator()
         plotMenu.add_command(label = "Reset view", command = self.resetView)
         plotMenu.add_separator()
@@ -701,6 +704,10 @@ class Window(ttk.Frame):
         self.plots.mfreq_real = np.array(self.plots.mfreq_real)
         self.plots.mfreq_imag = np.array(self.plots.mfreq_imag)
         self.canvasUpdate()
+        
+    def toggleDecades(self):
+        """Change the label appearance for marked frequencies to decade or frequency value form. For example, '100 kHz' becomes '5', and '10 mHz' becomes '-2'."""
+        self.plots.decades = not self.plots.decades
 
 #############
 ##MAIN LOOP##
