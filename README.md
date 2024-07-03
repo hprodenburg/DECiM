@@ -32,4 +32,6 @@ For detailed operating instructions, please consult the PDF manual.
 
 ## Citing
 
-If you use DEC*i*M for work leading to a scholarly publication, please cite the PDF manual, or cite the publication describing DEC*i*M once it has appeared.
+If you use DEC*i*M for work leading to a scholarly publication, please cite the publication describing DEC*i*M:
+
+Rodenburg, H.P. and Ngene, P. DEC*i*M: Determination of equivalent circuit models. *SoftwareX* **2024**, *27*, 101807. https://doi.org/10.1016/j.softx.2024.101807
