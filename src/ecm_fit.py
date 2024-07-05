@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the fitting classes. Last modified 8 May 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the fitting classes. Last modified 5 July 2024 by Henrik Rodenburg.
 
 Classes:
 RefinementEngine -- class for refinements in general, independent of the GUI
@@ -713,9 +713,24 @@ class RefinementWindow(tk.Toplevel):
         to_be_refined = []
         for t in self.tick_states:
             to_be_refined.append(t.get())
-        #Refinement engine
-        chosen_module = list(self.chosen_module_and_optimizer.get().split(":"))[0]
-        chosen_method = list(self.chosen_module_and_optimizer.get().split(":"))[1].lstrip(" ")
+        #Refinement engine: method and weights
+        if self.chosen_module_and_optimizer.get() != "":
+            chosen_module = list(self.chosen_module_and_optimizer.get().split(":"))[0]
+        else:
+            chosen_module = "SciPy"
+            self.chosen_module_and_optimizer.set("SciPy: Nelder-Mead")
+        if self.chosen_module_and_optimizer.get() != "":
+            chosen_method = list(self.chosen_module_and_optimizer.get().split(":"))[1].lstrip(" ")
+        else:
+            if chosen_module == "SciPy":
+                chosen_method = "Nelder-Mead"
+                self.chosen_module_and_optimizer.set("SciPy: Nelder-Mead")
+            elif chosen_module == "Optax":
+                chosen_method = "Adam"
+                self.chosen_module_and_optimizer.set("Optax: Adam")
+        if self.chosen_weighting.get() == "":
+            self.chosen_weighting.set("Unit")
+        #Refinement engine: start
         self.refinement_engine = RefinementEngine(self.function_to_fit, self.jnp_function_to_fit, self.data, self.refined_parameters, self.flipped_parameter_dict, to_be_refined, float(self.high_lim_value.get()), float(self.low_lim_value.get()), self.parameter_history, weighting_scheme = self.chosen_weighting.get(), opt_module = chosen_module, opt_method = chosen_method)
         #Refinement
         self.refinement_engine.refine_solution()
