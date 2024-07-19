@@ -9,7 +9,7 @@
 <tr class="heading-text decor">
 <td class="title">&nbsp;<br><strong class="title">ecm_fit</strong></td>
 </tr></table>
-    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;fitting&nbsp;classes.&nbsp;Last&nbsp;modified&nbsp;5&nbsp;July&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;fitting&nbsp;classes.&nbsp;Last&nbsp;modified&nbsp;19&nbsp;July&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
 &nbsp;<br>
 Classes:<br>
 <a href="#RefinementEngine">RefinementEngine</a>&nbsp;--&nbsp;class&nbsp;for&nbsp;refinements&nbsp;in&nbsp;general,&nbsp;independent&nbsp;of&nbsp;the&nbsp;GUI<br>
@@ -241,11 +241,12 @@ h_idx&nbsp;--&nbsp;index&nbsp;of&nbsp;highest-frequency&nbsp;point&nbsp;in&nbsp;
 &nbsp;<br>
 Methods:<br>
 make_UI&nbsp;--&nbsp;initialize&nbsp;the&nbsp;UI;&nbsp;makes&nbsp;the&nbsp;following&nbsp;UI&nbsp;elements,&nbsp;which&nbsp;are&nbsp;attributes:&nbsp;upper_frame,&nbsp;lower_frame,&nbsp;tick_frame,&nbsp;limit_frame,&nbsp;residuals_frame,&nbsp;conclude_frame<br>
-make_tick_frame&nbsp;--&nbsp;makes&nbsp;the&nbsp;set&nbsp;of&nbsp;tk.Checkbuttons&nbsp;used&nbsp;for&nbsp;parameter&nbsp;selection&nbsp;and&nbsp;their&nbsp;associated&nbsp;labels<br>
+make_parameter_frame&nbsp;--&nbsp;makes&nbsp;the&nbsp;ScrollableListbox&nbsp;used&nbsp;for&nbsp;parameter&nbsp;selection&nbsp;and&nbsp;their&nbsp;associated&nbsp;labels<br>
 make_limit_frame&nbsp;--&nbsp;makes&nbsp;the&nbsp;tk.Entries&nbsp;for&nbsp;setting&nbsp;the&nbsp;frequency&nbsp;limits&nbsp;and&nbsp;their&nbsp;associated&nbsp;labels,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;weighting&nbsp;scheme&nbsp;dropdown<br>
 make_residuals_frame&nbsp;--&nbsp;makes&nbsp;the&nbsp;plot&nbsp;canvas<br>
 make_conclude_frame&nbsp;--&nbsp;create&nbsp;the&nbsp;result&nbsp;label&nbsp;and&nbsp;the&nbsp;buttons&nbsp;used&nbsp;to&nbsp;control&nbsp;the&nbsp;refinement&nbsp;outcome<br>
-set_param_labels&nbsp;--&nbsp;set&nbsp;the&nbsp;values&nbsp;of&nbsp;StringVars&nbsp;that&nbsp;display&nbsp;the&nbsp;parameters'&nbsp;current&nbsp;values&nbsp;and&nbsp;units<br>
+update_parameter_listbox&nbsp;--&nbsp;set&nbsp;the&nbsp;values&nbsp;of&nbsp;strings&nbsp;in&nbsp;the&nbsp;ScrollableListbox&nbsp;displaying&nbsp;the&nbsp;parameters'&nbsp;current&nbsp;values&nbsp;and&nbsp;units<br>
+set_param_states&nbsp;--&nbsp;set&nbsp;the&nbsp;IntVars&nbsp;holding&nbsp;the&nbsp;active/inactive&nbsp;states&nbsp;of&nbsp;the&nbsp;parameters&nbsp;depending&nbsp;on&nbsp;the&nbsp;ScrollableListbox&nbsp;selection<br>
 toggle_lim_vis&nbsp;--&nbsp;toggle&nbsp;frequency&nbsp;limit&nbsp;visualization&nbsp;on/off<br>
 update_residuals&nbsp;--&nbsp;clear&nbsp;and&nbsp;redraw&nbsp;the&nbsp;plot&nbsp;canvas<br>
 error_function&nbsp;--&nbsp;function&nbsp;to&nbsp;be&nbsp;minimized<br>
@@ -272,17 +273,14 @@ optimizer_tick_correction&nbsp;--&nbsp;disable&nbsp;or&nbsp;enable&nbsp;tick&nbs
 
 <dl><dt><a name="RefinementWindow-make_limit_frame"><strong>make_limit_frame</strong></a>(self)</dt><dd><span class="code">Create&nbsp;tk.Entries&nbsp;and&nbsp;tk.Labels&nbsp;for&nbsp;setting&nbsp;the&nbsp;refinement&nbsp;frequency&nbsp;limits,&nbsp;as&nbsp;well&nbsp;as&nbsp;a&nbsp;tk.OptionMenu&nbsp;from&nbsp;which&nbsp;the&nbsp;weighting&nbsp;schemes&nbsp;can&nbsp;be&nbsp;chosen&nbsp;and&nbsp;a&nbsp;tk.OptionMenu&nbsp;from&nbsp;which&nbsp;the&nbsp;optimizer&nbsp;can&nbsp;be&nbsp;chosen.</span></dd></dl>
 
+<dl><dt><a name="RefinementWindow-make_parameter_frame"><strong>make_parameter_frame</strong></a>(self)</dt><dd><span class="code">Put&nbsp;the&nbsp;ScrollableListbox&nbsp;on&nbsp;the&nbsp;parameter_frame.&nbsp;First&nbsp;make&nbsp;a&nbsp;list&nbsp;to&nbsp;hold:<br>
+--&nbsp;the&nbsp;selection&nbsp;states&nbsp;(tk.IntVar&nbsp;with&nbsp;0&nbsp;or&nbsp;1&nbsp;for&nbsp;off&nbsp;or&nbsp;on):&nbsp;sel_states<br>
+Then&nbsp;make&nbsp;the&nbsp;ScrollableListbox&nbsp;and&nbsp;populate&nbsp;the&nbsp;lists.<br>
+Finally,&nbsp;call&nbsp;update_parameter_listbox&nbsp;to&nbsp;update&nbsp;the&nbsp;labels&nbsp;in&nbsp;the&nbsp;box</span></dd></dl>
+
 <dl><dt><a name="RefinementWindow-make_residuals_frame"><strong>make_residuals_frame</strong></a>(self)</dt><dd><span class="code">Create&nbsp;the&nbsp;plotting&nbsp;canvas,&nbsp;the&nbsp;plots&nbsp;on&nbsp;it&nbsp;and&nbsp;the&nbsp;toolbar&nbsp;of&nbsp;the&nbsp;residuals&nbsp;frame.</span></dd></dl>
 
-<dl><dt><a name="RefinementWindow-make_tick_frame"><strong>make_tick_frame</strong></a>(self)</dt><dd><span class="code">Put&nbsp;tk.Checkbutton&nbsp;objects&nbsp;on&nbsp;the&nbsp;tick_frame.&nbsp;First&nbsp;make&nbsp;lists&nbsp;to&nbsp;hold:<br>
---&nbsp;the&nbsp;Checkbuttons&nbsp;themselves:&nbsp;tick_boxes<br>
---&nbsp;the&nbsp;tick&nbsp;states&nbsp;(tk.IntVar&nbsp;with&nbsp;0&nbsp;or&nbsp;1&nbsp;for&nbsp;off&nbsp;or&nbsp;on):&nbsp;tick_states<br>
---&nbsp;a&nbsp;list&nbsp;of&nbsp;parameter&nbsp;labels&nbsp;(tk.Label):&nbsp;parameter_labels<br>
---&nbsp;a&nbsp;list&nbsp;of&nbsp;parameter&nbsp;values&nbsp;(tk.StringVar):&nbsp;parameter_values<br>
-Then&nbsp;make&nbsp;a&nbsp;Checkbutton&nbsp;and&nbsp;Label&nbsp;for&nbsp;every&nbsp;parameter&nbsp;in&nbsp;parameter_list&nbsp;and&nbsp;pack&nbsp;them&nbsp;onto&nbsp;either&nbsp;tick_box_frame&nbsp;or&nbsp;tick_label_frame.<br>
-Finally,&nbsp;call&nbsp;set_param_labels&nbsp;to&nbsp;update&nbsp;the&nbsp;parameter&nbsp;labels'&nbsp;StringVars.</span></dd></dl>
-
-<dl><dt><a name="RefinementWindow-optimizer_tick_correction"><strong>optimizer_tick_correction</strong></a>(self, *ev_args)</dt><dd><span class="code">Disable&nbsp;tick&nbsp;boxes&nbsp;for&nbsp;parameter&nbsp;selection&nbsp;for&nbsp;incompatible&nbsp;modules/optimizers;&nbsp;enable&nbsp;them&nbsp;again&nbsp;for&nbsp;compatible&nbsp;ones.<br>
+<dl><dt><a name="RefinementWindow-optimizer_listbox_correction"><strong>optimizer_listbox_correction</strong></a>(self, *ev_args)</dt><dd><span class="code">Disable&nbsp;ScrollableListbox&nbsp;for&nbsp;parameter&nbsp;selection&nbsp;for&nbsp;incompatible&nbsp;modules/optimizers;&nbsp;enable&nbsp;them&nbsp;again&nbsp;for&nbsp;compatible&nbsp;ones.<br>
 &nbsp;<br>
 Arguments:<br>
 self<br>
@@ -296,11 +294,13 @@ ev_args&nbsp;--&nbsp;arguments&nbsp;given&nbsp;by&nbsp;the&nbsp;tk.StringVar&nbs
 
 <dl><dt><a name="RefinementWindow-reset_parameters"><strong>reset_parameters</strong></a>(self)</dt><dd><span class="code">Revert&nbsp;the&nbsp;parameters&nbsp;back&nbsp;to&nbsp;what&nbsp;they&nbsp;were&nbsp;when&nbsp;the&nbsp;window&nbsp;was&nbsp;launched.</span></dd></dl>
 
-<dl><dt><a name="RefinementWindow-set_param_labels"><strong>set_param_labels</strong></a>(self)</dt><dd><span class="code">Set&nbsp;the&nbsp;labels&nbsp;of&nbsp;the&nbsp;parameters&nbsp;on&nbsp;the&nbsp;tick_frame.</span></dd></dl>
+<dl><dt><a name="RefinementWindow-set_param_states"><strong>set_param_states</strong></a>(self, event)</dt><dd><span class="code">Set&nbsp;the&nbsp;active/inactive&nbsp;state&nbsp;in&nbsp;self.<strong>sel_states</strong>&nbsp;for&nbsp;all&nbsp;parameters&nbsp;based&nbsp;on&nbsp;the&nbsp;selection&nbsp;in&nbsp;self.<strong>parameter_listbox</strong>.</span></dd></dl>
 
 <dl><dt><a name="RefinementWindow-toggle_all_parameters"><strong>toggle_all_parameters</strong></a>(self)</dt><dd><span class="code">Disable&nbsp;or&nbsp;enable&nbsp;the&nbsp;refinement&nbsp;of&nbsp;ALL&nbsp;parameters.</span></dd></dl>
 
 <dl><dt><a name="RefinementWindow-toggle_lim_vis"><strong>toggle_lim_vis</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;the&nbsp;frequency&nbsp;limits&nbsp;visualization&nbsp;in&nbsp;the&nbsp;plots&nbsp;on&nbsp;or&nbsp;off.</span></dd></dl>
+
+<dl><dt><a name="RefinementWindow-update_parameter_listbox"><strong>update_parameter_listbox</strong></a>(self)</dt><dd><span class="code">Clear&nbsp;and&nbsp;then&nbsp;populate&nbsp;self.<strong>parameter_listbox</strong>&nbsp;with&nbsp;names,&nbsp;values,&nbsp;and&nbsp;units&nbsp;of&nbsp;parameters.</span></dd></dl>
 
 <dl><dt><a name="RefinementWindow-update_residuals"><strong>update_residuals</strong></a>(self)</dt><dd><span class="code">Update&nbsp;the&nbsp;plots&nbsp;on&nbsp;the&nbsp;residuals&nbsp;frame:&nbsp;clear&nbsp;them&nbsp;and&nbsp;redraw&nbsp;the&nbsp;canvas.</span></dd></dl>
 

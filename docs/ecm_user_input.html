@@ -9,7 +9,7 @@
 <tr class="heading-text decor">
 <td class="title">&nbsp;<br><strong class="title">ecm_user_input</strong></td>
 </tr></table>
-    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;interactive&nbsp;elements&nbsp;code.&nbsp;Last&nbsp;modified&nbsp;7&nbsp;May&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;interactive&nbsp;elements&nbsp;code.&nbsp;Last&nbsp;modified&nbsp;19&nbsp;July&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
 &nbsp;<br>
 Classes:<br>
 <a href="#InteractionFrame">InteractionFrame</a>&nbsp;--&nbsp;contains&nbsp;all&nbsp;the&nbsp;controls&nbsp;for&nbsp;manual&nbsp;adjustment&nbsp;of&nbsp;fitting&nbsp;parameters<br>
@@ -792,16 +792,17 @@ for&nbsp;positioning&nbsp;this&nbsp;widget&nbsp;in&nbsp;a&nbsp;grid.</span></dd>
 <td class="section-title" colspan=3>&nbsp;<br><a name="ScrollableListbox">class <strong>ScrollableListbox</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
     
 <tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
-<td class="decor title-decor" colspan=2><span class="code"><a href="#ScrollableListbox">ScrollableListbox</a>(master)<br>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#ScrollableListbox">ScrollableListbox</a>(master,&nbsp;select_mode='single')<br>
 &nbsp;<br>
 <br>&nbsp;</span></td></tr>
 <tr><td>&nbsp;</td>
 <td class="singlecolumn">Methods defined here:<br>
-<dl><dt><a name="ScrollableListbox-__init__"><strong>__init__</strong></a>(self, master)</dt><dd><span class="code">Listbox-scrollbar&nbsp;combination.<br>
+<dl><dt><a name="ScrollableListbox-__init__"><strong>__init__</strong></a>(self, master, select_mode='single')</dt><dd><span class="code">Listbox-scrollbar&nbsp;combination.<br>
 &nbsp;<br>
 Init&nbsp;arguments:<br>
 self<br>
 master&nbsp;--&nbsp;ttk.<a href="tkinter.ttk.html#Frame">Frame</a>&nbsp;or&nbsp;tk.<a href="tkinter.ttk.html#Frame">Frame</a>&nbsp;on&nbsp;which&nbsp;to&nbsp;place&nbsp;the&nbsp;<a href="#ScrollableListbox">ScrollableListbox</a><br>
+select_mode&nbsp;--&nbsp;selectmode&nbsp;for&nbsp;self.<strong>listbox</strong>;&nbsp;tk.SINGLE&nbsp;for&nbsp;DECiM&nbsp;Core,&nbsp;tk.MULTIPLE&nbsp;for&nbsp;Advanced&nbsp;Refinement<br>
 &nbsp;<br>
 Attributes:<br>
 listbox&nbsp;--&nbsp;tk.Listbox<br>
@@ -809,7 +810,8 @@ scrollbar&nbsp;--&nbsp;tk.Scrollbar<br>
 &nbsp;<br>
 Methods:<br>
 insert&nbsp;--&nbsp;insert&nbsp;value&nbsp;into&nbsp;self.<strong>listbox</strong><br>
-get&nbsp;--&nbsp;get&nbsp;the&nbsp;currently&nbsp;selected&nbsp;option&nbsp;in&nbsp;self.<strong>listbox</strong><br>
+get&nbsp;--&nbsp;get&nbsp;the&nbsp;currently&nbsp;selected&nbsp;option&nbsp;in&nbsp;self.<strong>listbox</strong>&nbsp;(tk.SINGLE&nbsp;selection&nbsp;mode)<br>
+get_all&nbsp;--&nbsp;get&nbsp;all&nbsp;currently&nbsp;selected&nbsp;options&nbsp;in&nbsp;self.<strong>listbox</strong>&nbsp;(tk.MULTIPLE&nbsp;selection&nbsp;mode)<br>
 pack&nbsp;--&nbsp;pack&nbsp;self.<strong>listbox</strong>&nbsp;and&nbsp;self.<strong>scrollbar</strong>&nbsp;and&nbsp;configure&nbsp;the&nbsp;two&nbsp;to&nbsp;work&nbsp;together<br>
 bind_select&nbsp;--&nbsp;bind&nbsp;a&nbsp;function&nbsp;to&nbsp;element&nbsp;selection<br>
 itemconfig&nbsp;--&nbsp;self.<strong>listbox</strong>.itemconfig</span></dd></dl>
@@ -822,7 +824,7 @@ function&nbsp;--&nbsp;Function&nbsp;to&nbsp;bind</span></dd></dl>
 
 <dl><dt><a name="ScrollableListbox-clear"><strong>clear</strong></a>(self)</dt><dd><span class="code">Delete&nbsp;all&nbsp;values&nbsp;in&nbsp;self.<strong>listbox</strong>.</span></dd></dl>
 
-<dl><dt><a name="ScrollableListbox-get"><strong>get</strong></a>(self)</dt><dd><span class="code">Get&nbsp;the&nbsp;selected&nbsp;value&nbsp;in&nbsp;self.<strong>listbox</strong>.<br>
+<dl><dt><a name="ScrollableListbox-get"><strong>get</strong></a>(self)</dt><dd><span class="code">Get&nbsp;the&nbsp;selected&nbsp;value&nbsp;in&nbsp;self.<strong>listbox</strong>&nbsp;in&nbsp;tk.SINGLE&nbsp;selection&nbsp;mode.<br>
 &nbsp;<br>
 Arguments:<br>
 self<br>
@@ -830,19 +832,28 @@ self<br>
 Returns:<br>
 Currently&nbsp;selected&nbsp;value&nbsp;in&nbsp;self.<strong>listbox</strong>.</span></dd></dl>
 
+<dl><dt><a name="ScrollableListbox-get_all"><strong>get_all</strong></a>(self)</dt><dd><span class="code">Get&nbsp;all&nbsp;selected&nbsp;values&nbsp;in&nbsp;self.<strong>listbox</strong>&nbsp;in&nbsp;tk.MULTIPLE&nbsp;selection&nbsp;mode.<br>
+&nbsp;<br>
+Arguments:<br>
+self<br>
+&nbsp;<br>
+Returns:<br>
+List&nbsp;of&nbsp;all&nbsp;selected&nbsp;values&nbsp;in&nbsp;self.<strong>listbox</strong></span></dd></dl>
+
 <dl><dt><a name="ScrollableListbox-insert"><strong>insert</strong></a>(self, value)</dt><dd><span class="code">Put&nbsp;a&nbsp;value&nbsp;(string)&nbsp;into&nbsp;self.<strong>listbox</strong>.<br>
 &nbsp;<br>
 Arguments:<br>
 self<br>
 value&nbsp;--&nbsp;String,&nbsp;to&nbsp;be&nbsp;added&nbsp;to&nbsp;listbox</span></dd></dl>
 
-<dl><dt><a name="ScrollableListbox-pack"><strong>pack</strong></a>(self, side='left', fill='none', anchor='w')</dt><dd><span class="code">Pack&nbsp;self&nbsp;on&nbsp;master&nbsp;and&nbsp;configure&nbsp;self.<strong>scrollbar</strong>&nbsp;to&nbsp;scroll&nbsp;through&nbsp;self.<strong>listbox</strong>.<br>
+<dl><dt><a name="ScrollableListbox-pack"><strong>pack</strong></a>(self, side='left', fill='none', anchor='w', expand=0)</dt><dd><span class="code">Pack&nbsp;self&nbsp;on&nbsp;master&nbsp;and&nbsp;configure&nbsp;self.<strong>scrollbar</strong>&nbsp;to&nbsp;scroll&nbsp;through&nbsp;self.<strong>listbox</strong>.<br>
 &nbsp;<br>
 Arguments:<br>
 self<br>
 side&nbsp;--&nbsp;side&nbsp;on&nbsp;which&nbsp;to&nbsp;pack&nbsp;self<br>
 fill&nbsp;--&nbsp;which&nbsp;directions&nbsp;to&nbsp;fill&nbsp;on&nbsp;master<br>
-anchor&nbsp;--&nbsp;packing&nbsp;anchor</span></dd></dl>
+anchor&nbsp;--&nbsp;packing&nbsp;anchor<br>
+expand&nbsp;--&nbsp;expansion&nbsp;setting&nbsp;(horizontal,&nbsp;vertical,&nbsp;both)</span></dd></dl>
 
 <hr>
 Data descriptors defined here:<br>

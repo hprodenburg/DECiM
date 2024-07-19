@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the fitting classes. Last modified 5 July 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the fitting classes. Last modified 19 July 2024 by Henrik Rodenburg.
 
 Classes:
 RefinementEngine -- class for refinements in general, independent of the GUI
@@ -28,6 +28,7 @@ import tkinter.ttk as ttk
 
 from ecm_datastructure import dataSet
 from ecm_helpers import nearest
+from ecm_user_input import ScrollableListbox
 
 ######################
 ##GENERAL REFINEMENT##
@@ -390,11 +391,12 @@ class RefinementWindow(tk.Toplevel):
         
         Methods:
         make_UI -- initialize the UI; makes the following UI elements, which are attributes: upper_frame, lower_frame, tick_frame, limit_frame, residuals_frame, conclude_frame
-        make_tick_frame -- makes the set of tk.Checkbuttons used for parameter selection and their associated labels
+        make_parameter_frame -- makes the ScrollableListbox used for parameter selection and their associated labels
         make_limit_frame -- makes the tk.Entries for setting the frequency limits and their associated labels, as well as the weighting scheme dropdown
         make_residuals_frame -- makes the plot canvas
         make_conclude_frame -- create the result label and the buttons used to control the refinement outcome
-        set_param_labels -- set the values of StringVars that display the parameters' current values and units
+        update_parameter_listbox -- set the values of strings in the ScrollableListbox displaying the parameters' current values and units
+        set_param_states -- set the IntVars holding the active/inactive states of the parameters depending on the ScrollableListbox selection
         toggle_lim_vis -- toggle frequency limit visualization on/off
         update_residuals -- clear and redraw the plot canvas
         error_function -- function to be minimized
@@ -467,10 +469,10 @@ class RefinementWindow(tk.Toplevel):
         self.lower_frame = ttk.Frame(self)
         self.lower_frame.pack(side = tk.TOP, anchor = tk.CENTER, fill = tk.BOTH, expand = tk.YES)
         
-        #Four functional frames: one for the parameter tick boxes
-        self.tick_frame = ttk.Frame(self.lower_frame)
-        self.make_tick_frame()
-        self.tick_frame.pack(side = tk.LEFT, anchor = tk.W, padx = 50, fill = tk.X, expand = tk.YES)
+        #Four functional frames: one for the parameter ScrollableListbox
+        self.parameter_frame = ttk.Frame(self.lower_frame)
+        self.make_parameter_frame()
+        self.parameter_frame.pack(side = tk.LEFT, anchor = tk.W, padx = 50, fill = tk.BOTH, expand = tk.YES)
         #One for the frequency limits
         self.limit_frame = ttk.Frame(self.lower_frame)
         self.make_limit_frame()
@@ -484,37 +486,22 @@ class RefinementWindow(tk.Toplevel):
         self.make_conclude_frame()
         self.conclude_frame.pack(side = tk.LEFT, anchor = tk.W, padx = 50, fill = tk.X, expand = tk.YES)
         
-    def make_tick_frame(self):
-        """Put tk.Checkbutton objects on the tick_frame. First make lists to hold:
-        -- the Checkbuttons themselves: tick_boxes
-        -- the tick states (tk.IntVar with 0 or 1 for off or on): tick_states
-        -- a list of parameter labels (tk.Label): parameter_labels
-        -- a list of parameter values (tk.StringVar): parameter_values
-        Then make a Checkbutton and Label for every parameter in parameter_list and pack them onto either tick_box_frame or tick_label_frame.
-        Finally, call set_param_labels to update the parameter labels' StringVars."""
-        self.tick_boxes = [] #List of tick boxes. The states of these boxes determine which parameters are refined
-        self.tick_states = [] #Saves the on/off states of the tick boxes
-        self.parameter_labels = [] #List of labels to display current values
-        self.parameter_values = [] #List of StringVars to hold parameter values
-        self.tick_header_frame = ttk.Frame(self.tick_frame)
-        self.tick_header_frame.pack(side = tk.TOP, anchor = tk.W)
-        self.tick_label = tk.Label(self.tick_header_frame, text = "Parameters to refine")
-        self.tick_label.pack(side = tk.LEFT, anchor = tk.W)
-        self.toggle_all_button = tk.Button(self.tick_header_frame, text = "Toggle all", command = self.toggle_all_parameters)
-        self.toggle_all_button.pack(side = tk.RIGHT, anchor = tk.W)
-        self.tick_box_frame = ttk.Frame(self.tick_frame) #The frame is subdivided into two colums. One for boxes...
-        self.tick_box_frame.pack(side = tk.LEFT, anchor = tk.W)
-        self.tick_label_frame = ttk.Frame(self.tick_frame) #... and one for labels.
-        self.tick_label_frame.pack(side = tk.LEFT, anchor = tk.W)
-        for param in self.parameter_list: #A tick box and label are made for every parameter.
-            self.tick_states.append(tk.IntVar(self))
-            self.tick_boxes.append(tk.Checkbutton(self.tick_box_frame, text = param, variable = self.tick_states[-1]))
-            self.parameter_values.append(tk.StringVar(self))
-            self.parameter_labels.append(tk.Label(self.tick_label_frame, textvariable = self.parameter_values[-1]))
-            if str(param)[0] in "RLCQnOSGklmHtbg": #Only pack real, meaningful parameters.
-                self.tick_boxes[-1].pack(side = tk.TOP, anchor = tk.W, padx = 30)
-                self.parameter_labels[-1].pack(side = tk.TOP, anchor = tk.E)
-        self.set_param_labels()
+    def make_parameter_frame(self):
+        """Put the ScrollableListbox on the parameter_frame. First make a list to hold:
+        -- the selection states (tk.IntVar with 0 or 1 for off or on): sel_states
+        Then make the ScrollableListbox and populate the lists.
+        Finally, call update_parameter_listbox to update the labels in the box"""
+        self.sel_states = [] #Saves the on/off states of the parameters in the ScrollableListbox
+        self.par_header_frame = ttk.Frame(self.parameter_frame)
+        self.par_header_frame.pack(side = tk.TOP, anchor = tk.W)
+        self.par_label = tk.Label(self.par_header_frame, text = "Parameters to refine")
+        self.par_label.pack(side = tk.LEFT, anchor = tk.W)
+        self.parameter_listbox = ScrollableListbox(self.parameter_frame, select_mode = tk.MULTIPLE)
+        self.parameter_listbox.pack(side = tk.TOP, anchor = tk.W)
+        for param in self.parameter_list:
+            self.sel_states.append(tk.IntVar(self))
+        self.parameter_listbox.bind_select(self.set_param_states)
+        self.update_parameter_listbox()
         
     def make_limit_frame(self):
         """Create tk.Entries and tk.Labels for setting the refinement frequency limits, as well as a tk.OptionMenu from which the weighting schemes can be chosen and a tk.OptionMenu from which the optimizer can be chosen."""
@@ -546,12 +533,12 @@ class RefinementWindow(tk.Toplevel):
             self.weighting_dropdown["menu"].add_command(label = w, command = tk._setit(self.chosen_weighting, w))
         #Optimizers
         self.chosen_module_and_optimizer = tk.StringVar()
-        self.chosen_module_and_optimizer.trace("w", self.optimizer_tick_correction) #Disable tickboxes with Optax
+        self.chosen_module_and_optimizer.trace("w", self.optimizer_listbox_correction) #Disable tickboxes with Optax
         self.optimizer_frame = ttk.Frame(self.limit_frame)
         self.optimizer_frame.pack(side = tk.BOTTOM, anchor = tk.W)
         self.optimizer_label = tk.Label(self.optimizer_frame, text = "Optimizer: ")
         self.optimizer_label.pack(side = tk.LEFT, anchor = tk.W)
-        self.optimizer_dropdown = tk.OptionMenu(self.optimizer_frame, self.chosen_module_and_optimizer, "", command = self.optimizer_tick_correction)
+        self.optimizer_dropdown = tk.OptionMenu(self.optimizer_frame, self.chosen_module_and_optimizer, "", command = self.optimizer_listbox_correction)
         self.optimizer_dropdown["menu"].delete(0, "end")
         self.optimizer_dropdown.pack(side = tk.RIGHT, anchor = tk.W)
         self.expanded_optimizers = ["SciPy: Nelder-Mead", "Optax: Adam"]
@@ -597,9 +584,10 @@ class RefinementWindow(tk.Toplevel):
         #Reject button
         self.accept_button = tk.Button(self.conclude_frame, text = "Reject and close", command = self.reject_refinement)
         self.accept_button.pack(side = tk.TOP, anchor = tk.E)
-        
-    def set_param_labels(self):
-        """Set the labels of the parameters on the tick_frame."""
+    
+    def update_parameter_listbox(self):
+        """Clear and then populate self.parameter_listbox with names, values, and units of parameters."""
+        self.parameter_listbox.clear()
         for p in self.parameter_dict:
             units = "" #Stays this way for n, b, g
             if str(p)[0] in ["R", "O", "S", "G", "H"]:
@@ -615,8 +603,17 @@ class RefinementWindow(tk.Toplevel):
             if str(p)[0] == "t":
                 units = " s^(b*g)"
             if str(p)[0] in "RLCQnOSGklmHtbg":
-                self.parameter_values[self.parameter_dict[p]].set(p + " = {:5g}".format(self.refined_parameters[self.parameter_dict[p]]) + units)
+                self.parameter_listbox.insert(p + " = {:5g}".format(self.refined_parameters[self.parameter_dict[p]]) + units)
     
+    def set_param_states(self, event):
+        """Set the active/inactive state in self.sel_states for all parameters based on the selection in self.parameter_listbox."""
+        active_params = self.parameter_listbox.get_all()
+        for p in range(len(self.parameter_list)):
+            self.sel_states[p].set(0)
+            for a_param in active_params:
+                if list(a_param.split("="))[0].rstrip(" ") == self.parameter_list[p]:
+                    self.sel_states[p].set(1)
+                
     def toggle_lim_vis(self):
         """Toggle the frequency limits visualization in the plots on or off."""
         self.limit_visualisation = not self.limit_visualisation
@@ -711,7 +708,7 @@ class RefinementWindow(tk.Toplevel):
         self.update()
         #Determine what to refine
         to_be_refined = []
-        for t in self.tick_states:
+        for t in self.sel_states:
             to_be_refined.append(t.get())
         #Refinement engine: method and weights
         if self.chosen_module_and_optimizer.get() != "":
@@ -736,7 +733,7 @@ class RefinementWindow(tk.Toplevel):
         self.refinement_engine.refine_solution()
         self.refined_parameters = self.refinement_engine.parameters
         #Update
-        self.set_param_labels() #Update parameter labels
+        self.update_parameter_listbox() #Update parameter labels
         self.update_residuals() #Update residuals
         self.display_error() #Show total error
         self.refine_text.set("Refine solution")
@@ -744,14 +741,14 @@ class RefinementWindow(tk.Toplevel):
     def previous_refinement(self):
         """Revert the parameters back to what they were before the most recent refinement."""
         self.refined_parameters = self.parameter_history[-1] #Go back one set of refined parameters
-        self.set_param_labels() #Reset parameter labels
+        self.update_parameter_listbox() #Reset parameter labels
         self.update_residuals() #Reset residuals
         self.display_error() #Reset displayed error
     
     def reset_parameters(self):
         """Revert the parameters back to what they were when the window was launched."""
         self.refined_parameters = self.initial_parameters[:len(self.refined_parameters)] #Reset refined parameters
-        self.set_param_labels() #Reset parameter labels
+        self.update_parameter_listbox() #Reset parameter labels
         self.update_residuals() #Reset residuals
         self.display_error() #Reset displayed error
         self.parameter_history = [] #Clear refinement history
@@ -789,15 +786,13 @@ class RefinementWindow(tk.Toplevel):
             for t in self.tick_boxes:
                 t.select()
                 
-    def optimizer_tick_correction(self, *ev_args):
-        """Disable tick boxes for parameter selection for incompatible modules/optimizers; enable them again for compatible ones.
+    def optimizer_listbox_correction(self, *ev_args):
+        """Disable ScrollableListbox for parameter selection for incompatible modules/optimizers; enable them again for compatible ones.
         
         Arguments:
         self
         ev_args -- arguments given by the tk.StringVar trace"""
         if list(self.chosen_module_and_optimizer.get().split(":"))[0] == "Optax":
-            for t in self.tick_boxes:
-                t.configure(state = tk.DISABLED)
+            self.parameter_listbox.listbox.configure(state = tk.DISABLED)
         elif list(self.chosen_module_and_optimizer.get().split(":"))[0] == "SciPy":
-            for t in self.tick_boxes:
-                t.configure(state = tk.NORMAL)
+            self.parameter_listbox.listbox.configure(state = tk.NORMAL)

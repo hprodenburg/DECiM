@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the interactive elements code. Last modified 7 May 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the interactive elements code. Last modified 19 July 2024 by Henrik Rodenburg.
 
 Classes:
 InteractionFrame -- contains all the controls for manual adjustment of fitting parameters
@@ -93,7 +93,7 @@ class InteractionFrame(ttk.Frame):
         self.response_frame = ttk.Frame(self)
         self.adjust_button = tk.Button(self.response_frame, text = "Adjust controls", command = self.adjust_controls)
         self.adjust_button.pack(side = tk.BOTTOM, anchor = tk.CENTER)
-        self.parameter_frame.pack(side = tk.LEFT, anchor = tk.E, fill = tk.X, expand = True)
+        self.parameter_frame.pack(side = tk.LEFT, anchor = tk.E, fill = tk.BOTH, expand = True)
         
         #Response dropdown
         self.response_label = tk.Label(self.response_frame, text = "Response")
@@ -318,12 +318,13 @@ class InteractionFrame(ttk.Frame):
             self.slider.set(int(self.slider.to*(parameter_value - low)/(high - low)))
             
 class ScrollableListbox():
-    def __init__(self, master):
+    def __init__(self, master, select_mode = tk.SINGLE):
         """Listbox-scrollbar combination.
         
         Init arguments:
         self
         master -- ttk.Frame or tk.Frame on which to place the ScrollableListbox
+        select_mode -- selectmode for self.listbox; tk.SINGLE for DECiM Core, tk.MULTIPLE for Advanced Refinement
         
         Attributes:
         listbox -- tk.Listbox
@@ -331,11 +332,12 @@ class ScrollableListbox():
         
         Methods:
         insert -- insert value into self.listbox
-        get -- get the currently selected option in self.listbox
+        get -- get the currently selected option in self.listbox (tk.SINGLE selection mode)
+        get_all -- get all currently selected options in self.listbox (tk.MULTIPLE selection mode)
         pack -- pack self.listbox and self.scrollbar and configure the two to work together
         bind_select -- bind a function to element selection
         itemconfig -- self.listbox.itemconfig"""
-        self.listbox = tk.Listbox(master, activestyle = tk.NONE, selectmode = tk.SINGLE)
+        self.listbox = tk.Listbox(master, activestyle = tk.NONE, selectmode = select_mode)
         self.scrollbar = tk.Scrollbar(master)
         self.itemconfig = self.listbox.itemconfig
         
@@ -348,7 +350,7 @@ class ScrollableListbox():
         self.listbox.insert(tk.END, value)
         
     def get(self):
-        """Get the selected value in self.listbox.
+        """Get the selected value in self.listbox in tk.SINGLE selection mode.
         
         Arguments:
         self
@@ -356,6 +358,19 @@ class ScrollableListbox():
         Returns:
         Currently selected value in self.listbox."""
         return self.listbox.get(tk.ANCHOR)
+        
+    def get_all(self):
+        """Get all selected values in self.listbox in tk.MULTIPLE selection mode.
+        
+        Arguments:
+        self
+        
+        Returns:
+        List of all selected values in self.listbox"""
+        outpars = []
+        for i in self.listbox.curselection():
+            outpars.append(self.listbox.get(i))
+        return outpars
         
     def clear(self):
         """Delete all values in self.listbox."""
@@ -369,14 +384,15 @@ class ScrollableListbox():
         function -- Function to bind"""
         self.listbox.bind("<<ListboxSelect>>", function)
         
-    def pack(self, side = tk.LEFT, fill = tk.NONE, anchor = tk.W):
+    def pack(self, side = tk.LEFT, fill = tk.NONE, anchor = tk.W, expand = tk.FALSE):
         """Pack self on master and configure self.scrollbar to scroll through self.listbox.
         
         Arguments:
         self
         side -- side on which to pack self
         fill -- which directions to fill on master
-        anchor -- packing anchor"""
+        anchor -- packing anchor
+        expand -- expansion setting (horizontal, vertical, both)"""
         #Attach listbox and scrollbar to each other
         self.listbox.config(yscrollcommand = self.scrollbar.set)
         self.scrollbar.config(command = self.listbox.yview)
