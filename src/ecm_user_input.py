@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the interactive elements code. Last modified 19 July 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the interactive elements code. Last modified 31 July 2024 by Henrik Rodenburg.
 
 Classes:
 InteractionFrame -- contains all the controls for manual adjustment of fitting parameters
@@ -105,7 +105,7 @@ class InteractionFrame(ttk.Frame):
         
         #Error label
         self.error_frame = ttk.Frame(self)
-        self.error_label = tk.Label(self.response_frame, text = "Calculation error!", fg = "#c00", disabledforeground = "SystemButtonFace")
+        self.error_label = tk.Label(self.response_frame, text = "Calculation error!", fg = "#c00", disabledforeground = "SlateGray1")
         self.error_label.configure(state = "disabled")
         self.error_label.pack(side = tk.TOP, anchor = tk.CENTER)
         self.error_frame.pack(side = tk.LEFT, anchor = tk.E, fill = tk.X, expand = True)
