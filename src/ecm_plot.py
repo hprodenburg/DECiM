@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the plotting canvas class and some additional plotting-related code. Last modified 17 June 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the plotting canvas class and some additional plotting-related code. Last modified 31 July 2024 by Henrik Rodenburg.
 
 Classes:
 ImpedancePlot -- base class for all plot panels; possible subclasses below:
@@ -369,10 +369,12 @@ class ComplexPlaneImpedancePlot(ImpedancePlot):
         self.primary.set_ylabel("-Im[Z] ($\Omega$)")
         
     def set_base_limits(self):
+        """Also sets the aspect ratio."""
+        self.primary.set_aspect("equal")
         self.lim_x = (self.d_extend(min(self.data.real)), self.u_extend(max(self.data.real)))
         self.lim_y1 = (self.d_extend(min(-self.data.imag)), self.u_extend(max(-self.data.imag)))
         self.lim_y2 = (self.d_extend(min(self.data.freq)), self.u_extend(max(self.data.freq)))
-        
+                
 class ComplexPlaneAdmittancePlot(ImpedancePlot):
     def __init__(self, primary, data, model, ghost_data, ghost_data_visibility, make_twinx = False, data_on = True, model_on = True, primary_axis_on = True, twin_axis_on = False, primary_data_colour = "#000000", primary_model_colour = "#DD4444"):
         """Complex plane plot of the admittance (Nyquist plot).
@@ -396,11 +398,13 @@ class ComplexPlaneAdmittancePlot(ImpedancePlot):
     
     def plot_primary_data(self):
         """Function for plotting the data along the primary y-axis."""
-        self.primary.plot(1/self.data.real, -1/self.data.imag, marker = ".", linestyle = "None", color = self.primary_data_colour)
+        y = 1/(self.data.real + 1j*self.data.imag)
+        self.primary.plot(np.real(y), np.imag(y), marker = ".", linestyle = "None", color = self.primary_data_colour)
         
     def plot_primary_model(self):
         """Function for plotting the model curve along the primary y-axis."""
-        self.primary.plot(1/self.model.real, -1/self.model.imag, marker = "None", linestyle = "-", color = self.primary_model_colour)
+        y = 1/(self.model.real + 1j*self.model.imag)
+        self.primary.plot(np.real(y), np.imag(y), marker = "None", linestyle = "-", color = self.primary_model_colour)
 
     def plot_primary_ghost_data(self, g, i):
         """Function for plotting ghost data along the primary y-axis.
@@ -409,7 +413,8 @@ class ComplexPlaneAdmittancePlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.primary.plot(1/g.data.real, -1/g.data.imag, marker = ".", linestyle = "None", color = self.ghost_colours[i])
+        y = 1/(g.data.real + 1j*g.data.imag)
+        self.primary.plot(np.real(y), np.imag(y), marker = ".", linestyle = "None", color = self.ghost_colours[i])
     
     def plot_primary_ghost_model(self, g, i):
         """Function for plotting ghost model curve along the primary y-axis.
@@ -418,16 +423,20 @@ class ComplexPlaneAdmittancePlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.primary.plot(1/g.model.real, -1/g.model.imag, marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
+        y = 1/(g.model.real + 1j*g.model.imag)
+        self.primary.plot(np.real(y), np.imag(y), marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
         
     def set_text(self):
         self.primary.set_title("Complex plane")
         self.primary.set_xlabel("Re[Y] ($\Omega^{-1}$)")
-        self.primary.set_ylabel("-Im[Y] ($\Omega^{-1}$)")
+        self.primary.set_ylabel("Im[Y] ($\Omega^{-1}$)")
         
     def set_base_limits(self):
-        self.lim_x = (self.d_extend(min(1/self.data.real)), self.u_extend(max(1/self.data.real)))
-        self.lim_y1 = (self.d_extend(min(-1/self.data.imag)), self.u_extend(max(-1/self.data.imag)))
+        """Also sets the aspect ratio."""
+        self.primary.set_aspect("equal")
+        y = 1/(self.data.real + 1j*self.data.imag)
+        self.lim_x = (self.d_extend(min(np.real(y))), self.u_extend(max(np.real(y))))
+        self.lim_y1 = (self.d_extend(min(np.imag(y))), self.u_extend(max(np.imag(y))))
         self.lim_y2 = (self.d_extend(min(self.data.freq)), self.u_extend(max(self.data.freq)))
         
 class BodePhaseAmplitudePlot(ImpedancePlot):
@@ -545,11 +554,13 @@ class AdmittanceFrequencyPlot(ImpedancePlot):
     
     def plot_primary_data(self):
         """Function for plotting the data along the primary y-axis."""
-        self.primary.plot(self.data.freq, 1/self.data.real, marker = ".", linestyle = "None", color = self.primary_data_colour)
+        y = 1/(self.data.real + 1j*self.data.imag)
+        self.primary.plot(self.data.freq, np.real(y), marker = ".", linestyle = "None", color = self.primary_data_colour)
         
     def plot_primary_model(self):
         """Function for plotting the model curve along the primary y-axis."""
-        self.primary.plot(self.model.freq, 1/self.model.real, marker = "None", linestyle = "-", color = self.primary_model_colour)
+        y = 1/(self.model.real + 1j*self.model.imag)
+        self.primary.plot(self.model.freq, np.real(y), marker = "None", linestyle = "-", color = self.primary_model_colour)
 
     def plot_primary_ghost_data(self, g, i):
         """Function for plotting ghost data along the primary y-axis.
@@ -558,7 +569,8 @@ class AdmittanceFrequencyPlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.primary.plot(g.data.freq, 1/g.data.real, marker = ".", linestyle = "None", color = self.ghost_colours[i])
+        y = 1/(g.data.real + 1j*g.data.imag)
+        self.primary.plot(g.data.freq, np.real(y), marker = ".", linestyle = "None", color = self.ghost_colours[i])
     
     def plot_primary_ghost_model(self, g, i):
         """Function for plotting ghost model curve along the primary y-axis.
@@ -567,15 +579,18 @@ class AdmittanceFrequencyPlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.primary.plot(g.model.freq, 1/g.model.real, marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
+        y = 1/(g.model.real + 1j*g.model.imag)
+        self.primary.plot(g.model.freq, np.real(y), marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
         
     def plot_twin_data(self):
+        y = 1/(self.data.real + 1j*self.data.imag)
         """Function for plotting the data along the self.twin y-axis."""
-        self.twin.plot(self.data.freq, -1/self.data.imag, marker = ".", linestyle = "None", color = self.twin_data_colour)
+        self.twin.plot(self.data.freq, np.imag(y), marker = ".", linestyle = "None", color = self.twin_data_colour)
         
     def plot_twin_model(self):
         """Function for plotting the model curve along the self.twin y-axis."""
-        self.twin.plot(self.model.freq, -1/self.model.imag, marker = "None", linestyle = "-", color = self.twin_model_colour)
+        y = 1/(self.model.real + 1j*self.model.imag)
+        self.twin.plot(self.model.freq, np.imag(y), marker = "None", linestyle = "-", color = self.twin_model_colour)
 
     def plot_twin_ghost_data(self, g, i):
         """Function for plotting ghost data along the self.twin y-axis.
@@ -584,7 +599,8 @@ class AdmittanceFrequencyPlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.twin.plot(g.data.freq, -1/g.data.imag, marker = ".", linestyle = "None", color = self.ghost_colours[i])
+        y = 1/(g.data.real + 1j*g.data.imag)
+        self.twin.plot(g.data.freq, np.imag(y), marker = ".", linestyle = "None", color = self.ghost_colours[i])
     
     def plot_twin_ghost_model(self, g, i):
         """Function for plotting ghost model curve along the self.twin y-axis.
@@ -593,7 +609,8 @@ class AdmittanceFrequencyPlot(ImpedancePlot):
         self
         g -- ghost data expandedDataSet
         i -- index to use for colour"""
-        self.twin.plot(g.model.freq, -1/g.model.imag, marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
+        y = 1/(g.model.real + 1j*g.model.imag)
+        self.twin.plot(g.model.freq, np.imag(y), marker = "None", linestyle = "-", color = self.ghost_m_colours[i])
         
     def set_text(self):
         self.primary.set_title("Admittance")
@@ -687,7 +704,7 @@ class ImpedanceFrequencyPlot(ImpedancePlot):
         self.primary.set_title("Impedance")
         self.primary.set_xlabel("Frequency (Hz)")
         self.primary.set_ylabel("Z\' ($\Omega$)")
-        self.twin.set_ylabel("Z\'\' ($\Omega$)")
+        self.twin.set_ylabel("-Z\'\' ($\Omega$)")
         
     def set_base_limits(self):
         self.lim_x = (self.d_extend(min(self.data.freq)), self.u_extend(max(self.data.freq)))

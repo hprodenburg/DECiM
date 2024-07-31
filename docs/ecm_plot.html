@@ -9,7 +9,7 @@
 <tr class="heading-text decor">
 <td class="title">&nbsp;<br><strong class="title">ecm_plot</strong></td>
 </tr></table>
-    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;plotting&nbsp;canvas&nbsp;class&nbsp;and&nbsp;some&nbsp;additional&nbsp;plotting-related&nbsp;code.&nbsp;Last&nbsp;modified&nbsp;17&nbsp;June&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;plotting&nbsp;canvas&nbsp;class&nbsp;and&nbsp;some&nbsp;additional&nbsp;plotting-related&nbsp;code.&nbsp;Last&nbsp;modified&nbsp;31&nbsp;July&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
 &nbsp;<br>
 Classes:<br>
 <a href="#ImpedancePlot">ImpedancePlot</a>&nbsp;--&nbsp;base&nbsp;class&nbsp;for&nbsp;all&nbsp;plot&nbsp;panels;&nbsp;possible&nbsp;subclasses&nbsp;below:<br>
@@ -133,7 +133,7 @@ i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
 
 <dl><dt><a name="AdmittanceFrequencyPlot-plot_primary_model"><strong>plot_primary_model</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.</span></dd></dl>
 
-<dl><dt><a name="AdmittanceFrequencyPlot-plot_twin_data"><strong>plot_twin_data</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;data&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.</span></dd></dl>
+<dl><dt><a name="AdmittanceFrequencyPlot-plot_twin_data"><strong>plot_twin_data</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;data&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.&nbsp;Must&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes.</span></dd></dl>
 
 <dl><dt><a name="AdmittanceFrequencyPlot-plot_twin_ghost_data"><strong>plot_twin_ghost_data</strong></a>(self, g, i)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;ghost&nbsp;data&nbsp;along&nbsp;the&nbsp;self.<strong>twin</strong>&nbsp;y-axis.<br>
 &nbsp;<br>
@@ -367,7 +367,7 @@ i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
 
 <dl><dt><a name="ComplexPlaneAdmittancePlot-plot_primary_model"><strong>plot_primary_model</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.</span></dd></dl>
 
-<dl><dt><a name="ComplexPlaneAdmittancePlot-set_base_limits"><strong>set_base_limits</strong></a>(self)</dt><dd><span class="code">Set&nbsp;the&nbsp;base&nbsp;limits&nbsp;for&nbsp;all&nbsp;axes.&nbsp;May&nbsp;need&nbsp;to&nbsp;be&nbsp;redefined&nbsp;in&nbsp;child&nbsp;classes.&nbsp;Defaults&nbsp;to&nbsp;reasonable&nbsp;Bode&nbsp;plot&nbsp;limits.</span></dd></dl>
+<dl><dt><a name="ComplexPlaneAdmittancePlot-set_base_limits"><strong>set_base_limits</strong></a>(self)</dt><dd><span class="code">Also&nbsp;sets&nbsp;the&nbsp;aspect&nbsp;ratio.</span></dd></dl>
 
 <dl><dt><a name="ComplexPlaneAdmittancePlot-set_text"><strong>set_text</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;title,&nbsp;x&nbsp;label,&nbsp;and&nbsp;y&nbsp;label.&nbsp;To&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes&nbsp;and&nbsp;called&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;their&nbsp;__init__&nbsp;method&nbsp;and&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;in&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
 
@@ -482,7 +482,7 @@ i&nbsp;--&nbsp;index&nbsp;to&nbsp;use&nbsp;for&nbsp;colour</span></dd></dl>
 
 <dl><dt><a name="ComplexPlaneImpedancePlot-plot_primary_model"><strong>plot_primary_model</strong></a>(self)</dt><dd><span class="code">Function&nbsp;for&nbsp;plotting&nbsp;the&nbsp;model&nbsp;curve&nbsp;along&nbsp;the&nbsp;primary&nbsp;y-axis.</span></dd></dl>
 
-<dl><dt><a name="ComplexPlaneImpedancePlot-set_base_limits"><strong>set_base_limits</strong></a>(self)</dt><dd><span class="code">Set&nbsp;the&nbsp;base&nbsp;limits&nbsp;for&nbsp;all&nbsp;axes.&nbsp;May&nbsp;need&nbsp;to&nbsp;be&nbsp;redefined&nbsp;in&nbsp;child&nbsp;classes.&nbsp;Defaults&nbsp;to&nbsp;reasonable&nbsp;Bode&nbsp;plot&nbsp;limits.</span></dd></dl>
+<dl><dt><a name="ComplexPlaneImpedancePlot-set_base_limits"><strong>set_base_limits</strong></a>(self)</dt><dd><span class="code">Also&nbsp;sets&nbsp;the&nbsp;aspect&nbsp;ratio.</span></dd></dl>
 
 <dl><dt><a name="ComplexPlaneImpedancePlot-set_text"><strong>set_text</strong></a>(self)</dt><dd><span class="code">Placeholder&nbsp;function&nbsp;for&nbsp;title,&nbsp;x&nbsp;label,&nbsp;and&nbsp;y&nbsp;label.&nbsp;To&nbsp;be&nbsp;overridden&nbsp;in&nbsp;child&nbsp;classes&nbsp;and&nbsp;called&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;their&nbsp;__init__&nbsp;method&nbsp;and&nbsp;in&nbsp;the&nbsp;plot&nbsp;update&nbsp;method&nbsp;in&nbsp;the&nbsp;<a href="#PlotFrame">PlotFrame</a>.</span></dd></dl>
 
