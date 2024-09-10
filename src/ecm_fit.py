@@ -55,6 +55,7 @@ class RefinementEngine():
         opt_method -- string, optimizer to use
         nmaxiter -- maximum number of iterations per refineable parameter
         weighting_scheme -- weighting scheme, string; one of 'Unit', 'Observed modulus', 'Calculated modulus', 'Observed proportional', and 'Calculated proportional'
+        calculate_errors -- Boolean; True to calculate errors, False otherwise
         
         Attributes (other):
         module_dict -- dict of modules and corresponding refinement methods; keys are strings, values are methods in this class.
@@ -81,6 +82,7 @@ class RefinementEngine():
         self.silent = silent
         self.nmaxiter = nmaxiter
         self.weighting_scheme = weighting_scheme
+        self.calculate_errors = True
         
         self.module_dict = {"SciPy": self.refine_solution_scipy, "Optax": self.refine_solution_optax}
         
@@ -116,7 +118,8 @@ class RefinementEngine():
         self.iter = 0
         opt_res = op.minimize(self.error_function, np.array(self.parameters), method = self.opt_method, options = {"maxiter": self.nmaxiter*ref_par_count}, bounds = boundaries, callback = self.optimisation_callback) #Minimise the error
         self.parameters = opt_res["x"] #Save new parameters
-        self.get_error_estimates(self.parameters) #Save estimated parameter errors
+        if self.calculate_errors:
+            self.get_error_estimates(self.parameters) #Save estimated parameter errors
         
     def refine_solution_optax(self):
         """Apply boundaries, update the parameter history and use the optax.adam optimizer to find a solution."""
@@ -144,7 +147,8 @@ class RefinementEngine():
             jnp_parameters = ox.apply_updates(jnp_parameters, updates)
             #self.optimisation_callback(jnp_parameters)
         self.parameters = np.asarray(jnp_parameters)
-        self.get_error_estimates(self.parameters) #Save estimated parameter errors
+        if self.calculate_errors:
+            self.get_error_estimates(self.parameters) #Save estimated parameter errors
         
     def error_function(self, params):
         """Function to be minimized in the refinement. Weighting schemes are applied here.
@@ -382,6 +386,7 @@ class MultistartEngine():
         scores = []
         for i in range(min([len(self.parameters)*self.starts_per_par, self.nmaxstarts])):
             engines.append(RefinementEngine(self.function_to_fit, self.jnp_function_to_fit, self.data, self.initial_parameters(), self.parameter_dict, self.to_refine, self.high_f, self.low_f, self.previous_parameters, opt_module = self.opt_module, opt_method = self.opt_method, silent = self.silent, nmaxiter = self.nmaxiter, weighting_scheme = self.weighting_scheme))
+            engines[-1].calculate_errors = False
             engines[-1].refine_solution()
             scores.append(engines[-1].error_function(engines[-1].parameters))
         best_idx = scores.index(min(scores))
