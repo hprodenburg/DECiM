@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the fitting classes. Last modified 19 July 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the fitting classes. Last modified 10 September 2024 by Henrik Rodenburg.
 
 Classes:
 RefinementEngine -- class for refinements in general, independent of the GUI
@@ -16,6 +16,8 @@ import scipy.optimize as op
 import jax.numpy as jnp
 from jax import grad
 import optax as ox
+
+import numdifftools as nd
 
 import matplotlib as mp
 import matplotlib.pyplot as pt
@@ -43,6 +45,7 @@ class RefinementEngine():
         jnp_function_to_fit -- JAX.NumPy function to fit; typically Circuit.jnp_impedance
         data -- dataSet object containing measured data
         parameters -- list of parameters
+        parameter_errors -- list of estimated errors in the parameters
         parameter_list -- dict of parameters; keys are are indices in self.parameters, values are names (e.g. 'R0', 'n1', ...)
         to_refine -- list of ones and zeros; 1 means that the value in self.parameters at the same index should be refined, 0 means that it should not; does not work with optax.adam
         high_f -- upper frequency bound
@@ -61,11 +64,13 @@ class RefinementEngine():
         refine_solution -- refine the solution and update self.parameters
         refine_solution_scipy -- refine the solution with scipy.optimize.minimize and update self.parameters
         refine_solution_optax -- refine the solution with optax and update self.parameters
-        error_function -- function that returns the error to be minimized by self.refine_solution"""
+        error_function -- function that returns the error to be minimized by self.refine_solution
+        get_error_estimates -- calculate error estimates for the parameters & save them to self.parameter_errors"""
         self.function_to_fit = function_to_fit
         self.jnp_function_to_fit = jnp_function_to_fit
         self.data = data
         self.parameters = parameters
+        self.parameter_errors = np.zeros(len(parameters))
         self.parameter_dict = parameter_dict
         self.to_refine = to_refine
         self.high_f = high_f
@@ -111,6 +116,7 @@ class RefinementEngine():
         self.iter = 0
         opt_res = op.minimize(self.error_function, np.array(self.parameters), method = self.opt_method, options = {"maxiter": self.nmaxiter*ref_par_count}, bounds = boundaries, callback = self.optimisation_callback) #Minimise the error
         self.parameters = opt_res["x"] #Save new parameters
+        self.get_error_estimates(self.parameters) #Save estimated parameter errors
         
     def refine_solution_optax(self):
         """Apply boundaries, update the parameter history and use the optax.adam optimizer to find a solution."""
@@ -138,6 +144,7 @@ class RefinementEngine():
             jnp_parameters = ox.apply_updates(jnp_parameters, updates)
             #self.optimisation_callback(jnp_parameters)
         self.parameters = np.asarray(jnp_parameters)
+        self.get_error_estimates(self.parameters) #Save estimated parameter errors
         
     def error_function(self, params):
         """Function to be minimized in the refinement. Weighting schemes are applied here.
@@ -206,7 +213,16 @@ class RefinementEngine():
             out_str += self.parameter_dict[p] + ": " + "{:5g} | ".format(params[p])
         print(out_str)
         self.iter += 1
-
+        
+    def get_error_estimates(self, params):
+        """Calculate the error estimates for all parameters based on the inverse of the Hessian, using numdifftools. Result is saved to self.parameter_errors.
+        
+        Arguments:
+        self
+        params -- list of fit parameters"""
+        H = nd.Hessian(self.error_function)
+        cov = 0.5*np.linalg.inv(H(params))
+        self.parameter_errors = np.diag(cov)
 
 #####################
 ##SIMPLE REFINEMENT##
@@ -226,19 +242,24 @@ class SimpleRefinementEngine():
         
         Attributes:
         input_params -- list of input parameters
+        parameter_errors -- list of estimated parameter errors
         output_params -- list of output parameters
         data -- dataSet containing measured data
         min_impedance_function -- impedance function used in the minimization
         bounded -- Boolean, True if bounds are to be applied to the element values, False otherwise
+        maxiter -- maximum number of iterations in the optimization
         
         Methods:
         errorFunction -- function to be minimized
-        minRefinement -- complete optimization method"""
+        minRefinement -- complete optimization method
+        get_error_estimates -- estimatation of errors in the parameters"""
         self.input_params = params #Parameters belonging to the circuit elements
+        self.parameter_errors = np.zeros(len(self.input_params))
         self.output_params = params
         self.data = data #Raw data, taking the form of a dataSet object (ecm_datastructure). If a limited frequency range is desired, the truncated data should be passed to the SimpleRefinementEngine.
         self.min_impedance_function = min_impedance_function #The function used to calculate the impedance (ecm_circuits)
         self.bounded = bounded
+        self.maxiter = 10000
 
     def errorFunction(self, parameters):
         """Function to be minimized.
@@ -257,10 +278,21 @@ class SimpleRefinementEngine():
         for p in self.input_params:
             bound_list.append((0, 1e15))
         if self.bounded:
-            opt_res = op.minimize(self.errorFunction, np.array(self.input_params), method="Nelder-Mead", options = {"maxiter": 10000}, bounds = bound_list)
+            opt_res = op.minimize(self.errorFunction, np.array(self.input_params), method="Nelder-Mead", options = {"maxiter": self.maxiter, "maxfev": self.maxiter}, bounds = bound_list)
         else:
-            opt_res = op.minimize(self.errorFunction, np.array(self.input_params), method="Nelder-Mead", options = {"maxiter": 10000})
+            opt_res = op.minimize(self.errorFunction, np.array(self.input_params), method="Nelder-Mead", options = {"maxiter": self.maxiter, "maxfev": self.maxiter})
         self.output_params = opt_res["x"]
+        self.get_error_estimates(self.output_params)
+        
+    def get_error_estimates(self, params):
+        """Calculate the error estimates for all parameters based on the inverse of the Hessian, using numdifftools. Result is saved to self.parameter_errors.
+        
+        Arguments:
+        self
+        params -- list of fit parameters"""
+        H = nd.Hessian(self.errorFunction)
+        cov = 0.5*np.linalg.inv(H(params))
+        self.parameter_errors = np.diag(cov)
 
 ############################
 ##MULTISTART INITIAL GUESS##
@@ -733,6 +765,7 @@ class RefinementWindow(tk.Toplevel):
         self.refinement_engine.refine_solution()
         self.refined_parameters = self.refinement_engine.parameters
         #Update
+        print(self.refinement_engine.parameter_errors) #Temporary feature: print parameter errors
         self.update_parameter_listbox() #Update parameter labels
         self.update_residuals() #Update residuals
         self.display_error() #Show total error
