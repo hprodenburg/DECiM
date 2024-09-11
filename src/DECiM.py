@@ -1,6 +1,6 @@
 """DECiM (Determination of Equivalent Circuit Models) is an equivalent circuit model fitting program for impedance data. It is a GUI-based program.
 Much of the source code is spread over other python source files, all of which must be in the same folder as DECiM.py to ensure that the program works correctly.
-DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.3.5, 31 July 2024.
+DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.4.0-dev, 11 September 2024.
 
 This is the core module -- when launched, DECiM starts. This module also defines the Window class."""
 
@@ -109,6 +109,7 @@ class Window(ttk.Frame):
         data -- dataSet containing measured data
         model -- dataSet containing model curve
         prevparams -- list of lists of parameters, used to save old parameter sets that can be returned to with the Undo Refinement option in the Calculate menu
+        prevsdevs -- list of lists of uncertainties (standard deviations) in the parameters, used for saving result files with error estimates
         fitlim -- Boolean indicating whether or not the simple refinement should have frequency limits
         fitfreq -- frequency limits for the simple refinement
         master -- Tkinter tk that is actually running the show
@@ -162,9 +163,12 @@ class Window(ttk.Frame):
         self.model = dataSet()
         #Previous parameters
         self.prevparams = []
+        #Parameter standard deviations from most recent refinement
+        self.sdevs = None
         #Parameters regarding limiting the scope of the fit
         self.fitlim = False
         self.fitfreq = None
+
         #Finish building the UI
         self.make_UI()
 
@@ -337,7 +341,10 @@ class Window(ttk.Frame):
 
     def saveResult(self):
         """Open a dialog window for saving result (.recm2) files."""
-        createResultFile(self.circuit_manager.circuit, self.interactive.parameters, self.data, self.model, default_filename = self.plots.title.rstrip(".txt"))
+        if self.interactive.as_refined:
+            createResultFile(self.circuit_manager.circuit, self.interactive.parameters, self.sdevs, self.data, self.model, default_filename = self.plots.title.rstrip(".txt"), save_sdevs = True)
+        else:
+            createResultFile(self.circuit_manager.circuit, self.interactive.parameters, self.sdevs, self.data, self.model, default_filename = self.plots.title.rstrip(".txt"), save_sdevs = False)
 
     #Exiting DECiM
     
@@ -531,6 +538,8 @@ class Window(ttk.Frame):
         refinement_engine.minRefinement()
         self.prevparams.append(self.interactive.parameters) #Save the previous parameters to allow the refinement to be undone.
         self.interactive.parameters = refinement_engine.output_params
+        self.sdevs = refinement_engine.parameter_errors
+        self.interactive.as_refined = True
         self.canvasUpdate()
     
     def setRefinementRange(self):
@@ -549,6 +558,8 @@ class Window(ttk.Frame):
         if refinement_window.refinement_accepted:
             self.prevparams.append(self.interactive.parameters) #Save the previous parameters to allow the refinement to be undone.
             self.interactive.parameters = refinement_window.refined_parameters
+            self.sdevs = refinement_window.parameter_errors
+            self.interactive.as_refined = True
         self.canvasUpdate()
 
     def undoRefinement(self):

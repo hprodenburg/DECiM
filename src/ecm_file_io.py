@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains all functions related to file I/O. Last modified 9 May 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains all functions related to file I/O. Last modified 11 September 2024 by Henrik Rodenburg.
 
 Classes:
 DataSpecificationFile -- settings file that holds information about data file layout.
@@ -278,11 +278,11 @@ def assignIndicesAndValues(specification_lines, raw_units): #Take the specificat
     fit_parameters = list(np.zeros(100) + 1) #List of model parameters; returned by this function
     indices = []
     for spec_line in specification_lines:
-        halves = list(spec_line.split("|")) #First split each line into the value half and the index half
-        indices.append(int(halves[1]))
+        thirds = list(spec_line.split("|")) #First split each line into the value third, the index third, and the error third
+        indices.append(int(thirds[1]))
     for spec_line in specification_lines:
-        halves = list(spec_line.split("|")) #First split each line into the value half and the index half
-        parameter_details = list(halves[0].split()) #Get the parameter name and value, and unit if the parameter is not a CPE exponent.
+        thirds = list(spec_line.split("|")) #First split each line into the value third, the index third, and the error third
+        parameter_details = list(thirds[0].split()) #Get the parameter name and value, and unit if the parameter is not a CPE exponent.
         if len(parameter_details) == 3:
             parameter_name, parameter_value, parameter_unit = parameter_details[0][:2], parameter_details[1], parameter_details[2]
         elif len(parameter_details) == 2:
@@ -290,7 +290,7 @@ def assignIndicesAndValues(specification_lines, raw_units): #Take the specificat
         else:
             raise ValueError("Incorrect parameter line.")
         parameter_value = float(parameter_value) #Convert parameter value to float
-        parameter_index = int(halves[1]) - min(indices) #Get the index and convert it to an integer
+        parameter_index = int(thirds[1]) - min(indices) #Get the index and convert it to an integer
         fit_parameters[parameter_index] = parameter_value #Update the parameter list
         for element in raw_units.diagram.list_elements(): #Now check to which element the parameter under investigation belongs
             if element.name == parameter_name: #If the parameter name is equal to an element name (can happen for R, C, L, Q, G):
@@ -398,7 +398,7 @@ def parseResult(filename):
 ##RESULT FILE WRITING##
 #######################
 
-def createResultFile(circuit, parameters, e_dataset, m_dataset, default_filename = ""): #To write the result file, we need 1) the circuit diagram, 2) the parameter list, 3) the experimental data, 4) the model line's points and 5) a name for the new file.
+def createResultFile(circuit, parameters, uncertainties, e_dataset, m_dataset, default_filename = "", save_sdevs = False): #To write the result file, we need 1) the circuit diagram, 2) the parameter list, 3) the experimental data, 4) the model line's points and 5) a name for the new file.
     """Create a new result file.
     
     Arguments:
@@ -411,6 +411,8 @@ def createResultFile(circuit, parameters, e_dataset, m_dataset, default_filename
     default_filename -- initial file name, will normally be changed by the user
     
     No return value. The function ends with closing the output RECM2 file."""
+    #Inform the user
+    print("Saving result...")
     #File name
     fn = fdiag.asksaveasfilename(initialfile = default_filename)
     if fn[-6:] != ".recm2":
@@ -423,23 +425,45 @@ def createResultFile(circuit, parameters, e_dataset, m_dataset, default_filename
         outfile.write("CUSTOM MODEL: " + ecmcm.custom_model_diagrams[ecmcm.custom_model_name][0] + " " + ecmcm.custom_model_name + "\n\n")
     else:
         outfile.write(circuit.diagram.generate_circuit_string(verbose = True) + "\n\n")
+    #Dictionary of parameters
+    p_dict = {}
+    for e in circuit.diagram.list_elements():
+        p_dict[e.idx] = e.name
+        if e.tag in "QSOGH":
+            if e.tag == "Q":
+                p_dict[e.idx2] = "n" + str(e.number)
+            if e.tag == "O":
+                p_dict[e.idx2] = "k" + str(e.number)
+            if e.tag == "S":
+                p_dict[e.idx2] = "l" + str(e.number)
+            if e.tag == "G":
+                p_dict[e.idx2] = "m" + str(e.number)
+            if e.tag == "H":
+                p_dict[e.idx2] = "t" + str(e.number)
+                p_dict[e.idx3] = "b" + str(e.number)
+                p_dict[e.idx4] = "g" + str(e.number)
+    #Parameter standard deviations
+    if save_sdevs:
+        sdevs = uncertainties
+    else:
+        sdevs = np.ones(len(parameters))*np.inf
     #Model parameter section
     e_units = {"R": "Ohm", "L": "H", "C": "F", "Q": "Fs^(n-1)", "n": "", "b": "", "g": "", "O": "Ohm", "S": "Ohm", "G": "Ohm", "H": "Ohm", "k": "s^{1/2}", "l": "s^{1/2}", "m": "s^{1/2}", "t": "s^{b*g}"}
     outfile.write(">MODEL PARAMETERS\n")
     for e in circuit.diagram.list_elements():
-        outfile.write(e.name + ": " + str(parameters[e.idx]) + " " + e_units[e.tag] + " | " + str(e.idx) + "\n")
+        outfile.write(e.name + ": " + str(parameters[e.idx]) + " " + e_units[e.tag] + " | " + str(e.idx) + " | ± " + str(sdevs[e.idx]) + "\n")
         if e.tag == "Q":
-            outfile.write("n" + str(e.number) + ": " + str(parameters[e.idx2]) + " " + e_units["n"] + " | " + str(e.idx2) + "\n")
+            outfile.write("n" + str(e.number) + ": " + str(parameters[e.idx2]) + " " + e_units["n"] + " | " + str(e.idx2) + " | ± " + str(sdevs[e.idx2]) + "\n")
         if e.tag == "O":
-            outfile.write("k" + str(e.number) + ": " + str(parameters[e.idx2]) + " " + e_units["k"] + " | " + str(e.idx2) + "\n")
+            outfile.write("k" + str(e.number) + ": " + str(parameters[e.idx2]) + " " + e_units["k"] + " | " + str(e.idx2) + " | ± " + str(sdevs[e.idx2]) + "\n")
         if e.tag == "S":
-            outfile.write("l" + str(e.number) + ": " + str(parameters[e.idx2]) + " " + e_units["l"] + " | " + str(e.idx2) + "\n")
+            outfile.write("l" + str(e.number) + ": " + str(parameters[e.idx2]) + " " + e_units["l"] + " | " + str(e.idx2) + " | ± " + str(sdevs[e.idx2]) + "\n")
         if e.tag == "G":
-            outfile.write("m" + str(e.number) + ": " + str(parameters[e.idx2]) + " " + e_units["m"] + " | " + str(e.idx2) + "\n")
+            outfile.write("m" + str(e.number) + ": " + str(parameters[e.idx2]) + " " + e_units["m"] + " | " + str(e.idx2) + " | ± " + str(sdevs[e.idx2]) + "\n")
         if e.tag == "H":
-            outfile.write("t" + str(e.number) + ": " + str(parameters[e.idx2]) + " " + e_units["t"] + " | " + str(e.idx2) + "\n")
-            outfile.write("b" + str(e.number) + ": " + str(parameters[e.idx3]) + " " + e_units["b"] + " | " + str(e.idx3) + "\n")
-            outfile.write("g" + str(e.number) + ": " + str(parameters[e.idx4]) + " " + e_units["g"] + " | " + str(e.idx4) + "\n")
+            outfile.write("t" + str(e.number) + ": " + str(parameters[e.idx2]) + " " + e_units["t"] + " | " + str(e.idx2) + " | ± " + str(sdevs[e.idx2]) + "\n")
+            outfile.write("b" + str(e.number) + ": " + str(parameters[e.idx3]) + " " + e_units["b"] + " | " + str(e.idx3) + " | ± " + str(sdevs[e.idx3]) + "\n")
+            outfile.write("g" + str(e.number) + ": " + str(parameters[e.idx4]) + " " + e_units["g"] + " | " + str(e.idx4) + " | ± " + str(sdevs[e.idx4]) + "\n")
     outfile.write("\n")
     #Statistics section
     outfile.write(">STATISTICAL DATA\n")
@@ -470,6 +494,7 @@ def createResultFile(circuit, parameters, e_dataset, m_dataset, default_filename
         outfile.write("{:g}, {:g}, {:g}\n".format(m_dataset.freq[d], m_dataset.real[d], m_dataset.imag[d]))
     outfile.write("{:g}, {:g}, {:g}".format(m_dataset.freq[-1], m_dataset.real[-1], m_dataset.imag[-1]))
     outfile.close()
+    print("Result file saved to {:s}".format(fn))
 
 ################################
 ##CIRCUIT PRESET FILE HANDLING##

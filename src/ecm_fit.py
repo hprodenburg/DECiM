@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the fitting classes. Last modified 10 September 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the fitting classes. Last modified 11 September 2024 by Henrik Rodenburg.
 
 Classes:
 RefinementEngine -- class for refinements in general, independent of the GUI
@@ -46,7 +46,7 @@ class RefinementEngine():
         data -- dataSet object containing measured data
         parameters -- list of parameters
         parameter_errors -- list of estimated errors in the parameters
-        parameter_list -- dict of parameters; keys are are indices in self.parameters, values are names (e.g. 'R0', 'n1', ...)
+        parameter_dict -- dict of parameters; keys are are indices in self.parameters, values are names (e.g. 'R0', 'n1', ...)
         to_refine -- list of ones and zeros; 1 means that the value in self.parameters at the same index should be refined, 0 means that it should not; does not work with optax.adam
         high_f -- upper frequency bound
         low_f -- lower frequency bound
@@ -59,7 +59,7 @@ class RefinementEngine():
         
         Attributes (other):
         module_dict -- dict of modules and corresponding refinement methods; keys are strings, values are methods in this class.
-        l_idx, h_idx -- indices of the lower and upper frequency limits, respectively; created during refinement
+        l_idx, h_idx -- indices of the lower and upper frequency limits, respectively; created here and updated during refinement
         
         Methods:
         refine_solution -- refine the solution and update self.parameters
@@ -85,6 +85,9 @@ class RefinementEngine():
         self.calculate_errors = True
         
         self.module_dict = {"SciPy": self.refine_solution_scipy, "Optax": self.refine_solution_optax}
+        
+        #Initial frequency limits
+        self.h_idx, self.l_idx = nearest(self.high_f, self.data.freq), nearest(self.low_f, self.data.freq)
         
     def refine_solution(self):
         """Choose the correct refinement method based on self.opt_module."""
@@ -224,10 +227,16 @@ class RefinementEngine():
         Arguments:
         self
         params -- list of fit parameters"""
+        #Following the method at https://kitchingroup.cheme.cmu.edu/f19-06623/12-nonlinear-regression-2.html
+        #Set weight to Unit
+        self.weighting_scheme = "Unit"
+        #Create Hessian
         H = nd.Hessian(self.error_function)
-        cov = 0.5*np.linalg.inv(H(params))
-        self.parameter_errors = np.diag(cov)
-
+        #Invert Hessian and convert to variance-covariance matrix
+        self.cov = 0.5*np.linalg.inv(H(params))
+        #Extract diagonal and calculate standard deviations
+        self.parameter_errors = np.sqrt(np.diag(self.cov))
+        
 #####################
 ##SIMPLE REFINEMENT##
 #####################
@@ -296,7 +305,7 @@ class SimpleRefinementEngine():
         params -- list of fit parameters"""
         H = nd.Hessian(self.errorFunction)
         cov = 0.5*np.linalg.inv(H(params))
-        self.parameter_errors = np.diag(cov)
+        self.parameter_errors = np.sqrt(np.diag(cov))
 
 ############################
 ##MULTISTART INITIAL GUESS##
@@ -311,7 +320,7 @@ class MultistartEngine():
         jnp_function_to_fit -- JAX.NumPy function to fit; typically Circuit.jnp_impedance
         data -- dataSet object containing measured data
         parameters -- list of parameters
-        parameter_list -- dict of parameters; keys are are indices in self.parameters, values are names (e.g. 'R0', 'n1', ...)
+        parameter_dict -- dict of parameters; keys are are indices in self.parameters, values are names (e.g. 'R0', 'n1', ...)
         previous_parameters -- list of lists of parameters
         opt_module -- string, module from which to import optimizer; only option for now is 'SciPy'
         opt_method -- string, optimizer to use
@@ -416,6 +425,7 @@ class RefinementWindow(tk.Toplevel):
         data -- dataSet containing measured data (no frequency limits!)
         initial_parameters -- list initial fit parameters
         refined_parameters -- list refined fit parameters
+        parameter_errors -- list of standard deviations in the parameters
         parameter_history -- list of lists of previous parameter values
         parameter_dict -- dict containing parameter names as keys and corresponding indices in initial_parameters and refined_parameters as values
         flipped_parameter_dict -- dict containing indices as values and parameter names as keys
@@ -769,6 +779,7 @@ class RefinementWindow(tk.Toplevel):
         #Refinement
         self.refinement_engine.refine_solution()
         self.refined_parameters = self.refinement_engine.parameters
+        self.parameter_errors = self.refinement_engine.parameter_errors
         #Update
         print(self.refinement_engine.parameter_errors) #Temporary feature: print parameter errors
         self.update_parameter_listbox() #Update parameter labels

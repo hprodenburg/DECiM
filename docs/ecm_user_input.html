@@ -9,7 +9,7 @@
 <tr class="heading-text decor">
 <td class="title">&nbsp;<br><strong class="title">ecm_user_input</strong></td>
 </tr></table>
-    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;interactive&nbsp;elements&nbsp;code.&nbsp;Last&nbsp;modified&nbsp;19&nbsp;July&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;interactive&nbsp;elements&nbsp;code.&nbsp;Last&nbsp;modified&nbsp;11&nbsp;September&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
 &nbsp;<br>
 Classes:<br>
 <a href="#InteractionFrame">InteractionFrame</a>&nbsp;--&nbsp;contains&nbsp;all&nbsp;the&nbsp;controls&nbsp;for&nbsp;manual&nbsp;adjustment&nbsp;of&nbsp;fitting&nbsp;parameters<br>
@@ -95,6 +95,8 @@ low_lim_frame,&nbsp;low_lim_label,&nbsp;low_lim_box&nbsp;--&nbsp;frame,&nbsp;des
 high_lim_frame,&nbsp;high_lim_label,&nbsp;high_lim_box&nbsp;--&nbsp;frame,&nbsp;description&nbsp;label&nbsp;and&nbsp;tk.Entry&nbsp;widget&nbsp;for&nbsp;choosing&nbsp;the&nbsp;upper&nbsp;frequency&nbsp;limit<br>
 slider_frame,&nbsp;slider,&nbsp;parameter_label&nbsp;--&nbsp;frame,&nbsp;tk.Scale&nbsp;for&nbsp;setting&nbsp;the&nbsp;parameter&nbsp;value&nbsp;and&nbsp;a&nbsp;label&nbsp;to&nbsp;display&nbsp;the&nbsp;parameter&nbsp;name&nbsp;and&nbsp;value<br>
 override_field_frame,&nbsp;override_label,&nbsp;override_box,&nbsp;override_button&nbsp;--&nbsp;frame,&nbsp;description&nbsp;label,&nbsp;tk.Entry&nbsp;widget&nbsp;and&nbsp;button&nbsp;to&nbsp;override&nbsp;the&nbsp;slider&nbsp;input&nbsp;and&nbsp;instead&nbsp;type&nbsp;the&nbsp;desired&nbsp;parameter&nbsp;value<br>
+&nbsp;<br>
+as_refined&nbsp;--&nbsp;Boolean;&nbsp;indicates&nbsp;if&nbsp;result&nbsp;is&nbsp;as&nbsp;refined&nbsp;or&nbsp;not;&nbsp;partly&nbsp;controlled&nbsp;via&nbsp;DECiM&nbsp;core<br>
 &nbsp;<br>
 Methods:<br>
 update_cmd&nbsp;--&nbsp;canvasUpdate&nbsp;method&nbsp;from&nbsp;DECiM&nbsp;core<br>

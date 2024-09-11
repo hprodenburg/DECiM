@@ -1,4 +1,4 @@
-"""Part of DECiM. This file contains the interactive elements code. Last modified 31 July 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the interactive elements code. Last modified 11 September 2024 by Henrik Rodenburg.
 
 Classes:
 InteractionFrame -- contains all the controls for manual adjustment of fitting parameters
@@ -50,6 +50,8 @@ class InteractionFrame(ttk.Frame):
         slider_frame, slider, parameter_label -- frame, tk.Scale for setting the parameter value and a label to display the parameter name and value
         override_field_frame, override_label, override_box, override_button -- frame, description label, tk.Entry widget and button to override the slider input and instead type the desired parameter value
         
+        as_refined -- Boolean; indicates if result is as refined or not; partly controlled via DECiM core
+        
         Methods:
         update_cmd -- canvasUpdate method from DECiM core
         reset_parameter_listbox -- clear the list of parameters in the ScrollableListbox and fill it again
@@ -67,6 +69,9 @@ class InteractionFrame(ttk.Frame):
         #Parameters are saved here
         self.circuit = circuit
         self.parameters = parameters
+        
+        #Refinement check parameter
+        self.as_refined = False
         
         #Variables
         self.chosen_parameter = tk.StringVar() #You can check which index this has in self.circuit_elements to determine the index of the parameter that is being modified.
@@ -266,6 +271,8 @@ class InteractionFrame(ttk.Frame):
         self.update_label(output_value)
         #Update the parameter
         self.parameters[self.parameter_index(list(self.chosen_parameter.get().split(":"))[0])] = output_value
+        #Clear the as-refined status
+        self.as_refined = False
         #Update the canvas
         self.update_cmd()
     
@@ -277,6 +284,8 @@ class InteractionFrame(ttk.Frame):
         self.update_label(output_value)
         #Update the parameter
         self.parameters[self.parameter_index(list(self.chosen_parameter.get().split(":"))[0])] = output_value
+        #Clear the as-refined status
+        self.as_refined = False
         #Update the canvas
         self.update_cmd()
         self.adjust_controls()

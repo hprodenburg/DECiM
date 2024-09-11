@@ -9,7 +9,7 @@
 <tr class="heading-text decor">
 <td class="title">&nbsp;<br><strong class="title">ecm_file_io</strong></td>
 </tr></table>
-    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;all&nbsp;functions&nbsp;related&nbsp;to&nbsp;file&nbsp;I/O.&nbsp;Last&nbsp;modified&nbsp;9&nbsp;May&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;all&nbsp;functions&nbsp;related&nbsp;to&nbsp;file&nbsp;I/O.&nbsp;Last&nbsp;modified&nbsp;11&nbsp;September&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
 &nbsp;<br>
 Classes:<br>
 <a href="#DataSpecificationFile">DataSpecificationFile</a>&nbsp;--&nbsp;settings&nbsp;file&nbsp;that&nbsp;holds&nbsp;information&nbsp;about&nbsp;data&nbsp;file&nbsp;layout.<br>
@@ -902,7 +902,7 @@ raw_units&nbsp;--&nbsp;ecm_circuits.Circuit&nbsp;<a href="builtins.html#object">
 &nbsp;<br>
 Returns:<br>
 fit_parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;fit&nbsp;parameters</span></dd></dl>
- <dl><dt><a name="-createResultFile"><strong>createResultFile</strong></a>(circuit, parameters, e_dataset, m_dataset, default_filename='')</dt><dd><span class="code">Create&nbsp;a&nbsp;new&nbsp;result&nbsp;file.<br>
+ <dl><dt><a name="-createResultFile"><strong>createResultFile</strong></a>(circuit, parameters, uncertainties, e_dataset, m_dataset, default_filename='', save_sdevs=False)</dt><dd><span class="code">Create&nbsp;a&nbsp;new&nbsp;result&nbsp;file.<br>
 &nbsp;<br>
 Arguments:<br>
 circuit&nbsp;--&nbsp;ecm_circuits.Circuit&nbsp;<a href="builtins.html#object">object</a><br>

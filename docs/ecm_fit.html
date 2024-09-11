@@ -9,7 +9,7 @@
 <tr class="heading-text decor">
 <td class="title">&nbsp;<br><strong class="title">ecm_fit</strong></td>
 </tr></table>
-    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;fitting&nbsp;classes.&nbsp;Last&nbsp;modified&nbsp;10&nbsp;September&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;fitting&nbsp;classes.&nbsp;Last&nbsp;modified&nbsp;11&nbsp;September&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
 &nbsp;<br>
 Classes:<br>
 <a href="#RefinementEngine">RefinementEngine</a>&nbsp;--&nbsp;class&nbsp;for&nbsp;refinements&nbsp;in&nbsp;general,&nbsp;independent&nbsp;of&nbsp;the&nbsp;GUI<br>
@@ -74,7 +74,7 @@ function_to_fit&nbsp;--&nbsp;function&nbsp;to&nbsp;fit;&nbsp;typically&nbsp;Circ
 jnp_function_to_fit&nbsp;--&nbsp;JAX.NumPy&nbsp;function&nbsp;to&nbsp;fit;&nbsp;typically&nbsp;Circuit.jnp_impedance<br>
 data&nbsp;--&nbsp;dataSet&nbsp;<a href="builtins.html#object">object</a>&nbsp;containing&nbsp;measured&nbsp;data<br>
 parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;parameters<br>
-parameter_list&nbsp;--&nbsp;dict&nbsp;of&nbsp;parameters;&nbsp;keys&nbsp;are&nbsp;are&nbsp;indices&nbsp;in&nbsp;self.<strong>parameters</strong>,&nbsp;values&nbsp;are&nbsp;names&nbsp;(e.g.&nbsp;'R0',&nbsp;'n1',&nbsp;...)<br>
+parameter_dict&nbsp;--&nbsp;dict&nbsp;of&nbsp;parameters;&nbsp;keys&nbsp;are&nbsp;are&nbsp;indices&nbsp;in&nbsp;self.<strong>parameters</strong>,&nbsp;values&nbsp;are&nbsp;names&nbsp;(e.g.&nbsp;'R0',&nbsp;'n1',&nbsp;...)<br>
 previous_parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;lists&nbsp;of&nbsp;parameters<br>
 opt_module&nbsp;--&nbsp;string,&nbsp;module&nbsp;from&nbsp;which&nbsp;to&nbsp;import&nbsp;optimizer;&nbsp;only&nbsp;option&nbsp;for&nbsp;now&nbsp;is&nbsp;'SciPy'<br>
 opt_method&nbsp;--&nbsp;string,&nbsp;optimizer&nbsp;to&nbsp;use<br>
@@ -140,7 +140,7 @@ jnp_function_to_fit&nbsp;--&nbsp;JAX.NumPy&nbsp;function&nbsp;to&nbsp;fit;&nbsp;
 data&nbsp;--&nbsp;dataSet&nbsp;<a href="builtins.html#object">object</a>&nbsp;containing&nbsp;measured&nbsp;data<br>
 parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;parameters<br>
 parameter_errors&nbsp;--&nbsp;list&nbsp;of&nbsp;estimated&nbsp;errors&nbsp;in&nbsp;the&nbsp;parameters<br>
-parameter_list&nbsp;--&nbsp;dict&nbsp;of&nbsp;parameters;&nbsp;keys&nbsp;are&nbsp;are&nbsp;indices&nbsp;in&nbsp;self.<strong>parameters</strong>,&nbsp;values&nbsp;are&nbsp;names&nbsp;(e.g.&nbsp;'R0',&nbsp;'n1',&nbsp;...)<br>
+parameter_dict&nbsp;--&nbsp;dict&nbsp;of&nbsp;parameters;&nbsp;keys&nbsp;are&nbsp;are&nbsp;indices&nbsp;in&nbsp;self.<strong>parameters</strong>,&nbsp;values&nbsp;are&nbsp;names&nbsp;(e.g.&nbsp;'R0',&nbsp;'n1',&nbsp;...)<br>
 to_refine&nbsp;--&nbsp;list&nbsp;of&nbsp;ones&nbsp;and&nbsp;zeros;&nbsp;1&nbsp;means&nbsp;that&nbsp;the&nbsp;value&nbsp;in&nbsp;self.<strong>parameters</strong>&nbsp;at&nbsp;the&nbsp;same&nbsp;index&nbsp;should&nbsp;be&nbsp;refined,&nbsp;0&nbsp;means&nbsp;that&nbsp;it&nbsp;should&nbsp;not;&nbsp;does&nbsp;not&nbsp;work&nbsp;with&nbsp;optax.adam<br>
 high_f&nbsp;--&nbsp;upper&nbsp;frequency&nbsp;bound<br>
 low_f&nbsp;--&nbsp;lower&nbsp;frequency&nbsp;bound<br>
@@ -153,7 +153,7 @@ calculate_errors&nbsp;--&nbsp;Boolean;&nbsp;True&nbsp;to&nbsp;calculate&nbsp;err
 &nbsp;<br>
 Attributes&nbsp;(other):<br>
 module_dict&nbsp;--&nbsp;dict&nbsp;of&nbsp;modules&nbsp;and&nbsp;corresponding&nbsp;refinement&nbsp;methods;&nbsp;keys&nbsp;are&nbsp;strings,&nbsp;values&nbsp;are&nbsp;methods&nbsp;in&nbsp;this&nbsp;class.<br>
-l_idx,&nbsp;h_idx&nbsp;--&nbsp;indices&nbsp;of&nbsp;the&nbsp;lower&nbsp;and&nbsp;upper&nbsp;frequency&nbsp;limits,&nbsp;respectively;&nbsp;created&nbsp;during&nbsp;refinement<br>
+l_idx,&nbsp;h_idx&nbsp;--&nbsp;indices&nbsp;of&nbsp;the&nbsp;lower&nbsp;and&nbsp;upper&nbsp;frequency&nbsp;limits,&nbsp;respectively;&nbsp;created&nbsp;here&nbsp;and&nbsp;updated&nbsp;during&nbsp;refinement<br>
 &nbsp;<br>
 Methods:<br>
 refine_solution&nbsp;--&nbsp;refine&nbsp;the&nbsp;solution&nbsp;and&nbsp;update&nbsp;self.<strong>parameters</strong><br>
@@ -239,6 +239,7 @@ element_list&nbsp;--&nbsp;list&nbsp;of&nbsp;all&nbsp;elements&nbsp;in&nbsp;the&n
 data&nbsp;--&nbsp;dataSet&nbsp;containing&nbsp;measured&nbsp;data&nbsp;(no&nbsp;frequency&nbsp;limits!)<br>
 initial_parameters&nbsp;--&nbsp;list&nbsp;initial&nbsp;fit&nbsp;parameters<br>
 refined_parameters&nbsp;--&nbsp;list&nbsp;refined&nbsp;fit&nbsp;parameters<br>
+parameter_errors&nbsp;--&nbsp;list&nbsp;of&nbsp;standard&nbsp;deviations&nbsp;in&nbsp;the&nbsp;parameters<br>
 parameter_history&nbsp;--&nbsp;list&nbsp;of&nbsp;lists&nbsp;of&nbsp;previous&nbsp;parameter&nbsp;values<br>
 parameter_dict&nbsp;--&nbsp;dict&nbsp;containing&nbsp;parameter&nbsp;names&nbsp;as&nbsp;keys&nbsp;and&nbsp;corresponding&nbsp;indices&nbsp;in&nbsp;initial_parameters&nbsp;and&nbsp;refined_parameters&nbsp;as&nbsp;values<br>
 flipped_parameter_dict&nbsp;--&nbsp;dict&nbsp;containing&nbsp;indices&nbsp;as&nbsp;values&nbsp;and&nbsp;parameter&nbsp;names&nbsp;as&nbsp;keys<br>
