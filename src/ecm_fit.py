@@ -1,8 +1,8 @@
-"""Part of DECiM. This file contains the fitting classes. Last modified 11 September 2024 by Henrik Rodenburg.
+"""Part of DECiM. This file contains the fitting classes. Last modified 12 September 2024 by Henrik Rodenburg.
 
 Classes:
+ParameterDictionary -- dict child class linking the parameter names to refinement list/array indices
 RefinementEngine -- class for refinements in general, independent of the GUI
-SimpleRefinementEngine -- class for the simple refinement
 MultistartEngine -- class for automatic initial guesses
 RefinementWindow -- class for the advanced refinement"""
 
@@ -31,6 +31,53 @@ import tkinter.ttk as ttk
 from ecm_datastructure import dataSet
 from ecm_helpers import nearest
 from ecm_user_input import ScrollableListbox
+
+########################
+##PARAMETER DICTIONARY##
+########################
+
+class ParameterDictionary(dict):
+    def __init__(self, circuit, flipped = False):
+        """Dictionary of parameter indices and names. Used to couple the list of refinement parameters to the names of the equivalent circuit elements & parameters.
+        
+        Init arguments (all of which become attributes with the same name):
+        circuit -- ecm_circuits.Circuit object
+        flipped -- Boolean; indicates if keys are indices and values are names (default, False) or the other way around (flipped, True)
+        
+        No methods other than those inherited from dict."""
+        super().__init__()
+        self.circuit = circuit
+        self.flipped = flipped
+        if self.flipped:
+            for e in self.circuit.diagram.list_elements():
+                self[e.name] = e.idx
+                if e.tag == "Q":
+                    self["n" + str(e.number)] = e.idx2
+                elif e.tag == "O":
+                    self["k" + str(e.number)] = e.idx2
+                elif e.tag == "S":
+                    self["l" + str(e.number)] = e.idx2
+                elif e.tag == "G":
+                    self["m" + str(e.number)] = e.idx2
+                elif e.tag == "H":
+                    self["t" + str(e.number)] = e.idx2
+                    self["b" + str(e.number)] = e.idx3
+                    self["g" + str(e.number)] = e.idx4
+        else:
+            for e in self.circuit.diagram.list_elements():
+                self[e.idx] = e.name
+                if e.tag == "Q":
+                    self[e.idx2] = "n" + str(e.number)
+                elif e.tag == "O":
+                    self[e.idx2] = "k" + str(e.number)
+                elif e.tag == "S":
+                    self[e.idx2] = "l" + str(e.number)
+                elif e.tag == "G":
+                    self[e.idx2] = "m" + str(e.number)
+                elif e.tag == "H":
+                    self[e.idx2] = "t" + str(e.number)
+                    self[e.idx3] = "b" + str(e.number)
+                    self[e.idx4] = "g" + str(e.number)
 
 ######################
 ##GENERAL REFINEMENT##
@@ -236,76 +283,6 @@ class RefinementEngine():
         self.cov = 0.5*np.linalg.inv(H(params))
         #Extract diagonal and calculate standard deviations
         self.parameter_errors = np.sqrt(np.diag(self.cov))
-        
-#####################
-##SIMPLE REFINEMENT##
-#####################
-
-class SimpleRefinementEngine():
-    def __init__(self, params, data, min_impedance_function, bounded = True):
-        """Handling of the simple refinement.
-        
-        Init arguments:
-        params -- list of fit parameters
-        data -- dataSet containing measured data (frequency limits should be applied BEFORE calling __init__)
-        min_impedance_function -- impedance function used in the optimization
-        
-        Keyword arguments:
-        bounded -- Boolean, True if bounds are to be applied to the element values, False otherwise
-        
-        Attributes:
-        input_params -- list of input parameters
-        parameter_errors -- list of estimated parameter errors
-        output_params -- list of output parameters
-        data -- dataSet containing measured data
-        min_impedance_function -- impedance function used in the minimization
-        bounded -- Boolean, True if bounds are to be applied to the element values, False otherwise
-        maxiter -- maximum number of iterations in the optimization
-        
-        Methods:
-        errorFunction -- function to be minimized
-        minRefinement -- complete optimization method
-        get_error_estimates -- estimatation of errors in the parameters"""
-        self.input_params = params #Parameters belonging to the circuit elements
-        self.parameter_errors = np.zeros(len(self.input_params))
-        self.output_params = params
-        self.data = data #Raw data, taking the form of a dataSet object (ecm_datastructure). If a limited frequency range is desired, the truncated data should be passed to the SimpleRefinementEngine.
-        self.min_impedance_function = min_impedance_function #The function used to calculate the impedance (ecm_circuits)
-        self.bounded = bounded
-        self.maxiter = 10000
-
-    def errorFunction(self, parameters):
-        """Function to be minimized.
-        
-        Arguments:
-        self
-        parameters: list of fit parameters
-        
-        Returns:
-        NumPy array; sum of the squared differences in the impedance; this is done separately for the real and imaginary components, which are then added."""
-        return sum((np.real(self.min_impedance_function(parameters, self.data.freq)) - self.data.real)**2) + sum((np.imag(self.min_impedance_function(parameters, self.data.freq)) - self.data.imag)**2)
-
-    def minRefinement(self):
-        """Parameter optimization function; uses the Nelder-Mead (simplex) method and unit weighting to calculate the optimal parameters."""
-        bound_list = []
-        for p in self.input_params:
-            bound_list.append((0, 1e15))
-        if self.bounded:
-            opt_res = op.minimize(self.errorFunction, np.array(self.input_params), method="Nelder-Mead", options = {"maxiter": self.maxiter, "maxfev": self.maxiter}, bounds = bound_list)
-        else:
-            opt_res = op.minimize(self.errorFunction, np.array(self.input_params), method="Nelder-Mead", options = {"maxiter": self.maxiter, "maxfev": self.maxiter})
-        self.output_params = opt_res["x"]
-        self.get_error_estimates(self.output_params)
-        
-    def get_error_estimates(self, params):
-        """Calculate the error estimates for all parameters based on the inverse of the Hessian, using numdifftools. Result is saved to self.parameter_errors.
-        
-        Arguments:
-        self
-        params -- list of fit parameters"""
-        H = nd.Hessian(self.errorFunction)
-        cov = 0.5*np.linalg.inv(H(params))
-        self.parameter_errors = np.sqrt(np.diag(cov))
 
 ############################
 ##MULTISTART INITIAL GUESS##

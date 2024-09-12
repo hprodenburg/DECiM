@@ -1,6 +1,6 @@
 """DECiM (Determination of Equivalent Circuit Models) is an equivalent circuit model fitting program for impedance data. It is a GUI-based program.
 Much of the source code is spread over other python source files, all of which must be in the same folder as DECiM.py to ensure that the program works correctly.
-DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.4.0-dev, 11 September 2024.
+DECiM was written and is maintained by Henrik Rodenburg. Current version: 1.4.0-dev, 12 September 2024.
 
 This is the core module -- when launched, DECiM starts. This module also defines the Window class."""
 
@@ -55,7 +55,7 @@ from ecm_helpers import nearest, maxima #Helper functions nearest(a, b) and maxi
 from ecm_file_io import parseData, parseCircuitString, parseResult, createResultFile, parseCircuitPresets, DataSpecificationWindow #Functions related to parsing data files, creating result files and parsing result files.
 from ecm_datastructure import dataSet #dataSet class.
 from ecm_plot import PlotFrame, limiter, GeometryWindow #PlotFrame, limiter and GeometryWindow classes. DECiM's plots are plotted in a PlotFrame.
-from ecm_fit import MultistartEngine, SimpleRefinementEngine, RefinementWindow #The classes dealing with the fitting procedures.
+from ecm_fit import ParameterDictionary, MultistartEngine, RefinementEngine, RefinementWindow #The classes dealing with the fitting procedures.
 from ecm_user_input import InteractionFrame #Frame containing the various input fields, sliders, dropdowns, etc. that make up the interactive part of the program.
 from ecm_history import expandedDataSet, HistoryManager, DataSetSelectorWindow #For non-interactive plotting and quick switching between datasets.
 from ecm_manual import HelpWindow #User instructions.
@@ -500,22 +500,7 @@ class Window(ttk.Frame):
         self.plots.canvas.draw()
         self.update()
         #Create a dictionary of the parameters (as in ecm_fit.RefinementWindow, but opposite)
-        par_dict = {}
-        for p in self.circuit_manager.circuit.diagram.list_elements(): #Tie parameter names to parameter array indices and count the parameters
-            par_dict[p.idx] = p.name
-            if p.tag in "QSOGH":
-                if p.tag == "Q":
-                    par_dict[p.idx2] = "n" + str(p.number)
-                if p.tag == "O":
-                    par_dict[p.idx2] = "k" + str(p.number)
-                if p.tag == "S":
-                    par_dict[p.idx2] = "l" + str(p.number)
-                if p.tag == "G":
-                    par_dict[p.idx2] = "m" + str(p.number)
-                if p.tag == "H":
-                    par_dict[p.idx2] = "t" + str(p.number)
-                    par_dict[p.idx3] = "b" + str(p.number)
-                    par_dict[p.idx4] = "g" + str(p.number)
+        par_dict = ParameterDictionary(self.circuit_manager.circuit)
         #Calculate the initial guess and update previous parameters
         guess_engine = MultistartEngine(self.circuit_manager.circuit.impedance, self.circuit_manager.circuit.jnp_impedance, self.data, list(np.ones(len(par_dict))), par_dict, self.prevparams, opt_module = "SciPy", opt_method = "Nelder-Mead", silent = True, nmaxiter = 100, weighting_scheme = "Unit", starts_per_par = 3, nmaxstarts = 30)
         guess_engine.generate_solution()
@@ -530,14 +515,14 @@ class Window(ttk.Frame):
         self.plots.lhs.text(0.7, 0.9, "Refining...", transform = self.plots.lhs.transAxes)
         self.plots.canvas.draw()
         self.update()
-        if self.fitlim:
-            optim_data = dataSet(freq = self.data.freq[self.fitfreq[1]:self.fitfreq[0]], real = self.data.real[self.fitfreq[1]:self.fitfreq[0]], imag = self.data.imag[self.fitfreq[1]:self.fitfreq[0]])
-        else:
-            optim_data = self.data
-        refinement_engine = SimpleRefinementEngine(self.interactive.parameters, optim_data, self.circuit_manager.circuit.impedance)
-        refinement_engine.minRefinement()
+        if not self.fitlim:
+            self.fitfreq = (min(self.data.freq), max(self.data.freq))
+        p_dict = ParameterDictionary(self.circuit_manager.circuit)
+        p_len = len(p_dict)
+        refinement_engine = RefinementEngine(self.circuit_manager.circuit.impedance, self.circuit_manager.circuit.jnp_impedance, self.data, self.interactive.parameters[:p_len], p_dict, np.ones(p_len), self.fitfreq[1], self.fitfreq[0], self.prevparams)
+        refinement_engine.refine_solution()
         self.prevparams.append(self.interactive.parameters) #Save the previous parameters to allow the refinement to be undone.
-        self.interactive.parameters = refinement_engine.output_params
+        self.interactive.parameters = refinement_engine.parameters
         self.sdevs = refinement_engine.parameter_errors
         self.interactive.as_refined = True
         self.canvasUpdate()
@@ -548,8 +533,7 @@ class Window(ttk.Frame):
         sset = sdiag.askstring(title = "Provide frequency range for fitting", prompt = "Highest, lowest frequency (in Hz, comma separated):")
         hlim, llim = sset.split(",")
         hlim, llim = float(hlim), float(llim)
-        hidx, lidx = nearest(hlim, self.data.freq), nearest(llim, self.data.freq)
-        self.fitfreq = (hidx,lidx)
+        self.fitfreq = (hlim, llim)
     
     def advancedRefinement(self):
         """Launch the refinement window and wait for the result. If the user accepts the result, replace the model parameters with the result and update the plots."""

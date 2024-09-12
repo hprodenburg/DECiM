@@ -9,11 +9,11 @@
 <tr class="heading-text decor">
 <td class="title">&nbsp;<br><strong class="title">ecm_fit</strong></td>
 </tr></table>
-    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;fitting&nbsp;classes.&nbsp;Last&nbsp;modified&nbsp;11&nbsp;September&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
+    <p><span class="code">Part&nbsp;of&nbsp;DECiM.&nbsp;This&nbsp;file&nbsp;contains&nbsp;the&nbsp;fitting&nbsp;classes.&nbsp;Last&nbsp;modified&nbsp;12&nbsp;September&nbsp;2024&nbsp;by&nbsp;Henrik&nbsp;Rodenburg.<br>
 &nbsp;<br>
 Classes:<br>
+<a href="#ParameterDictionary">ParameterDictionary</a>&nbsp;--&nbsp;<a href="builtins.html#dict">dict</a>&nbsp;child&nbsp;class&nbsp;linking&nbsp;the&nbsp;parameter&nbsp;names&nbsp;to&nbsp;refinement&nbsp;list/array&nbsp;indices<br>
 <a href="#RefinementEngine">RefinementEngine</a>&nbsp;--&nbsp;class&nbsp;for&nbsp;refinements&nbsp;in&nbsp;general,&nbsp;independent&nbsp;of&nbsp;the&nbsp;GUI<br>
-<a href="#SimpleRefinementEngine">SimpleRefinementEngine</a>&nbsp;--&nbsp;class&nbsp;for&nbsp;the&nbsp;simple&nbsp;refinement<br>
 <a href="#MultistartEngine">MultistartEngine</a>&nbsp;--&nbsp;class&nbsp;for&nbsp;automatic&nbsp;initial&nbsp;guesses<br>
 <a href="#RefinementWindow">RefinementWindow</a>&nbsp;--&nbsp;class&nbsp;for&nbsp;the&nbsp;advanced&nbsp;refinement</span></p>
 <p>
@@ -41,12 +41,17 @@ Classes:<br>
     
 <tr><td class="decor index-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
 <td class="singlecolumn"><dl>
+<dt class="heading-text"><a href="builtins.html#dict">builtins.dict</a>(<a href="builtins.html#object">builtins.object</a>)
+</dt><dd>
+<dl>
+<dt class="heading-text"><a href="ecm_fit.html#ParameterDictionary">ParameterDictionary</a>
+</dt></dl>
+</dd>
 <dt class="heading-text"><a href="builtins.html#object">builtins.object</a>
 </dt><dd>
 <dl>
 <dt class="heading-text"><a href="ecm_fit.html#MultistartEngine">MultistartEngine</a>
 </dt><dt class="heading-text"><a href="ecm_fit.html#RefinementEngine">RefinementEngine</a>
-</dt><dt class="heading-text"><a href="ecm_fit.html#SimpleRefinementEngine">SimpleRefinementEngine</a>
 </dt></dl>
 </dd>
 <dt class="heading-text"><a href="tkinter.html#Toplevel">tkinter.Toplevel</a>(<a href="tkinter.html#BaseWidget">tkinter.BaseWidget</a>, <a href="tkinter.html#Wm">tkinter.Wm</a>)
@@ -74,7 +79,7 @@ function_to_fit&nbsp;--&nbsp;function&nbsp;to&nbsp;fit;&nbsp;typically&nbsp;Circ
 jnp_function_to_fit&nbsp;--&nbsp;JAX.NumPy&nbsp;function&nbsp;to&nbsp;fit;&nbsp;typically&nbsp;Circuit.jnp_impedance<br>
 data&nbsp;--&nbsp;dataSet&nbsp;<a href="builtins.html#object">object</a>&nbsp;containing&nbsp;measured&nbsp;data<br>
 parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;parameters<br>
-parameter_dict&nbsp;--&nbsp;dict&nbsp;of&nbsp;parameters;&nbsp;keys&nbsp;are&nbsp;are&nbsp;indices&nbsp;in&nbsp;self.<strong>parameters</strong>,&nbsp;values&nbsp;are&nbsp;names&nbsp;(e.g.&nbsp;'R0',&nbsp;'n1',&nbsp;...)<br>
+parameter_dict&nbsp;--&nbsp;<a href="builtins.html#dict">dict</a>&nbsp;of&nbsp;parameters;&nbsp;keys&nbsp;are&nbsp;are&nbsp;indices&nbsp;in&nbsp;self.<strong>parameters</strong>,&nbsp;values&nbsp;are&nbsp;names&nbsp;(e.g.&nbsp;'R0',&nbsp;'n1',&nbsp;...)<br>
 previous_parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;lists&nbsp;of&nbsp;parameters<br>
 opt_module&nbsp;--&nbsp;string,&nbsp;module&nbsp;from&nbsp;which&nbsp;to&nbsp;import&nbsp;optimizer;&nbsp;only&nbsp;option&nbsp;for&nbsp;now&nbsp;is&nbsp;'SciPy'<br>
 opt_method&nbsp;--&nbsp;string,&nbsp;optimizer&nbsp;to&nbsp;use<br>
@@ -124,6 +129,124 @@ Data descriptors defined here:<br>
 </td></tr></table> <p>
 <table class="section">
 <tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="ParameterDictionary">class <strong>ParameterDictionary</strong></a>(<a href="builtins.html#dict">builtins.dict</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#ParameterDictionary">ParameterDictionary</a>(circuit,&nbsp;flipped=False)<br>
+&nbsp;<br>
+<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn"><dl><dt>Method resolution order:</dt>
+<dd><a href="ecm_fit.html#ParameterDictionary">ParameterDictionary</a></dd>
+<dd><a href="builtins.html#dict">builtins.dict</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="ParameterDictionary-__init__"><strong>__init__</strong></a>(self, circuit, flipped=False)</dt><dd><span class="code">Dictionary&nbsp;of&nbsp;parameter&nbsp;indices&nbsp;and&nbsp;names.&nbsp;Used&nbsp;to&nbsp;couple&nbsp;the&nbsp;list&nbsp;of&nbsp;refinement&nbsp;parameters&nbsp;to&nbsp;the&nbsp;names&nbsp;of&nbsp;the&nbsp;equivalent&nbsp;circuit&nbsp;elements&nbsp;&amp;&nbsp;parameters.<br>
+&nbsp;<br>
+Init&nbsp;arguments&nbsp;(all&nbsp;of&nbsp;which&nbsp;become&nbsp;attributes&nbsp;with&nbsp;the&nbsp;same&nbsp;name):<br>
+circuit&nbsp;--&nbsp;ecm_circuits.Circuit&nbsp;<a href="builtins.html#object">object</a><br>
+flipped&nbsp;--&nbsp;Boolean;&nbsp;indicates&nbsp;if&nbsp;keys&nbsp;are&nbsp;indices&nbsp;and&nbsp;values&nbsp;are&nbsp;names&nbsp;(default,&nbsp;False)&nbsp;or&nbsp;the&nbsp;other&nbsp;way&nbsp;around&nbsp;(flipped,&nbsp;True)<br>
+&nbsp;<br>
+No&nbsp;methods&nbsp;other&nbsp;than&nbsp;those&nbsp;inherited&nbsp;from&nbsp;<a href="builtins.html#dict">dict</a>.</span></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
+<hr>
+Methods inherited from <a href="builtins.html#dict">builtins.dict</a>:<br>
+<dl><dt><a name="ParameterDictionary-__contains__"><strong>__contains__</strong></a>(self, key, /)</dt><dd><span class="code">True&nbsp;if&nbsp;the&nbsp;dictionary&nbsp;has&nbsp;the&nbsp;specified&nbsp;key,&nbsp;else&nbsp;False.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__delitem__"><strong>__delitem__</strong></a>(self, key, /)</dt><dd><span class="code">Delete&nbsp;self[key].</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__eq__"><strong>__eq__</strong></a>(self, value, /)</dt><dd><span class="code">Return&nbsp;self==value.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__ge__"><strong>__ge__</strong></a>(self, value, /)</dt><dd><span class="code">Return&nbsp;self&gt;=value.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__getattribute__"><strong>__getattribute__</strong></a>(self, name, /)</dt><dd><span class="code">Return&nbsp;getattr(self,&nbsp;name).</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><span class="code">x.<a href="#ParameterDictionary-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__gt__"><strong>__gt__</strong></a>(self, value, /)</dt><dd><span class="code">Return&nbsp;self&gt;value.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__ior__"><strong>__ior__</strong></a>(self, value, /)</dt><dd><span class="code">Return&nbsp;self|=value.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__iter__"><strong>__iter__</strong></a>(self, /)</dt><dd><span class="code">Implement&nbsp;iter(self).</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__le__"><strong>__le__</strong></a>(self, value, /)</dt><dd><span class="code">Return&nbsp;self&lt;=value.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__len__"><strong>__len__</strong></a>(self, /)</dt><dd><span class="code">Return&nbsp;len(self).</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__lt__"><strong>__lt__</strong></a>(self, value, /)</dt><dd><span class="code">Return&nbsp;self&lt;value.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__ne__"><strong>__ne__</strong></a>(self, value, /)</dt><dd><span class="code">Return&nbsp;self!=value.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__or__"><strong>__or__</strong></a>(self, value, /)</dt><dd><span class="code">Return&nbsp;self|value.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__repr__"><strong>__repr__</strong></a>(self, /)</dt><dd><span class="code">Return&nbsp;repr(self).</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__reversed__"><strong>__reversed__</strong></a>(self, /)</dt><dd><span class="code">Return&nbsp;a&nbsp;reverse&nbsp;iterator&nbsp;over&nbsp;the&nbsp;<a href="builtins.html#dict">dict</a>&nbsp;keys.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__ror__"><strong>__ror__</strong></a>(self, value, /)</dt><dd><span class="code">Return&nbsp;value|self.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__setitem__"><strong>__setitem__</strong></a>(self, key, value, /)</dt><dd><span class="code">Set&nbsp;self[key]&nbsp;to&nbsp;value.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-__sizeof__"><strong>__sizeof__</strong></a>(...)</dt><dd><span class="code">D.<a href="#ParameterDictionary-__sizeof__">__sizeof__</a>()&nbsp;-&gt;&nbsp;size&nbsp;of&nbsp;D&nbsp;in&nbsp;memory,&nbsp;in&nbsp;bytes</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-clear"><strong>clear</strong></a>(...)</dt><dd><span class="code">D.<a href="#ParameterDictionary-clear">clear</a>()&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Remove&nbsp;all&nbsp;items&nbsp;from&nbsp;D.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-copy"><strong>copy</strong></a>(...)</dt><dd><span class="code">D.<a href="#ParameterDictionary-copy">copy</a>()&nbsp;-&gt;&nbsp;a&nbsp;shallow&nbsp;copy&nbsp;of&nbsp;D</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-get"><strong>get</strong></a>(self, key, default=None, /)</dt><dd><span class="code">Return&nbsp;the&nbsp;value&nbsp;for&nbsp;key&nbsp;if&nbsp;key&nbsp;is&nbsp;in&nbsp;the&nbsp;dictionary,&nbsp;else&nbsp;default.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-items"><strong>items</strong></a>(...)</dt><dd><span class="code">D.<a href="#ParameterDictionary-items">items</a>()&nbsp;-&gt;&nbsp;a&nbsp;set-like&nbsp;<a href="builtins.html#object">object</a>&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;items</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-keys"><strong>keys</strong></a>(...)</dt><dd><span class="code">D.<a href="#ParameterDictionary-keys">keys</a>()&nbsp;-&gt;&nbsp;a&nbsp;set-like&nbsp;<a href="builtins.html#object">object</a>&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;keys</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-pop"><strong>pop</strong></a>(...)</dt><dd><span class="code">D.<a href="#ParameterDictionary-pop">pop</a>(k[,d])&nbsp;-&gt;&nbsp;v,&nbsp;remove&nbsp;specified&nbsp;key&nbsp;and&nbsp;return&nbsp;the&nbsp;corresponding&nbsp;value.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;key&nbsp;is&nbsp;not&nbsp;found,&nbsp;return&nbsp;the&nbsp;default&nbsp;if&nbsp;given;&nbsp;otherwise,<br>
+raise&nbsp;a&nbsp;KeyError.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-popitem"><strong>popitem</strong></a>(self, /)</dt><dd><span class="code">Remove&nbsp;and&nbsp;return&nbsp;a&nbsp;(key,&nbsp;value)&nbsp;pair&nbsp;as&nbsp;a&nbsp;2-tuple.<br>
+&nbsp;<br>
+Pairs&nbsp;are&nbsp;returned&nbsp;in&nbsp;LIFO&nbsp;(last-in,&nbsp;first-out)&nbsp;order.<br>
+Raises&nbsp;KeyError&nbsp;if&nbsp;the&nbsp;<a href="builtins.html#dict">dict</a>&nbsp;is&nbsp;empty.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-setdefault"><strong>setdefault</strong></a>(self, key, default=None, /)</dt><dd><span class="code">Insert&nbsp;key&nbsp;with&nbsp;a&nbsp;value&nbsp;of&nbsp;default&nbsp;if&nbsp;key&nbsp;is&nbsp;not&nbsp;in&nbsp;the&nbsp;dictionary.<br>
+&nbsp;<br>
+Return&nbsp;the&nbsp;value&nbsp;for&nbsp;key&nbsp;if&nbsp;key&nbsp;is&nbsp;in&nbsp;the&nbsp;dictionary,&nbsp;else&nbsp;default.</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-update"><strong>update</strong></a>(...)</dt><dd><span class="code">D.<a href="#ParameterDictionary-update">update</a>([E,&nbsp;]**F)&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Update&nbsp;D&nbsp;from&nbsp;<a href="builtins.html#dict">dict</a>/iterable&nbsp;E&nbsp;and&nbsp;F.<br>
+If&nbsp;E&nbsp;is&nbsp;present&nbsp;and&nbsp;has&nbsp;a&nbsp;.<a href="#ParameterDictionary-keys">keys</a>()&nbsp;method,&nbsp;then&nbsp;does:&nbsp;&nbsp;for&nbsp;k&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;E[k]<br>
+If&nbsp;E&nbsp;is&nbsp;present&nbsp;and&nbsp;lacks&nbsp;a&nbsp;.<a href="#ParameterDictionary-keys">keys</a>()&nbsp;method,&nbsp;then&nbsp;does:&nbsp;&nbsp;for&nbsp;k,&nbsp;v&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;v<br>
+In&nbsp;either&nbsp;case,&nbsp;this&nbsp;is&nbsp;followed&nbsp;by:&nbsp;for&nbsp;k&nbsp;in&nbsp;F:&nbsp;&nbsp;D[k]&nbsp;=&nbsp;F[k]</span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-values"><strong>values</strong></a>(...)</dt><dd><span class="code">D.<a href="#ParameterDictionary-values">values</a>()&nbsp;-&gt;&nbsp;an&nbsp;<a href="builtins.html#object">object</a>&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;values</span></dd></dl>
+
+<hr>
+Class methods inherited from <a href="builtins.html#dict">builtins.dict</a>:<br>
+<dl><dt><a name="ParameterDictionary-__class_getitem__"><strong>__class_getitem__</strong></a>(...)<span class="grey"><span class="heading-text"> from <a href="builtins.html#type">builtins.type</a></span></span></dt><dd><span class="code">See&nbsp;<a href="https://peps.python.org/pep-0585/">PEP&nbsp;585</a></span></dd></dl>
+
+<dl><dt><a name="ParameterDictionary-fromkeys"><strong>fromkeys</strong></a>(iterable, value=None, /)<span class="grey"><span class="heading-text"> from <a href="builtins.html#type">builtins.type</a></span></span></dt><dd><span class="code">Create&nbsp;a&nbsp;new&nbsp;dictionary&nbsp;with&nbsp;keys&nbsp;from&nbsp;iterable&nbsp;and&nbsp;values&nbsp;set&nbsp;to&nbsp;value.</span></dd></dl>
+
+<hr>
+Static methods inherited from <a href="builtins.html#dict">builtins.dict</a>:<br>
+<dl><dt><a name="ParameterDictionary-__new__"><strong>__new__</strong></a>(*args, **kwargs)<span class="grey"><span class="heading-text"> from <a href="builtins.html#type">builtins.type</a></span></span></dt><dd><span class="code">Create&nbsp;and&nbsp;return&nbsp;a&nbsp;new&nbsp;<a href="builtins.html#object">object</a>.&nbsp;&nbsp;See&nbsp;help(type)&nbsp;for&nbsp;accurate&nbsp;signature.</span></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="builtins.html#dict">builtins.dict</a>:<br>
+<dl><dt><strong>__hash__</strong> = None</dl>
+
+</td></tr></table> <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
 <td class="section-title" colspan=3>&nbsp;<br><a name="RefinementEngine">class <strong>RefinementEngine</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
     
 <tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
@@ -140,7 +263,7 @@ jnp_function_to_fit&nbsp;--&nbsp;JAX.NumPy&nbsp;function&nbsp;to&nbsp;fit;&nbsp;
 data&nbsp;--&nbsp;dataSet&nbsp;<a href="builtins.html#object">object</a>&nbsp;containing&nbsp;measured&nbsp;data<br>
 parameters&nbsp;--&nbsp;list&nbsp;of&nbsp;parameters<br>
 parameter_errors&nbsp;--&nbsp;list&nbsp;of&nbsp;estimated&nbsp;errors&nbsp;in&nbsp;the&nbsp;parameters<br>
-parameter_dict&nbsp;--&nbsp;dict&nbsp;of&nbsp;parameters;&nbsp;keys&nbsp;are&nbsp;are&nbsp;indices&nbsp;in&nbsp;self.<strong>parameters</strong>,&nbsp;values&nbsp;are&nbsp;names&nbsp;(e.g.&nbsp;'R0',&nbsp;'n1',&nbsp;...)<br>
+parameter_dict&nbsp;--&nbsp;<a href="builtins.html#dict">dict</a>&nbsp;of&nbsp;parameters;&nbsp;keys&nbsp;are&nbsp;are&nbsp;indices&nbsp;in&nbsp;self.<strong>parameters</strong>,&nbsp;values&nbsp;are&nbsp;names&nbsp;(e.g.&nbsp;'R0',&nbsp;'n1',&nbsp;...)<br>
 to_refine&nbsp;--&nbsp;list&nbsp;of&nbsp;ones&nbsp;and&nbsp;zeros;&nbsp;1&nbsp;means&nbsp;that&nbsp;the&nbsp;value&nbsp;in&nbsp;self.<strong>parameters</strong>&nbsp;at&nbsp;the&nbsp;same&nbsp;index&nbsp;should&nbsp;be&nbsp;refined,&nbsp;0&nbsp;means&nbsp;that&nbsp;it&nbsp;should&nbsp;not;&nbsp;does&nbsp;not&nbsp;work&nbsp;with&nbsp;optax.adam<br>
 high_f&nbsp;--&nbsp;upper&nbsp;frequency&nbsp;bound<br>
 low_f&nbsp;--&nbsp;lower&nbsp;frequency&nbsp;bound<br>
@@ -152,7 +275,7 @@ weighting_scheme&nbsp;--&nbsp;weighting&nbsp;scheme,&nbsp;string;&nbsp;one&nbsp;
 calculate_errors&nbsp;--&nbsp;Boolean;&nbsp;True&nbsp;to&nbsp;calculate&nbsp;errors,&nbsp;False&nbsp;otherwise<br>
 &nbsp;<br>
 Attributes&nbsp;(other):<br>
-module_dict&nbsp;--&nbsp;dict&nbsp;of&nbsp;modules&nbsp;and&nbsp;corresponding&nbsp;refinement&nbsp;methods;&nbsp;keys&nbsp;are&nbsp;strings,&nbsp;values&nbsp;are&nbsp;methods&nbsp;in&nbsp;this&nbsp;class.<br>
+module_dict&nbsp;--&nbsp;<a href="builtins.html#dict">dict</a>&nbsp;of&nbsp;modules&nbsp;and&nbsp;corresponding&nbsp;refinement&nbsp;methods;&nbsp;keys&nbsp;are&nbsp;strings,&nbsp;values&nbsp;are&nbsp;methods&nbsp;in&nbsp;this&nbsp;class.<br>
 l_idx,&nbsp;h_idx&nbsp;--&nbsp;indices&nbsp;of&nbsp;the&nbsp;lower&nbsp;and&nbsp;upper&nbsp;frequency&nbsp;limits,&nbsp;respectively;&nbsp;created&nbsp;here&nbsp;and&nbsp;updated&nbsp;during&nbsp;refinement<br>
 &nbsp;<br>
 Methods:<br>
@@ -241,8 +364,8 @@ initial_parameters&nbsp;--&nbsp;list&nbsp;initial&nbsp;fit&nbsp;parameters<br>
 refined_parameters&nbsp;--&nbsp;list&nbsp;refined&nbsp;fit&nbsp;parameters<br>
 parameter_errors&nbsp;--&nbsp;list&nbsp;of&nbsp;standard&nbsp;deviations&nbsp;in&nbsp;the&nbsp;parameters<br>
 parameter_history&nbsp;--&nbsp;list&nbsp;of&nbsp;lists&nbsp;of&nbsp;previous&nbsp;parameter&nbsp;values<br>
-parameter_dict&nbsp;--&nbsp;dict&nbsp;containing&nbsp;parameter&nbsp;names&nbsp;as&nbsp;keys&nbsp;and&nbsp;corresponding&nbsp;indices&nbsp;in&nbsp;initial_parameters&nbsp;and&nbsp;refined_parameters&nbsp;as&nbsp;values<br>
-flipped_parameter_dict&nbsp;--&nbsp;dict&nbsp;containing&nbsp;indices&nbsp;as&nbsp;values&nbsp;and&nbsp;parameter&nbsp;names&nbsp;as&nbsp;keys<br>
+parameter_dict&nbsp;--&nbsp;<a href="builtins.html#dict">dict</a>&nbsp;containing&nbsp;parameter&nbsp;names&nbsp;as&nbsp;keys&nbsp;and&nbsp;corresponding&nbsp;indices&nbsp;in&nbsp;initial_parameters&nbsp;and&nbsp;refined_parameters&nbsp;as&nbsp;values<br>
+flipped_parameter_dict&nbsp;--&nbsp;<a href="builtins.html#dict">dict</a>&nbsp;containing&nbsp;indices&nbsp;as&nbsp;values&nbsp;and&nbsp;parameter&nbsp;names&nbsp;as&nbsp;keys<br>
 parameter_list&nbsp;--&nbsp;list&nbsp;of&nbsp;parameter&nbsp;names<br>
 refinement_accepted&nbsp;--&nbsp;bool,&nbsp;indicates&nbsp;if&nbsp;the&nbsp;refinement&nbsp;result&nbsp;has&nbsp;been&nbsp;accepted&nbsp;by&nbsp;the&nbsp;user<br>
 limit_visualisation&nbsp;--&nbsp;bool,&nbsp;indicates&nbsp;whether&nbsp;the&nbsp;frequency&nbsp;limits&nbsp;should&nbsp;be&nbsp;displayed<br>
@@ -276,7 +399,7 @@ optimizer_tick_correction&nbsp;--&nbsp;disable&nbsp;or&nbsp;enable&nbsp;tick&nbs
 
 <dl><dt><a name="RefinementWindow-display_error"><strong>display_error</strong></a>(self)</dt><dd><span class="code">Calculate&nbsp;the&nbsp;reduced&nbsp;sum&nbsp;of&nbsp;the&nbsp;squares&nbsp;and&nbsp;display&nbsp;it&nbsp;as&nbsp;result_text&nbsp;in&nbsp;the&nbsp;result_label.</span></dd></dl>
 
-<dl><dt><a name="RefinementWindow-flip_parameter_values_keys"><strong>flip_parameter_values_keys</strong></a>(self)</dt><dd><span class="code">Flip&nbsp;the&nbsp;keys&nbsp;and&nbsp;values&nbsp;of&nbsp;self.<strong>parameter_dict</strong>&nbsp;and&nbsp;store&nbsp;the&nbsp;new&nbsp;dict&nbsp;as&nbsp;self.<strong>flipped_parameter_dict</strong>.</span></dd></dl>
+<dl><dt><a name="RefinementWindow-flip_parameter_values_keys"><strong>flip_parameter_values_keys</strong></a>(self)</dt><dd><span class="code">Flip&nbsp;the&nbsp;keys&nbsp;and&nbsp;values&nbsp;of&nbsp;self.<strong>parameter_dict</strong>&nbsp;and&nbsp;store&nbsp;the&nbsp;new&nbsp;<a href="builtins.html#dict">dict</a>&nbsp;as&nbsp;self.<strong>flipped_parameter_dict</strong>.</span></dd></dl>
 
 <dl><dt><a name="RefinementWindow-make_UI"><strong>make_UI</strong></a>(self)</dt><dd><span class="code">Make&nbsp;the&nbsp;<a href="#RefinementWindow">RefinementWindow</a>&nbsp;UI.&nbsp;First&nbsp;divide&nbsp;the&nbsp;window&nbsp;into&nbsp;upper&nbsp;and&nbsp;lower&nbsp;halves&nbsp;(upper_frame,&nbsp;lower_frame),&nbsp;then&nbsp;put&nbsp;tick_frame,&nbsp;limit_frame,&nbsp;residuals_frame&nbsp;and&nbsp;conclude_frame&nbsp;on&nbsp;the&nbsp;lower&nbsp;ttk.Frame.</span></dd></dl>
 
@@ -1071,65 +1194,5 @@ with&nbsp;regard&nbsp;to&nbsp;widget&nbsp;MASTER.</span></dd></dl>
 <dl><dt><a name="RefinementWindow-wm_withdraw"><strong>wm_withdraw</strong></a>(self)</dt><dd><span class="code">Withdraw&nbsp;this&nbsp;widget&nbsp;from&nbsp;the&nbsp;screen&nbsp;such&nbsp;that&nbsp;it&nbsp;is&nbsp;unmapped<br>
 and&nbsp;forgotten&nbsp;by&nbsp;the&nbsp;window&nbsp;manager.&nbsp;Re-draw&nbsp;it&nbsp;with&nbsp;wm_deiconify.</span></dd></dl>
 
-</td></tr></table> <p>
-<table class="section">
-<tr class="decor title-decor heading-text">
-<td class="section-title" colspan=3>&nbsp;<br><a name="SimpleRefinementEngine">class <strong>SimpleRefinementEngine</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
-    
-<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
-<td class="decor title-decor" colspan=2><span class="code"><a href="#SimpleRefinementEngine">SimpleRefinementEngine</a>(params,&nbsp;data,&nbsp;min_impedance_function,&nbsp;bounded=True)<br>
-&nbsp;<br>
-<br>&nbsp;</span></td></tr>
-<tr><td>&nbsp;</td>
-<td class="singlecolumn">Methods defined here:<br>
-<dl><dt><a name="SimpleRefinementEngine-__init__"><strong>__init__</strong></a>(self, params, data, min_impedance_function, bounded=True)</dt><dd><span class="code">Handling&nbsp;of&nbsp;the&nbsp;simple&nbsp;refinement.<br>
-&nbsp;<br>
-Init&nbsp;arguments:<br>
-params&nbsp;--&nbsp;list&nbsp;of&nbsp;fit&nbsp;parameters<br>
-data&nbsp;--&nbsp;dataSet&nbsp;containing&nbsp;measured&nbsp;data&nbsp;(frequency&nbsp;limits&nbsp;should&nbsp;be&nbsp;applied&nbsp;BEFORE&nbsp;calling&nbsp;__init__)<br>
-min_impedance_function&nbsp;--&nbsp;impedance&nbsp;function&nbsp;used&nbsp;in&nbsp;the&nbsp;optimization<br>
-&nbsp;<br>
-Keyword&nbsp;arguments:<br>
-bounded&nbsp;--&nbsp;Boolean,&nbsp;True&nbsp;if&nbsp;bounds&nbsp;are&nbsp;to&nbsp;be&nbsp;applied&nbsp;to&nbsp;the&nbsp;element&nbsp;values,&nbsp;False&nbsp;otherwise<br>
-&nbsp;<br>
-Attributes:<br>
-input_params&nbsp;--&nbsp;list&nbsp;of&nbsp;input&nbsp;parameters<br>
-parameter_errors&nbsp;--&nbsp;list&nbsp;of&nbsp;estimated&nbsp;parameter&nbsp;errors<br>
-output_params&nbsp;--&nbsp;list&nbsp;of&nbsp;output&nbsp;parameters<br>
-data&nbsp;--&nbsp;dataSet&nbsp;containing&nbsp;measured&nbsp;data<br>
-min_impedance_function&nbsp;--&nbsp;impedance&nbsp;function&nbsp;used&nbsp;in&nbsp;the&nbsp;minimization<br>
-bounded&nbsp;--&nbsp;Boolean,&nbsp;True&nbsp;if&nbsp;bounds&nbsp;are&nbsp;to&nbsp;be&nbsp;applied&nbsp;to&nbsp;the&nbsp;element&nbsp;values,&nbsp;False&nbsp;otherwise<br>
-maxiter&nbsp;--&nbsp;maximum&nbsp;number&nbsp;of&nbsp;iterations&nbsp;in&nbsp;the&nbsp;optimization<br>
-&nbsp;<br>
-Methods:<br>
-errorFunction&nbsp;--&nbsp;function&nbsp;to&nbsp;be&nbsp;minimized<br>
-minRefinement&nbsp;--&nbsp;complete&nbsp;optimization&nbsp;method<br>
-get_error_estimates&nbsp;--&nbsp;estimatation&nbsp;of&nbsp;errors&nbsp;in&nbsp;the&nbsp;parameters</span></dd></dl>
-
-<dl><dt><a name="SimpleRefinementEngine-errorFunction"><strong>errorFunction</strong></a>(self, parameters)</dt><dd><span class="code">Function&nbsp;to&nbsp;be&nbsp;minimized.<br>
-&nbsp;<br>
-Arguments:<br>
-self<br>
-parameters:&nbsp;list&nbsp;of&nbsp;fit&nbsp;parameters<br>
-&nbsp;<br>
-Returns:<br>
-NumPy&nbsp;array;&nbsp;sum&nbsp;of&nbsp;the&nbsp;squared&nbsp;differences&nbsp;in&nbsp;the&nbsp;impedance;&nbsp;this&nbsp;is&nbsp;done&nbsp;separately&nbsp;for&nbsp;the&nbsp;real&nbsp;and&nbsp;imaginary&nbsp;components,&nbsp;which&nbsp;are&nbsp;then&nbsp;added.</span></dd></dl>
-
-<dl><dt><a name="SimpleRefinementEngine-get_error_estimates"><strong>get_error_estimates</strong></a>(self, params)</dt><dd><span class="code">Calculate&nbsp;the&nbsp;error&nbsp;estimates&nbsp;for&nbsp;all&nbsp;parameters&nbsp;based&nbsp;on&nbsp;the&nbsp;inverse&nbsp;of&nbsp;the&nbsp;Hessian,&nbsp;using&nbsp;numdifftools.&nbsp;Result&nbsp;is&nbsp;saved&nbsp;to&nbsp;self.<strong>parameter_errors</strong>.<br>
-&nbsp;<br>
-Arguments:<br>
-self<br>
-params&nbsp;--&nbsp;list&nbsp;of&nbsp;fit&nbsp;parameters</span></dd></dl>
-
-<dl><dt><a name="SimpleRefinementEngine-minRefinement"><strong>minRefinement</strong></a>(self)</dt><dd><span class="code">Parameter&nbsp;optimization&nbsp;function;&nbsp;uses&nbsp;the&nbsp;Nelder-Mead&nbsp;(simplex)&nbsp;method&nbsp;and&nbsp;unit&nbsp;weighting&nbsp;to&nbsp;calculate&nbsp;the&nbsp;optimal&nbsp;parameters.</span></dd></dl>
-
-<hr>
-Data descriptors defined here:<br>
-<dl><dt><strong>__dict__</strong></dt>
-<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
-</dl>
-<dl><dt><strong>__weakref__</strong></dt>
-<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
-</dl>
 </td></tr></table></td></tr></table>
 </body></html>
