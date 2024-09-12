@@ -757,6 +757,7 @@ class RefinementWindow(tk.Toplevel):
         self.refinement_engine.refine_solution()
         self.refined_parameters = self.refinement_engine.parameters
         self.parameter_errors = self.refinement_engine.parameter_errors
+        self.cov = self.refinement_engine.cov
         #Update
         print(self.refinement_engine.parameter_errors) #Temporary feature: print parameter errors
         self.update_parameter_listbox() #Update parameter labels

@@ -60,6 +60,7 @@ from ecm_user_input import InteractionFrame #Frame containing the various input 
 from ecm_history import expandedDataSet, HistoryManager, DataSetSelectorWindow #For non-interactive plotting and quick switching between datasets.
 from ecm_manual import HelpWindow #User instructions.
 from ecm_zhit import ZHITWindow #For data validation.
+from ecm_correlation import CorrelationMatrix, CorrelationWindow #For the correlation matrix from refinements
 import ecm_custom_models as ecmcm #For custom models.
 
 #########################
@@ -109,7 +110,8 @@ class Window(ttk.Frame):
         data -- dataSet containing measured data
         model -- dataSet containing model curve
         prevparams -- list of lists of parameters, used to save old parameter sets that can be returned to with the Undo Refinement option in the Calculate menu
-        prevsdevs -- list of lists of uncertainties (standard deviations) in the parameters, used for saving result files with error estimates
+        sdevs -- list of lists of uncertainties (standard deviations) in the parameters, used for saving result files with error estimates
+        corrs -- correlation matrix for the parameters from the most recent refinement
         fitlim -- Boolean indicating whether or not the simple refinement should have frequency limits
         fitfreq -- frequency limits for the simple refinement
         master -- Tkinter tk that is actually running the show
@@ -140,6 +142,8 @@ class Window(ttk.Frame):
         
         Refinement: minRefine, advancedRefinement, setRefinementRange, undoRefinement
         
+        showCorrelationMatrix -- display the correlation matrix from the most recent refinement
+        
         performZHIT -- launch Z-HIT transform window
         
         Circuit selection: setCircuit, selectCircuit, setCustomModel, typeCircuit
@@ -163,8 +167,9 @@ class Window(ttk.Frame):
         self.model = dataSet()
         #Previous parameters
         self.prevparams = []
-        #Parameter standard deviations from most recent refinement
+        #Parameter standard deviations and correlation matrix from most recent refinement
         self.sdevs = None
+        self.corrs = None
         #Parameters regarding limiting the scope of the fit
         self.fitlim = False
         self.fitfreq = None
@@ -248,6 +253,8 @@ class Window(ttk.Frame):
         calculateMenu.add_command(label = "Set simple refinement frequency range", command = self.setRefinementRange)
         calculateMenu.add_command(label = "Advanced refinement...", command = self.advancedRefinement)
         calculateMenu.add_command(label = "Undo refinement", command = self.undoRefinement)
+        calculateMenu.add_separator()
+        calculateMenu.add_command(label = "Show correlation matrix", command = self.showCorrelationMatrix)
         calculateMenu.add_separator()
         calculateMenu.add_command(label = "Get apex frequencies", command = self.getMaxima)
         calculateMenu.add_separator()
@@ -524,6 +531,7 @@ class Window(ttk.Frame):
         self.prevparams.append(self.interactive.parameters) #Save the previous parameters to allow the refinement to be undone.
         self.interactive.parameters = refinement_engine.parameters
         self.sdevs = refinement_engine.parameter_errors
+        self.corrs = CorrelationMatrix(refinement_engine.cov, self.sdevs)
         self.interactive.as_refined = True
         self.canvasUpdate()
     
@@ -543,6 +551,7 @@ class Window(ttk.Frame):
             self.prevparams.append(self.interactive.parameters) #Save the previous parameters to allow the refinement to be undone.
             self.interactive.parameters = refinement_window.refined_parameters
             self.sdevs = refinement_window.parameter_errors
+            self.corrs = CorrelationMatrix(refinement_window.cov, self.sdevs)
             self.interactive.as_refined = True
         self.canvasUpdate()
 
@@ -551,6 +560,13 @@ class Window(ttk.Frame):
         self.interactive.parameters = self.prevparams[-1]
         del self.prevparams[-1]
         self.canvasUpdate()
+        
+    #Correlation matrix
+    
+    def showCorrelationMatrix(self):
+        """Display the correlation matrix from the most recent refinement in a new top-level window."""
+        if self.corrs != None:
+            CorrelationWindow(self.corrs.matrix, ParameterDictionary(self.circuit_manager.circuit))
         
     #Z-HIT data validation
     

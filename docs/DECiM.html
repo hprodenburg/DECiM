@@ -88,7 +88,8 @@ history_manager&nbsp;--&nbsp;ecm_history.HistoryManager&nbsp;object<br>
 data&nbsp;--&nbsp;dataSet&nbsp;containing&nbsp;measured&nbsp;data<br>
 model&nbsp;--&nbsp;dataSet&nbsp;containing&nbsp;model&nbsp;curve<br>
 prevparams&nbsp;--&nbsp;list&nbsp;of&nbsp;lists&nbsp;of&nbsp;parameters,&nbsp;used&nbsp;to&nbsp;save&nbsp;old&nbsp;parameter&nbsp;sets&nbsp;that&nbsp;can&nbsp;be&nbsp;returned&nbsp;to&nbsp;with&nbsp;the&nbsp;Undo&nbsp;Refinement&nbsp;option&nbsp;in&nbsp;the&nbsp;Calculate&nbsp;menu<br>
-prevsdevs&nbsp;--&nbsp;list&nbsp;of&nbsp;lists&nbsp;of&nbsp;uncertainties&nbsp;(standard&nbsp;deviations)&nbsp;in&nbsp;the&nbsp;parameters,&nbsp;used&nbsp;for&nbsp;saving&nbsp;result&nbsp;files&nbsp;with&nbsp;error&nbsp;estimates<br>
+sdevs&nbsp;--&nbsp;list&nbsp;of&nbsp;lists&nbsp;of&nbsp;uncertainties&nbsp;(standard&nbsp;deviations)&nbsp;in&nbsp;the&nbsp;parameters,&nbsp;used&nbsp;for&nbsp;saving&nbsp;result&nbsp;files&nbsp;with&nbsp;error&nbsp;estimates<br>
+corrs&nbsp;--&nbsp;correlation&nbsp;matrix&nbsp;for&nbsp;the&nbsp;parameters&nbsp;from&nbsp;the&nbsp;most&nbsp;recent&nbsp;refinement<br>
 fitlim&nbsp;--&nbsp;Boolean&nbsp;indicating&nbsp;whether&nbsp;or&nbsp;not&nbsp;the&nbsp;simple&nbsp;refinement&nbsp;should&nbsp;have&nbsp;frequency&nbsp;limits<br>
 fitfreq&nbsp;--&nbsp;frequency&nbsp;limits&nbsp;for&nbsp;the&nbsp;simple&nbsp;refinement<br>
 master&nbsp;--&nbsp;Tkinter&nbsp;tk&nbsp;that&nbsp;is&nbsp;actually&nbsp;running&nbsp;the&nbsp;show<br>
@@ -118,6 +119,8 @@ setSampleGeometry&nbsp;--&nbsp;set&nbsp;sample&nbsp;thickness&nbsp;and&nbsp;area
 Saving&nbsp;and&nbsp;loading&nbsp;data&nbsp;from&nbsp;measurements&nbsp;(RAM):&nbsp;selectOtherDataset,&nbsp;plotNonInteractive,&nbsp;saveToHistory<br>
 &nbsp;<br>
 Refinement:&nbsp;minRefine,&nbsp;advancedRefinement,&nbsp;setRefinementRange,&nbsp;undoRefinement<br>
+&nbsp;<br>
+showCorrelationMatrix&nbsp;--&nbsp;display&nbsp;the&nbsp;correlation&nbsp;matrix&nbsp;from&nbsp;the&nbsp;most&nbsp;recent&nbsp;refinement<br>
 &nbsp;<br>
 performZHIT&nbsp;--&nbsp;launch&nbsp;Z-HIT&nbsp;transform&nbsp;window<br>
 &nbsp;<br>
@@ -230,6 +233,8 @@ circuit_name&nbsp;--&nbsp;string&nbsp;containing&nbsp;the&nbsp;name&nbsp;of&nbsp
 <dl><dt><a name="Window-setVisRY1"><strong>setVisRY1</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;visibility&nbsp;of&nbsp;the&nbsp;amplitude&nbsp;or&nbsp;real&nbsp;admittance.</span></dd></dl>
 
 <dl><dt><a name="Window-setVisRY2"><strong>setVisRY2</strong></a>(self)</dt><dd><span class="code">Toggle&nbsp;visibility&nbsp;of&nbsp;the&nbsp;phase&nbsp;or&nbsp;imaginary&nbsp;admittance.</span></dd></dl>
+
+<dl><dt><a name="Window-showCorrelationMatrix"><strong>showCorrelationMatrix</strong></a>(self)</dt><dd><span class="code">Display&nbsp;the&nbsp;correlation&nbsp;matrix&nbsp;from&nbsp;the&nbsp;most&nbsp;recent&nbsp;refinement&nbsp;in&nbsp;a&nbsp;new&nbsp;top-level&nbsp;window.</span></dd></dl>
 
 <dl><dt><a name="Window-showInstructions"><strong>showInstructions</strong></a>(self)</dt><dd><span class="code">Launch&nbsp;the&nbsp;help&nbsp;window.</span></dd></dl>
 
