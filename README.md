@@ -13,7 +13,7 @@ The current DEC*i*M version (1.4.0) requires the following software to already b
 - Optax
 - numdifftools
 
-**PLEASE NOTE: The numdifftools package is a new requirement. If you are updating DEC*i*M to 1.4.0, please remember to install numdifftools.**
+**PLEASE NOTE: The numdifftools package is a new requirement. If you are updating DEC*i*M to version 1.4.0, please remember to install numdifftools.**
 
 **PLEASE NOTE: DEC*i*M has been reported not to work well together with Conda. Please do not use a Python 3 installation with Conda to install and run DEC*i*M.**
 
