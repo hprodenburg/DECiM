@@ -337,35 +337,35 @@ In this example, an impedance spectrum of RbOH^.^*x*H~2~O is analyzed with Z-HIT
 
 2. Go to ```File```>```Load data...``` and navigate to the ```examples``` folder (```path_to_decim/DECiM/examples```). Go to ```RbOH_xH2O```. Change the ```Text files``` option to ```All files``` and open the ```CH3_cool_40C_2.csv``` file. The data should now appear in the main DEC*i*M window, looking like [@fig-rboh-step2].
 
-![Impedance spectrum of RbOH^.^*x*H~2~O.](figures/Examples/SoftX_Revision/RbOH_xH2O/Step2.png){width=100% #fig-rboh-step2}
+![Impedance spectrum of RbOH^.^*x*H~2~O.](figures/Examples/RbOH_xH2O/Step2.png){width=100% #fig-rboh-step2}
 
 3. Go to ```Calculate```>```Perform Z-HIT tranform```. A new window will open.
 
 4. Click the ```Calculate Z-HIT impedance``` button. The phase will now be smoothed and the amplitude calculated. You may notice that the high-frequency phase data are not well-estimated. Adjust the window the length to 10 and try again. The result should look like [@fig-rboh-step4].
 
-![Z-HIT transform of the spectrum in [@fig-rboh-step2].](figures/Examples/SoftX_Revision/RbOH_xH2O/Step4.png){width=100% #fig-rboh-step4}
+![Z-HIT transform of the spectrum in [@fig-rboh-step2].](figures/Examples/RbOH_xH2O/Step4.png){width=100% #fig-rboh-step4}
 
 5. The phase data are well-smoothed over the entire frequency range, but the calculated amplitude increases instead of decreasing, as the measured data does, above ~300 kHz. Therefore, the data at the highest frequencies cannot be trusted. Knowing this, the Z-HIT window can be closed with ```Reject and close```.
 
 6. Now it is time to define an equivalent circuit model. Because the phase angle goes up at high frequencies, an inductor should be included. Other than that, the Randles circuit (with a CPE instead of a Warburg element for the low-frequency region) will suffice. This circuit can be drawn via ```Circuit```>```Draw circuit```; see [@fig-rboh-step6]. With ```Use circuit and close```, the circuit is set.
 
-![Chosen circuit for RbOH^.^*x*H~2~O.](figures/Examples/SoftX_Revision/RbOH_xH2O/Step6.png){width=100% #fig-rboh-step6}
+![Chosen circuit for RbOH^.^*x*H~2~O.](figures/Examples/RbOH_xH2O/Step6.png){width=100% #fig-rboh-step6}
 
 7. Since this is quite a simple circuit, using ```Calculate```>```Automatic initial guess```, a reasonable initial guess can be obtained. Note that this method is subject to some randomness; the result may change (for better or worse) by pressing ```Automatic initial guess``` multiple times. After doing this twice, the result could look like the one in [@fig-rboh-step7].
 
-![Initial guess for RbOH^.^*x*H~2~O.](figures/Examples/SoftX_Revision/RbOH_xH2O/Step7.png){width=100% #fig-rboh-step7}
+![Initial guess for RbOH^.^*x*H~2~O.](figures/Examples/RbOH_xH2O/Step7.png){width=100% #fig-rboh-step7}
 
 8. The amplitude shoulder on the right-hand side looks as if it could be better captured by the model, although we know to doubt this feature due to the Z-HIT analysis. By selecting ```C0``` in the parameter list box and pressing ```Adjust controls```, the slider can be moved to the right to slightly improve the fit. [@fig-rboh-step8] results.
 
-![Manual adjustment to the RbOH^.^*x*H~2~O spectrum.](figures/Examples/SoftX_Revision/RbOH_xH2O/Step8.png){width=100% #fig-rboh-step8}
+![Manual adjustment to the RbOH^.^*x*H~2~O spectrum.](figures/Examples/RbOH_xH2O/Step8.png){width=100% #fig-rboh-step8}
 
 9. To finalize the fit, a refinement is in order. Using ```Calculate```>```Simple refinement```, [@fig-rboh-step9] is obtained. Apparently, the change in step (8) was not an improvement to the overall fit.
 
-![Refinement of the fit of the RbOH^.^*x*H~2~O spectrum.](figures/Examples/SoftX_Revision/RbOH_xH2O/Step9.png){width=100% #fig-rboh-step9}
+![Refinement of the fit of the RbOH^.^*x*H~2~O spectrum.](figures/Examples/RbOH_xH2O/Step9.png){width=100% #fig-rboh-step9}
 
 10. To verify that the fit is of good quality, it is worth looking at the result in a few different plot types. For example, changing the right-hand side plot to ```Y' and Y'' vs. frequency``` ([@fig-rboh-step10]) reveals a few measurement artifacts around 100 kHz and the apparent breakdown of the model above 600 kHz.
 
-![Alternative view of the RbOH^.^*x*H~2~O spectrum.](figures/Examples/SoftX_Revision/RbOH_xH2O/Step10.png){width=100% #fig-rboh-step10}
+![Alternative view of the RbOH^.^*x*H~2~O spectrum.](figures/Examples/RbOH_xH2O/Step10.png){width=100% #fig-rboh-step10}
 
 11. Now that the spectrum has been validated and modeled, and we understand the limitations of the result (breakdown at high frequencies), the result can be saved. Go to ```File```>```Save result...``` and save the result.
 
@@ -381,11 +381,11 @@ In this example, a graphite||lithium (C||Li) half-cell's impedance spectrum, rec
 
 3. Because the spectrum is quite complex, it is useful to get an impression of the characteristic frequencies of the features. Selecting ```Plot>Mark frequencies that are integer powers of 10``` results in [@fig-lic-step3].
 
-![Impedance spectrum of a graphite||lithium half-cell.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step3.png){width=100% #fig-lic-step3}
+![Impedance spectrum of a graphite||lithium half-cell.](figures/Examples/Li_C_Half_Cell/Step3.png){width=100% #fig-lic-step3}
 
 4. The impedance spectrum has a high-frequency semicircle (100 kHz--10 Hz), a medium-frequency semicircle (10 Hz--100 mHz), and a straight line (<100 mHz). There is also a gap between the origin and the start of the high-frequency semicircle due to the external circuit. An appropriate choice of equivalent circuit for this spectrum is ```{L0R0(R1Q1)({R2Q0}Q2)}```. L~0~ and R~0~ represent the external circuit and possibly electrolyte resistance, (R~1~Q~1~) and (R~2~Q~2~) represent two independent processes (likely charge transfers at the two electrodes, given the low characteristic frequencies), and Q~0~ represents polarisation (straight line). Typing the circuit string ```{L0R0(R1Q1)({R2Q0}Q2)}``` into ```Circuit>Type circuit``` will populate the ```Parameter``` list box on the left, below the plots, as in [@fig-lic-step4].
 
-![List of parameters for ```{L0R0(R1Q1)({R2Q0}Q2)}```.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step4.png){width=15% #fig-lic-step4}
+![List of parameters for ```{L0R0(R1Q1)({R2Q0}Q2)}```.](figures/Examples/Li_C_Half_Cell/Step4.png){width=15% #fig-lic-step4}
 
 5. The ```Plot>Mark frequencies that are integer powers of 10``` option should now be clicked again to toggle it off. Also ```Plot>Reset View``` to zoom back in on the whole spectrum.
 
@@ -393,57 +393,57 @@ In this example, a graphite||lithium (C||Li) half-cell's impedance spectrum, rec
 
 7. Now, the constant phase elements' parameters can be adjusted. First, adjust Q~1~ by selecting it, pressing ```Adjust controls``` and moving the slider to the right. The high-frequency semicircle should now be fitted to some extent by the red line and the first shoulder of |Z| should be touched by the model curve. The result should look like [@fig-lic-step7], with $Q_1 = 1.1\times 10^{-5}$ F.
 
-![The result of the first few manual fitting steps for the C||Li half-cell.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step7.png){width=100% #fig-lic-step7}
+![The result of the first few manual fitting steps for the C||Li half-cell.](figures/Examples/Li_C_Half_Cell/Step7.png){width=100% #fig-lic-step7}
 
 8. Q~2~ can now also be adjusted with the slider for a rough fit of the intermediate-frequency semicircle. The result should look like [@fig-lic-step8].
 
-![C||Li half-cell spectrum after tuning Q~2~.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step8.png){width=100% #fig-lic-step8}
+![C||Li half-cell spectrum after tuning Q~2~.](figures/Examples/Li_C_Half_Cell/Step8.png){width=100% #fig-lic-step8}
 
 9. Now, the CPE exponent n~0~ should be adjusted to match the angle of the low-frequency line and Q~0~ should then be adjusted to roughly match its length, resulting in [@fig-lic-step9]. The parameters are those in  [@fig-lic-step9-2].
 
-![C||Li half-cell spectrum after tuning n~0~ and Q~0~.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step9.png){width=100% #fig-lic-step9}
+![C||Li half-cell spectrum after tuning n~0~ and Q~0~.](figures/Examples/Li_C_Half_Cell/Step9.png){width=100% #fig-lic-step9}
 
-![Parameters after tuning n~0~ and Q~0~.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step9_2.png){width=15% #fig-lic-step9-2}
+![Parameters after tuning n~0~ and Q~0~.](figures/Examples/Li_C_Half_Cell/Step9_2.png){width=15% #fig-lic-step9-2}
 
 10. To better match the initial guess to the data in the complex plane, the CPE exponents n~1~ and n~2~ should be decreased. However, decreasing n~1~ will cause the model's |Z| to differ greatly from the measured data. This can be remedied by adjusting Q~1~. A final, small adjustment of R~1~ gives rise to [@fig-lic-step10].
 
-![C||Li impedance spectrum after tuning n~1~, Q~1~, and R~1~.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step10.png){width=100% #fig-lic-step10}
+![C||Li impedance spectrum after tuning n~1~, Q~1~, and R~1~.](figures/Examples/Li_C_Half_Cell/Step10.png){width=100% #fig-lic-step10}
 
 11. Adjusting n~2~, Q~2~ and R~2~ in the same order as n~1~, Q~1~ and R~1~ leads to [@fig-lic-step11]. The parameters are in [@fig-lic-step11-2].
 
-![C||Li impedance spectrum after tuning n~2~, Q~2~, and R~2~.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step11.png){width=100% #fig-lic-step11}
+![C||Li impedance spectrum after tuning n~2~, Q~2~, and R~2~.](figures/Examples/Li_C_Half_Cell/Step11.png){width=100% #fig-lic-step11}
 
-![C||Li impedance spectrum after tuning n~2~, Q~2~, and R~2~.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step11_2.png){width=15% #fig-lic-step11-2}
+![C||Li impedance spectrum after tuning n~2~, Q~2~, and R~2~.](figures/Examples/Li_C_Half_Cell/Step11_2.png){width=15% #fig-lic-step11-2}
 
 12. Now, the final corrections before automatic refinement should be made. First, L~0~ should be increased to around $1.7\times 10^{-6}$ H to better describe the phase data at the highest frequencies. On the other end of the spectrum, Q~0~ should be decreased to $3.2\times 10^{-2}$ Fs^n-1^. Then, Q~2~ can be decreased as well, to $2.4\times 10^{-3}$ Fs^n-1^. The result is [@fig-lic-step12].
 
-![C||Li impedance spectrum after tuning n~2~, Q~2~, and R~2~.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step12.png){width=100% #fig-lic-step12}
+![C||Li impedance spectrum after tuning n~2~, Q~2~, and R~2~.](figures/Examples/Li_C_Half_Cell/Step12.png){width=100% #fig-lic-step12}
 
 13. It now appears that R~2~ is too large, so it should be decreased. Then, n~2~ should be increased to raise the the semicircle without widening it. Finally, n~0~ and Q~0~ should be tweaked to correct the low-frequency part of the spectrum. This leads to [@fig-lic-step13]. The parameters are in [@fig-lic-step13-2].
 
-![C||Li impedance spectrum before moving on to advanced refinement.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step13.png){width=100% #fig-lic-step13}
+![C||Li impedance spectrum before moving on to advanced refinement.](figures/Examples/Li_C_Half_Cell/Step13.png){width=100% #fig-lic-step13}
 
-![Parameters before moving on to advanced refinement.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step13_2.png){width=15% #fig-lic-step13-2}
+![Parameters before moving on to advanced refinement.](figures/Examples/Li_C_Half_Cell/Step13_2.png){width=15% #fig-lic-step13-2}
 
 14. Now, it is time to move on to automatic refinement via ```Calculate>Advanced refinement...```. This will open a window with plots as in [@fig-lic-step14]. In the  window, the ```SciPy: Nelder-Mead``` optimizer and ```Calculated modulus``` weighting scheme (modulus weighting based on the model curve) should be selected.
 
-![Plots in the refinement window before any refinement has been done.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step14.png){width=100% #fig-lic-step14}
+![Plots in the refinement window before any refinement has been done.](figures/Examples/Li_C_Half_Cell/Step14.png){width=100% #fig-lic-step14}
 
 15. The goal of the refinement is to improve the residuals. This will be done in several steps. First, the high-frequency part of the model should be optimized by selecting L~0~, R~0~, R~1~, Q~1~, and n~1~ on the left and setting the lower frequency limit to 10 Hz in the centre. The settings should look as in [@fig-lic-step15].
 
-![Refinement settings.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step15.png){width=75% #fig-lic-step15}
+![Refinement settings.](figures/Examples/Li_C_Half_Cell/Step15.png){width=75% #fig-lic-step15}
 
 16. Pressing ```Refine solution``` on the right results in [@fig-lic-step16].
 
-![High-frequency refinement result.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step16.png){width=100% #fig-lic-step16}
+![High-frequency refinement result.](figures/Examples/Li_C_Half_Cell/Step16.png){width=100% #fig-lic-step16}
 
 17. Now, the lower frequencies should be treated. Because there are no points where Re[Z] = 0 or Im[Z] = 0 in this region, the weighting scheme can be set to ```Observed proportional``` (proportional weighting based on measured data). Refining with the upper frequency limit set to 10 Hz, the lower frequency limit set to 0.009 Hz, and R~2~, Q~2~, n~2~, Q~0~, and n~0~ selected, results in [@fig-lic-step17].
 
-![Low-frequency refinement result.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step17.png){width=100% #fig-lic-step17}
+![Low-frequency refinement result.](figures/Examples/Li_C_Half_Cell/Step17.png){width=100% #fig-lic-step17}
 
 18. The final refinement step covers the entire frequency range and all parameters. With the ```Calculated modulus``` weighting scheme, the result is [@fig-lic-step18].
 
-![Final refinement result.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step18.png){width=100% #fig-lic-step18}
+![Final refinement result.](figures/Examples/Li_C_Half_Cell/Step18.png){width=100% #fig-lic-step18}
 
 19. The result can be saved to a .recm2 file with ```File>Save result...``` This file can be loaded again via ```File>Load result...```, which will load both the data and model.
 
@@ -459,15 +459,15 @@ In this example, the loading of a data file with ($f$, $|Z|$, $\phi$) data inste
 
 3. Click ```File>Specify data file layout...``` and select the settings indicated in [@fig-bodeex-step3]. Then, click ```Save and exit```.
 
-![Modifying the data file layout specification.](figures/Examples/SoftX_Revision/BodeEx/Step3.png){width=30% #fig-bodeex-step3}
+![Modifying the data file layout specification.](figures/Examples/BodeEx/Step3.png){width=30% #fig-bodeex-step3}
 
 4. Go to ```File```>```Load data...``` to open the file from step 1 in DEC*i*M. The data should now appear in the main DEC*i*M window ([@fig-bodeex-step4]).
 
-![Spectrum loaded from ($f$, $|Z|$, $\phi$) data.](figures/Examples/SoftX_Revision/BodeEx/Step4.png){width=100% #fig-bodeex-step4}
+![Spectrum loaded from ($f$, $|Z|$, $\phi$) data.](figures/Examples/BodeEx/Step4.png){width=100% #fig-bodeex-step4}
 
 5. To go back to the standard loading settings, go to ```File>Specify data file layout...``` and select the settings indicated in [@fig-bodeex-step5]. If you do not do this, DEC*i*M will continue to expect ($f$, $|Z|$, $\phi$) data even after closing the program.
 
-![Restoring the default data file layout specification.](figures/Examples/SoftX_Revision/BodeEx/Step5.png){width=30% #fig-bodeex-step5}
+![Restoring the default data file layout specification.](figures/Examples/BodeEx/Step5.png){width=30% #fig-bodeex-step5}
 
 # Copyright information {#sec-copyright}
 
