@@ -2,13 +2,9 @@
 
 DEC*i*M (Determination of Equivalent Circuit Models) is an equivalent circuit model fitting program for impedance data. It is a GUI-based program, written entirely in Python.
 
-## Experimental version
-
-This version (1.4.0-dev) is experimental. Parameter error estimates are being implemented, with changes to the simple refinement and the addition of a variance-covariance matrix being planned as well. In principle, this is *NOT* a stable version -- use it at your own risk.
-
 ## Prerequisites
 
-The current DEC*i*M version (1.4.0-dev) requires the following software to already be installed on your computer:
+The current DEC*i*M version (1.4.0) requires the following software to already be installed on your computer:
 
 - Python 3.10 or higher (including copy, webbrowser, functools and tkinter as part of the Python Standard Library)
 - NumPy
@@ -17,7 +13,9 @@ The current DEC*i*M version (1.4.0-dev) requires the following software to alrea
 - Optax
 - numdifftools
 
-**WARNING: DEC*i*M has been reported not to work well together with Conda. Please do not use a Python 3 installation with Conda to install and run DEC*i*M.**
+**PLEASE NOTE: The numdifftools package is a new requirement. If you are updating DEC*i*M to 1.4.0, please remember to install numdifftools.**
+
+**PLEASE NOTE: DEC*i*M has been reported not to work well together with Conda. Please do not use a Python 3 installation with Conda to install and run DEC*i*M.**
 
 ## Installation
 
@@ -35,7 +33,7 @@ Open your preferred program to access the command line and navigate to the `src`
 python DECiM.py
 ```
 
-For detailed operating instructions, please consult the PDF manual.
+For detailed operating instructions, please consult the PDF manual, which is located in the `manual` directory under the name `manual.pdf`.
 
 ## Citing
 

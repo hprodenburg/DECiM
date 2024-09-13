@@ -27,15 +27,17 @@ If you followed the installation instructions above, you have a working Python 3
 - SciPy (scipy.org)
 - Matplotlib (matplotlib.org)
 - Optax (optax.readthedocs.io/en/latest/)
+- numdifftools (numdifftools.readthedocs.io/en/stable/intro/index.html)
 
 If you installed WinPython, you only need to install Optax. Otherwise, you need to install all four packages. To do this, open a terminal (```cmd```) and type in the commands specified (without quotation marks/backticks) in the table below.
 
-| Package    | Installation command                      |
-| :--------- | :---------------------------------------: |
-| NumPy      | ```python -m pip install -U numpy```      |
-| SciPy      | ```python -m pip install -U scipy```      |
-| Matplotlib | ```python -m pip install -U matplotlib``` |
-| Optax      | ```python -m pip install -U optax```      |
+| Package      | Installation command                        |
+| :----------- | :-----------------------------------------: |
+| NumPy        | ```python -m pip install -U numpy```        |
+| SciPy        | ```python -m pip install -U scipy```        |
+| Matplotlib   | ```python -m pip install -U matplotlib```   |
+| Optax        | ```python -m pip install -U optax```        |
+| numdifftools | ```python -m pip install -U numdifftools``` |
 
 ## DEC*i*M
 

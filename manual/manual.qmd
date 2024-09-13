@@ -1,0 +1,494 @@
+---
+title: "User manual for DEC*i*M: Program for the Determination of Equivalent Circuit Models"
+subtitle: "Version 1.4.0"
+bibliography: ./references.bib
+csl: chem-acs-superscript-square-brackets-no-dois.csl
+author:
+  - name: |
+      Hendrik P. Rodenburg and Peter Ngene \
+      Utrecht University
+date: today
+date-format: long
+toc: true
+toc-depth: 2
+number-sections: true
+crossref:
+  chapters: true
+format:
+  pdf:
+    hyperrefoptions: draft <!-- Disable this to re-enable hyperlinks in the text -->
+    fig-pos: H
+    geometry:
+      - top = 30 mm
+      - left = 20 mm
+execute:
+  echo: false
+jupyter: python3
+---
+
+# Introduction {#sec-introduction}
+
+## Equivalent circuit modelling {#sec-intro-models}
+
+The analysis of (electrochemical) impedance spectra usually involves fitting a model to the impedance data. In most cases, such a model takes the form of an equivalent circuit model, *i.e.* an electrical circuit whose impedance is similar to that of the sample. Equivalent circuit models may contain many different circuit elements, including capacitors, inductors, resistors, and more complex elements such as Warburg elements and constant phase elements, which can be arranged in many different ways. The circuit elements typically represent physical processes, and the values of the elements' parameters inform on the properties of the measured system. For instance, a resistor can represent the resistance of an electrolyte. If the dimensions of the electrolyte are known and its resistance can be determined, then its conductivity can be calculated. Similarly, a capacitor can represent a double layer capacitance, which can be useful for determining the electrochemically active surface area of an electrode. However, extracting the value of a parameter such as a resistance or capacitance usually requires the entire impedance spectrum to be modeled, which can be challenging for more complex systems. In this manual, a program for the Determination of Equivalent Circuit Models (DEC*i*M) is presented, which can be used to model impedance spectra.
+
+## DEC*i*M's purpose {#sec-intro-purpose}
+
+DEC*i*M is designed to allow both expert and non-expert users to adequately model impedance spectra. The program offers manual and automatic fitting, three different methods for creating equivalent circuit models, data validation, and different options for visualization. For non-expert users, there is a simple workflow consisting of drawing a circuit or typing a circuit string followed by manual fitting and a quick 'simple refinement'. For expert users, there is Z-HIT data validation, and there is the option to define a custom model (which can be a transmission line model or even a non-circuit model). Additionally, one may separately refine parameters in frequency ranges of choice with weighting schemes of choice. During and after data processing, there are seven different types of plots available for visualization, with the option of including multiple data sets for comparison. Finally, the data and model can be saved to a result file which is human-readable and can be loaded by DEC*i*M.
+
+# Installation {#sec-installation}
+
+## Prerequisites {#sec-installation-prerequisites}
+
+DEC*i*M is written in Python[@Python2023] and requires Python 3.10 or a more recent version of the Python interpreter. It is recommended to download Python from the official website (python.org) or to install WinPython. In addition, the following packages are required:
+
+- NumPy[@NumPy2020]
+- SciPy[@SciPy2020]
+- Matplotlib[@Matplotlib2007]
+- Optax [@deepmind2020]
+- numdifftools [@DErrico2006; @Perktold2014]
+- tkinter (Python Standard Library)
+- functools (Python Standard Library)
+- copy (Python Standard Library)
+- webbrowser (Python Standard Library)
+
+The DEC*i*M repository on GitHub[@Rodenburg2024_DECiM] contains a file 'Installation_guide_from_scratch.md' to help with the installation of Python 3, the dependencies, and DEC*i*M itself.
+
+## Installing DEC*i*M {#sec-installation-installing}
+
+Installing DEC*i*M simply involves downloading DEC*i*M from GitHub.[@Rodenburg2024_DECiM] All necessary files for DEC*i*M to start are in the 'src' folder. These files are:
+
+- DECiM.py
+- ecm\_circuits.py
+- ecm\_correlation.py
+- ecm\_custom\_models.py
+- ecm\_datastructure.py
+- ecm\_file\_io.py
+- ecm\_fit.py
+- ecm\_helpers.py
+- ecm\_history.py
+- ecm\_manual.py
+- ecm\_plot.py
+- ecm\_user\_input.py
+- ecm\_zhit.py
+
+In addition, a file containing circuit presets, 'ecm_presets.decim_circuits' should be present, as well as a file containing information about data file structure, 'ecm_datafiles.decim_specification'.
+
+## Starting DEC*i*M {#sec-installation-starting}
+
+After the installation has been completed, DEC*i*M can be started by navigating to the ```DECiM/src``` folder on the command line and then (provided you can start Python 3 as ```python```) typing ```python DEC*i*M.py```, followed by pressing RETURN/ENTER.
+
+# Equivalent circuit model selection {#sec-models}
+
+By default, DEC*i*M chooses (RQ) as the circuit, but it is recommended to define a new equivalent circuit model before data are loaded into DEC*i*M. There are multiple ways to do this: typing a circuit string, choosing a circuit preset, drawing a circuit or defining a custom model. Once an equivalent circuit model has been chosen, data can be loaded and the model parameters' values can be determined.
+
+## Typing a circuit {#sec-models-typing}
+
+A circuit can be described in text as a circuit string following a notation similar to that of Boukamp.[@Boukamp1989] In DEC*i*M, the symbols R, L, C, Q, O, S, G, and H are used to refer to the resistor, inductor, capacitor, constant phase element, open Warburg, short Warburg, Gerischer, and Havriliak-Negami elements, respectively. They can be connected in series by placing them between curly brackets '{}' or in parallel by placing them between parentheses '()'. Two examples are given in @fig-circuit-notation.
+
+![Two example circuits. a) {R$_0$(R$_1$Q$_0$)Q$_1$}; b) {R$_0$L$_0$(Q$_1${R$_1$(R$_2$Q$_0$)})}.](figures/Circuit_notation.png){width=100% #fig-circuit-notation}
+
+The circuit typing input box can be accessed via the 'Circuit' menu as 'Type circuit'. A new window will be opened in which the circuit string can be typed. When the window is closed, the text is read and validated. If the text is a valid circuit string, then the circuit is updated.
+
+## Circuit presets {#sec-models-presets}
+
+Circuit strings can also be typed in the circuit_presets.decim_circuits text file. One circuit string can be entered on each line. On program startup, DEC*i*M reads this file and places every valid circuit string in the 'Circuit' menu, from where the circuit can be selected.
+
+## Drawing a circuit {#sec-models-drawing}
+
+It is possible to draw a circuit diagram in DEC*i*M by clicking the circuit button below the slider or by going to the 'Circuit' menu and clicking 'Draw circuit'. A new window will open. On the left, there are some controls, and on the right, there is a drawing canvas. In the top left, the connection mode (series or parallel) is indicated. Drawing in series mode will autmatically connect elements drawn to the left or right of each other on the canvas, whereas drawing in parallel mode will automatically connect elements drawn above or below each other. This way, the elements are grouped into so-called *units*: groups of elements connected in parallel or series. When elements that were drawn in different modes need to be connected, their units must be merged by activating merge mode. This will create a new unit into which the smaller units are merged. The connection mode determines how the smaller units are connected.
+
+To draw a new element or to merge units, you must click on the drawing canvas. If merge mode is enabled and there are units that can be merged, the highlighted units will be merged. If merge mode is disabled, clicking on the canvas will place the element on the canvas at the mouse position (first element) or at the closest available '+' position (all other elements). To illustrate the drawing process, an example in which the RL(RQ) circuit is drawn, is given below in Figures [-@fig-circuit-drawing-step1]--[-@fig-circuit-drawing-step10].
+
+![First, switch to series mode by clicking 'Series/parallel mode', then select a resistor from the element dropdown.](figures/Circuit_drawing/Step1.png){width=100% #fig-circuit-drawing-step1}
+
+  
+
+![Draw the resistor by clicking on the canvas.](figures/Circuit_drawing/Step2.png){width=100% #fig-circuit-drawing-step2}
+
+  
+
+![Select an inductor and draw it on the canvas by clicking to the right of the resistor.](figures/Circuit_drawing/Step3.png){width=100% #fig-circuit-drawing-step3}
+
+  
+
+![Switch to parallel mode and select a new resistor.](figures/Circuit_drawing/Step4.png){width=100% #fig-circuit-drawing-step4}
+
+  
+
+![Draw the resistor by clicking to the right of the inductor. The resistor is in a new parallel unit and is not connected to the other elements, which are in a series unit.](figures/Circuit_drawing/Step5.png){width=100% #fig-circuit-drawing-step5}
+
+  
+
+![Select a constant phase element from the element dropdown and draw it below the new resistor. It will be automatically added to the same parallel unit, and the connections will be drawn.](figures/Circuit_drawing/Step6.png){width=100% #fig-circuit-drawing-step6}
+
+  
+
+![Enable merge mode by clicking 'Merge units' and move the mouse to the red dot. Click on or near it to try to merge the units.](figures/Circuit_drawing/Step7.png){width=100% #fig-circuit-drawing-step7}
+
+  
+
+![The units are not merged because they are only horizontally separated. To merge two units in parallel, they must be vertically separated. Similarly, merging two units in series requires them to be horizontally separated.](figures/Circuit_drawing/Step8.png){width=100% #fig-circuit-drawing-step8}
+
+  
+
+![Try again in series mode.](figures/Circuit_drawing/Step9.png){width=100% #fig-circuit-drawing-step9}
+
+  
+
+![The two units are now merged and the circuit is complete.](figures/Circuit_drawing/Step10.png){width=100% #fig-circuit-drawing-step10}
+
+With the circuit made, click 'Use circuit and close' to select it as the model for the analysis.
+
+## Custom models {#sec-models-custom}
+
+Custom models can be defined in 'ecm\_custom\_models.py'. Custom models are functions that return the impedance based on the fit parameters, but do not necessarily involve any circuit diagram. This is useful for different physical models of the impedance, or for transmission line models, which cannot be defined using the circuit typing or drawing interfaces. A custom model can be created as follows:
+
+1. Create a function *Z(fp, freq)*, where *fp* is a list of fit parameters and freq a NumPy array of frequencies. The function should return a NumPy array of complex impedances.
+2. Add the function to the custom\_model\_diagrams dictionary as *'name': ('diagram', Z)*, where 'diagram' is a circuit string that contains as many parameters as the model uses.
+
+Once the model has been defined, it can be accessed from the 'Circuit' menu, where the name entered into the custom\_model\_diagrams dictionary will be displayed.
+
+Note that, if you want to use optimizers provided by Optax, you should use JAX.NumPy[@deepmind2020] instead of NumPy. This will break the automatic initial guess and simple refinement options. It may be useful to define your custom model twice: once with NumPy and once with JAX.NumPy.
+
+# Loading and saving files with impedance data {#sec-files}
+
+## Data files {#sec-files-data}
+
+Data files can be loaded from the 'File' menu in the menu bar at the top of the program window. DEC*i*M expects data files to be text files consisting of columns separated by whitespace characters (tabs, spaces) or commas. The first line can be a header specifying the quantities and units; DEC*i*M will skip any lines that do not consist solely of numbers, separators and line breaks. By default, DEC*i*M expects the first value to be a linear frequency ($f$, __not__ $\omega = 2 \pi f$) in units of Hz, the second value to be the real impedance component Re$[Z]$ in units of $\Omega$ and the third value to be the imaginary impedance component Im$[Z]$ in units of $\Omega$. Alternative data file layouts can be defined using the 'Specify data file layout...' option in the 'File' menu, which will open the window shown in [@fig-column-layout]. Doing so will modify the settings file 'ecm_datafiles.decim_specification'.
+
+![The data file specification window.](figures/Column_layout.png){width=40% #fig-column-layout}
+
+Data files can only be loaded by DEC*i*M, not saved. Even if the data are tranformed with Z-HIT, it is not possible to save a new data file. Only a result file (.recm2) may be saved.
+
+## Result files {#sec-files-result}
+
+Result files (.recm2 file extension) may be saved and loaded by DEC*i*M, via the 'File' menu. They contain more information than data files: besides data, also limited statistical information, model parameters and points to plot the model are provided. The structure of a result file is as follows:
+
+1. '>CIRCUIT DEFINITION' header.
+2. Text describing the circuit diagram (circuit string or custom model information).
+3. '>MODEL PARAMETERS' header.
+4. List of model parameters' names, values, indices, and estimated uncertainties (only after refinements, and even then only if they can be determined); the names, values and indices are important for fitting.
+5. '>STATISTICAL DATA' header.
+6. List of number of parameters, number of frequencies, degrees of freedom, observation-to-parameter ratio and the proprotionally weighted sum of the squares $S_v$ (a measure of the goodness of fit).
+7. '>IMPEDANCE DATA' header.
+8. 'Frequency (Hz), Re(Z) / Ohm, Im(Z) / Ohm' header.
+9. Impedance data as described by the above header.
+10. '>IMPEDANCE FIT' header.
+11. 'Frequency (Hz), Re(Z) / Ohm, Im(Z) / Ohm' header.
+12. 500 points of impedance that describe the model, formatted as described by the above header.
+
+Result files are designed to be human-readable and to be a useful step towards preparing publication-quality figures. It is not necessary to evaluate the impedance using the model description and parameter values after the result file is generated. The model can simply be plotted from the data points below the '>IMPEDANCE FIT' header.
+
+# Data validation {#sec-validation}
+
+## Z-HIT transform {#sec-validation-zhit}
+
+For data validation, DEC*i*M provides the Z-HIT transform[@Schiller2001] in the 'Calculate menu'. Clicking 'Perform Z-HIT transform' will open a new window with complex plane and Bode plots in the upper half and two entry boxes and two tick boxes, three buttons, and then two more entry boxes in the lower half. With the upper entry boxes, the desired frequency range for data validation can be selected, and edge artifacts generated by the filter can be cut with the tick-boxes. The buttons can be used to start the calculation and to close with or without accepting the result. The lower two entry boxes can be used to tune the filter that is used to smoothen the phase.
+
+The algorithm for the Z-HIT transform is:
+
+1. Smoothen the phase data with a Savitzky-Golay filter.[@Savitzky1964] Via the lower entry boxes, you can set the window length and polynomial order used by the filter. By default, these are set to 50 and 3, respectively. For description of the filter's implementation, see the SciPy[@SciPy2020] documentation for the *scipy.signal.savgol_filter*.
+2. Calculate $\ln|Z|$ from the phase spline.
+3. Determine the constant of integration in the Z-HIT transform.
+4. Display the result.
+
+If you only want to inspect the Z-HIT transform, you should close the window with the 'Reject and close button'. If you wish to use the transformed data instead of the measured data, click 'Accept and close'.
+
+# Manual parameter adjustment {#sec-adjustment}
+
+The user interface of the main DEC*i*M window contains controls for manual parameter adjustment below the plots. These controls allow the selection of parameters, modification of parameters via a slider and directly setting a parameter's value by typing it. The controls used for this are shown in @fig-manual-adjustment.
+
+![The controls for manually changing parameters' values. 1) Parameter list box. 2) Slider response dropdown. 3) Slider controls adjustment button. 4) First slider limit (can be upper or lower limit). 5) Slider. 6). Second slider limit. 7) Direct input box. 8) Parameter value set button. 9) Circuit selection button.](figures/User_interface.png){width=100% #fig-manual-adjustment}
+
+## Parameter list box {#sec-adjustment-parameters}
+
+The parameter list box is contains a list of all parameters and their values in the current equivalent circuit model. Clicking a parameter in this list makes it adjustable by the slider and 'Direct input' box. If the equivalent circuit model is changed, the parameter dropdown is automatically updated.
+
+## Slider controls {#sec-adjustment-controls}
+
+After a parameter has been chosen, it can be adjusted by the slider. It is, however, important to set the lower and upper limits of the parameter first. For example, resistors typically take values between 0 $\Omega$ and $10^{10}$ $\Omega$, while capacitors normally take values between $1$ F and $10^{-12}$ F. These limits can be set in the 'Limit 1' and 'Limit 2' text boxes. However, note that for values between 0 and 1 on a log-scaled axis, 'Limit 1' should be $0$, not $1$; 'Limit 2' should be the lower limit (*e.g.* $10^{-12}$). After the limits have been set correctly, the slider response can be set with the menu under 'Response'. Usually, a logarithmic response is appropriate, but in the case of exponents (CPE n, Havriliak-Negami b & g), a linear response is often better.
+
+To save time in setting up the slider limits and response, the 'Adjust controls' button can be used to automatically set up the slider controls. The limits and slider response will be set to typical values for the selected parameter. For any parameter which has units of $\Omega$ (R, O, S, G, and H), 'Limit 1' will be $0$, 'Limit 2' will be $10^{10}$ and the response will be logarithmic. For C, Q, and L, and the second parameter of G and H (m and t, respectively), 'Limit 1' will be $0$, 'Limit 2' will be $10^{-12}$ and the response will be logarithmic. For the second parameter of O and S (k and l, respectively), 'Limit 1' will be $0$, 'Limit 2' will be $10^6$ s$^{-1/2}$ and the response will be logarithmic. Finally, for a CPE exponent n and the Havriliak-Negami exponents b and g, 'Limit 1' will be $0$, 'Limit 2' will be $1$ and the response will be linear.
+
+## Slider and Set button {#sec-adjustment-methods}
+
+With the slider controls ready, the value of the selected parameter can be changed through the slider in three different ways:
+
+1. Dragging the slider with the left mouse button pressed. The slider will move quickly.
+2. Holding the left mouse button while the cursor is to the left or right of the button inside the slider. The slider will move slowly.
+3. Clicking at any point on the slider bar with the right mouse button. The slider will immediately move to the indicated position.
+
+The value of the parameter will be automatically updated and displayed below the slider. The plots will also be updated.
+
+As an alternative to the slider, the parameter value may also be updated with the 'Direct input' text box. To do this, first enter the desired value of the parameter and then press the 'Set' button. The parameter's value will immediately be changed to the value you entered and the plots will be updated.
+
+## Guidelines for manual fitting
+
+Manual fitting can be difficult and time-consuming, especially for more complex spectra. Fortunately, there is a systematic approach that works for many spectra. It works as follows:
+
+1. Set all capacitors C and CPEs Q to 1 F, CPE and Havriliak-Negami exponents n, b, and g to 1, inductors L to 10^-12^ H, and resistors R to 1 $\Omega$. Set Warburg, Gerischer, and Havriliak-Negami elements O, S, G, and H to 1 $\Omega$ as well and don't touch the parameter influencing the time constant (k, l, m, and t).
+2. Estimate the resistors' values from the ends of the semicircles in the complex plane and the heights of the $|Z|$ plateaus in the Bode plot.
+3. Decrease the C and Q values of the capacitors and CPEs that are connected in parallel with the resistors until semicircles start to appear. Make sure the phase and amplitude are fitted well.
+4. For CPEs, adjust the exponent n until the fit is as close as possible.
+5. Increase L until the fit no longer improves.
+6. For Warburg and Gerischer elements, estimate O, S, or G from the real part of the electrode response. Then carefully adjust k, l, or m until the electrode response is fitted well.
+7. Fine-tune all parameters.
+
+Note that the approach for Havriliak-Negami elements is different; there, H should be tuned first, followed by t, and finally b and g.
+
+# Automatic model refinement {#sec-refinement}
+
+In many cases, it is useful to automatically refine the parameters obtained by manual fitting. DEC*i*M includes two options for this: the simple and advanced refinement. These can be found in the 'Calculate' menu in the menu bar.
+
+## Automatic initial guess
+
+In some cases, particularly for relatively simple models, it is possible to generate a reasonably accurate initial guess with the 'Automatic initial guess' option from the 'Calculate' menu. This option will start multiple refinements from different starting positions and pick the best solution. It can save much time spent on manual fitting. While the calculation is running, the text 'Guessing...' will be displayed in the complex plane plot. Do not click anywhere inside the window while this text is displayed to avoid DEC*i*M becoming unresponsive.
+
+## Simple refinement {#sec-refinement-simple}
+
+The simple refinement refines all parameters without applying any weights. It is mainly useful for simple circuits. Only the frequency range can be controlled; this is done with the 'Set simple refinement frequency range' option in the 'Calculate' menu. After clicking 'Refine solution (simple)', the refinement will immediately begin, and the text 'Refining...' will be displayed in the complex plane plot. Do not click anywhere inside the window while the refinement is running; this could cause DEC*i*M to become unresponsive.
+
+## Advanced refinement {#sec-refinement-advanced}
+
+The advanced refinement can be accessed via the 'Advanced refinement...' option in the 'Calculate' menu. Clicking this option will launch a new window with three plots and three columns of controls. The plots are the residuals, the complex plane plot and the Bode plot of the impedance spectrum. The controls are shown in @fig-refinement-controls.
+
+![The refinement controls.](figures/Refinement_UI.png){width=90% #fig-refinement-controls}
+
+It is possible to select and deselect parameters to be refined (with the ```SciPy: Nelder-Mead``` optimizer only), to set the frequency range, to choose a weighting scheme, and to choose an optimizer. The frequency limits can be shown in the residuals and Bode plots with the 'Limit visualisation on/off' button. The available weighting schemes are 'Unit' (no weights), 'Observed modulus' (modulus weighting based on measured data), 'Calculated modulus' (modulus weighting based on model), 'Observed proportional' (proportional weighting based on measured data), and 'Calculated proportional' (proportional weighting based on model). Unit weighting (the default) is fast, but not as accurate as modulus or proportional weighting. Proportional weighting is slow and can run into problems when the imaginary impedance component is close to $0$. Therefore, modulus weighting is recommended, with modulus weighting based on the model ('Calculated modulus') typically being the best performing option.
+
+Once all desired parameters have been selected, the limits have been set and a weighting scheme has been chosen, the solution can be refined with the 'Refine solution' button. If the result is not as desired, then the parameters can be reset with 'Undo refinement' to go back to the previous refinement result, or 'Reset parameters' to go back to the parameters as they were when the window was launched. If no satisfactory result can be obtained at all or you wish to cancel the refinement, then 'Reject and close' will close the window and discard the refinement result. If, however, an acceptable result is obtained, 'Accept and close' will update the model parameters in the main part of DEC*i*M and update the plots there.
+
+## Undoing refinements {#sec-refinement-undo}
+
+In case a simple or advanced refinement leads to an undesirable result, the refinement can be undone with the 'Undo refinement' button in the 'Calculate' menu. It is possible to go back more than once; after every refinement, the parameters are saved and can be recovered. This is not done for slider movements, as these are more easily undone by hand.
+
+# Plotting options {#sec-plots}
+
+By default, DEC*i*M displays two plots: a complex plane plot and a Bode plot that shows both the amplitude $|Z|(\omega)$ and the phase $\phi(\omega)$. These can be customized in various different ways.
+
+## Plotting multiple data sets {#sec-plots-history}
+
+Multiple data sets can be plotted via the 'History' menu. If one data set is loaded, then saved with 'Save current dataset and sample dimensions to history' and then a new data set is loaded, the old data set can be plotted alongside the new one with 'Plot or remove non-interactive dataset (max. 3)'. This can be done with up to three additional data sets. Additionally, you can switch between different data sets for analysis with 'Select other dataset'; this is equivalent to loading a result file, but then from RAM.
+
+## Marking specific frequencies {#sec-plots-marking}
+
+Frequencies that are integer powers of ten (*e.g.* $0.1$ Hz, $10$ Hz, 100 kHz, etc.) can be highlighted in the complex plane plot with the 'Mark frequencies that are integer powers of 10' option under 'Plot'. The points belonging to the frequencies in question (or those with the best matching frequencies for frequencies that are not present exactly) will be circled and the frequencies will be indicated in text beside them. Clicking the marking option again will turn all of this off again.
+
+## Switching between different plot types {#sec-plots-switching}
+
+The axes of both plots can be changed in a few different ways. The options are as follows:
+
+Left-hand side (LHS):
+
+- Complex plane impedance: $Z''$ vs. $Z'$
+- Complex plane admittance: $Y''$ vs. $Y'$
+
+Right-hand side (RHS):
+
+- Bode amplitude/phase: |Z| vs. $f$  and $\phi$ vs. $f$
+- $Y'$ vs. $f$ and $Y''$ vs. $f$
+- $Z'$ vs. $f$ and $Z''$ vs. $f$
+- Conductivity vs. frequency: $\sigma'$ vs. $f$ and $\sigma''$ vs. $f$
+- Permittivity vs. frequency: $\epsilon'$ vs. $f$ and $\epsilon''$ vs. $f$
+
+For the conductivity or permittivity plots, the sample dimensions should be entered into the dialog that opens with 'Plot'>'Set sample geometry'.
+
+## Other plotting options {#sec-plots-other}
+
+There are several other options in the 'Plot' menu. These are:
+
+- 'Toggle data visibility': turn measured data on/off in both plots.
+- 'Toggle model visibility': turn model curve(s) on/off in both plots.
+- 'Reset view': reset the view limits of both plots.
+- 'Toggle RHS primary log scale': change the scaling of the left axis in the RHS plot from linear to logarithmic or vice versa.
+- 'Toggle RHS secondary log scale': change the scaling of the right axis in the RHS plot from linear to logarithmic or vice versa.
+- 'Toggle RHS primary visibility': turn the left axis in the RHS plot on or off.
+- 'Toggle RHS secondary visibility': turn the right axis in the RHS plot on or off.
+
+There is also a toolbar below the plots (which also features in the Z-HIT and refinement windows). This allows zooming, panning, adjusting the shape of the plots and the saving of image files.
+
+# Other functions {#sec-other}
+
+## Apex frequencies {#sec-other-apex}
+
+The 'Get apex frequencies' option in the 'Calculate' menu will open a new window in which the frequencies at which maxima in the complex plane plot are found. The frequencies given here are angular frequencies $\omega = 2\pi f$, not linear frequencies $f$ (which are displayed everywhere else in DEC*i*M).
+
+## Correlation matrix {#sec-other-correlation}
+
+After every refinement, the variance-covariance matrix of the fit parameters is estimated. From this, a correlation matrix is calculated that can be accessed in the 'Calculate' menu via 'Show correlation matrix'. A color map representing the matrix will then be shown. White values indicate that the correlation coefficients could not be estimated. Other colors are explained via the legend (color bar).
+
+## Help menu {#sec-other-help}
+
+The 'Help' menu has only two options:
+
+- 'Show instructions', which will display brief instructions for how to use the program.
+- 'Open manual', which will open the PDF manual in a web browser.
+
+# Examples {#sec-examples}
+
+Examples in this section may date back to earlier versions of DEC*i*M but are still functional in the current version.
+
+## Example 1: RbOH^.^*x*H~2~O {#sec-examples-rboh}
+
+In this example, an impedance spectrum of RbOH^.^*x*H~2~O is analyzed with Z-HIT and an equivalent circuit model is fitted to the data.
+
+1. Start DEC*i*M with ```python DECiM.py``` (or the equivalent on your system for starting a Python 3 script) in the ```src``` folder.
+
+2. Go to ```File```>```Load data...``` and navigate to the ```examples``` folder (```path_to_decim/DECiM/examples```). Go to ```RbOH_xH2O```. Change the ```Text files``` option to ```All files``` and open the ```CH3_cool_40C_2.csv``` file. The data should now appear in the main DEC*i*M window, looking like [@fig-rboh-step2].
+
+![Impedance spectrum of RbOH^.^*x*H~2~O.](figures/Examples/SoftX_Revision/RbOH_xH2O/Step2.png){width=100% #fig-rboh-step2}
+
+3. Go to ```Calculate```>```Perform Z-HIT tranform```. A new window will open.
+
+4. Click the ```Calculate Z-HIT impedance``` button. The phase will now be smoothed and the amplitude calculated. You may notice that the high-frequency phase data are not well-estimated. Adjust the window the length to 10 and try again. The result should look like [@fig-rboh-step4].
+
+![Z-HIT transform of the spectrum in [@fig-rboh-step2].](figures/Examples/SoftX_Revision/RbOH_xH2O/Step4.png){width=100% #fig-rboh-step4}
+
+5. The phase data are well-smoothed over the entire frequency range, but the calculated amplitude increases instead of decreasing, as the measured data does, above ~300 kHz. Therefore, the data at the highest frequencies cannot be trusted. Knowing this, the Z-HIT window can be closed with ```Reject and close```.
+
+6. Now it is time to define an equivalent circuit model. Because the phase angle goes up at high frequencies, an inductor should be included. Other than that, the Randles circuit (with a CPE instead of a Warburg element for the low-frequency region) will suffice. This circuit can be drawn via ```Circuit```>```Draw circuit```; see [@fig-rboh-step6]. With ```Use circuit and close```, the circuit is set.
+
+![Chosen circuit for RbOH^.^*x*H~2~O.](figures/Examples/SoftX_Revision/RbOH_xH2O/Step6.png){width=100% #fig-rboh-step6}
+
+7. Since this is quite a simple circuit, using ```Calculate```>```Automatic initial guess```, a reasonable initial guess can be obtained. Note that this method is subject to some randomness; the result may change (for better or worse) by pressing ```Automatic initial guess``` multiple times. After doing this twice, the result could look like the one in [@fig-rboh-step7].
+
+![Initial guess for RbOH^.^*x*H~2~O.](figures/Examples/SoftX_Revision/RbOH_xH2O/Step7.png){width=100% #fig-rboh-step7}
+
+8. The amplitude shoulder on the right-hand side looks as if it could be better captured by the model, although we know to doubt this feature due to the Z-HIT analysis. By selecting ```C0``` in the parameter list box and pressing ```Adjust controls```, the slider can be moved to the right to slightly improve the fit. [@fig-rboh-step8] results.
+
+![Manual adjustment to the RbOH^.^*x*H~2~O spectrum.](figures/Examples/SoftX_Revision/RbOH_xH2O/Step8.png){width=100% #fig-rboh-step8}
+
+9. To finalize the fit, a refinement is in order. Using ```Calculate```>```Simple refinement```, [@fig-rboh-step9] is obtained. Apparently, the change in step (8) was not an improvement to the overall fit.
+
+![Refinement of the fit of the RbOH^.^*x*H~2~O spectrum.](figures/Examples/SoftX_Revision/RbOH_xH2O/Step9.png){width=100% #fig-rboh-step9}
+
+10. To verify that the fit is of good quality, it is worth looking at the result in a few different plot types. For example, changing the right-hand side plot to ```Y' and Y'' vs. frequency``` ([@fig-rboh-step10]) reveals a few measurement artifacts around 100 kHz and the apparent breakdown of the model above 600 kHz.
+
+![Alternative view of the RbOH^.^*x*H~2~O spectrum.](figures/Examples/SoftX_Revision/RbOH_xH2O/Step10.png){width=100% #fig-rboh-step10}
+
+11. Now that the spectrum has been validated and modeled, and we understand the limitations of the result (breakdown at high frequencies), the result can be saved. Go to ```File```>```Save result...``` and save the result.
+
+12. DEC*i*M can now be closed; the result can be reloaded with ```File```>```Load result...```.
+
+## Example 2: graphite||lithium half-cell {#sec-examples-lic}
+
+In this example, a graphite||lithium (C||Li) half-cell's impedance spectrum, recorded after a series of charge-discharge cycles, is analyzed by manually fitting and then automatically refining an equivalent circuit model.
+
+1. Start DEC*i*M with ```python DECiM.py``` (or the equivalent on your system for starting a Python 3 script) in the ```src``` folder.
+
+2. Go to ```File```>```Load data...``` and navigate to the ```examples``` folder (```path_to_decim/DECiM/examples```). Go to ```Li_Graphite_Half_Cell``` and open the text file (.txt, not .recm2) that's inside. The data should now appear in the main DEC*i*M window.
+
+3. Because the spectrum is quite complex, it is useful to get an impression of the characteristic frequencies of the features. Selecting ```Plot>Mark frequencies that are integer powers of 10``` results in [@fig-lic-step3].
+
+![Impedance spectrum of a graphite||lithium half-cell.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step3.png){width=100% #fig-lic-step3}
+
+4. The impedance spectrum has a high-frequency semicircle (100 kHz--10 Hz), a medium-frequency semicircle (10 Hz--100 mHz), and a straight line (<100 mHz). There is also a gap between the origin and the start of the high-frequency semicircle due to the external circuit. An appropriate choice of equivalent circuit for this spectrum is ```{L0R0(R1Q1)({R2Q0}Q2)}```. L~0~ and R~0~ represent the external circuit and possibly electrolyte resistance, (R~1~Q~1~) and (R~2~Q~2~) represent two independent processes (likely charge transfers at the two electrodes, given the low characteristic frequencies), and Q~0~ represents polarisation (straight line). Typing the circuit string ```{L0R0(R1Q1)({R2Q0}Q2)}``` into ```Circuit>Type circuit``` will populate the ```Parameter``` list box on the left, below the plots, as in [@fig-lic-step4].
+
+![List of parameters for ```{L0R0(R1Q1)({R2Q0}Q2)}```.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step4.png){width=15% #fig-lic-step4}
+
+5. The ```Plot>Mark frequencies that are integer powers of 10``` option should now be clicked again to toggle it off. Also ```Plot>Reset View``` to zoom back in on the whole spectrum.
+
+6. The parameters' values are now all 1; they should be set to reasonable starting values. For L~0~, this is 10^-12^ H. For R~0~, this is the distance on the real axis between the origin and the start of the high-frequency semicircle; this is ca. 7 $\Omega$. R~1~ should be roughly the diameter of the high-frequency semircircle (ca. 70 $\Omega$) and R~2~ should be roughly the diameter of the intermediate-frequency semicircle (ca. 80 $\Omega$). All Q and n can remain equal to 1. The desired starting values can be quickly set by first selecting the right parameter and then typing the value into the ```Direct input``` field and pressing the ```Set``` button. Alternatively, ```Adjust controls``` may be pressed, and the slider may then be moved.
+
+7. Now, the constant phase elements' parameters can be adjusted. First, adjust Q~1~ by selecting it, pressing ```Adjust controls``` and moving the slider to the right. The high-frequency semicircle should now be fitted to some extent by the red line and the first shoulder of |Z| should be touched by the model curve. The result should look like [@fig-lic-step7], with $Q_1 = 1.1\times 10^{-5}$ F.
+
+![The result of the first few manual fitting steps for the C||Li half-cell.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step7.png){width=100% #fig-lic-step7}
+
+8. Q~2~ can now also be adjusted with the slider for a rough fit of the intermediate-frequency semicircle. The result should look like [@fig-lic-step8].
+
+![C||Li half-cell spectrum after tuning Q~2~.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step8.png){width=100% #fig-lic-step8}
+
+9. Now, the CPE exponent n~0~ should be adjusted to match the angle of the low-frequency line and Q~0~ should then be adjusted to roughly match its length, resulting in [@fig-lic-step9]. The parameters are those in  [@fig-lic-step9-2].
+
+![C||Li half-cell spectrum after tuning n~0~ and Q~0~.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step9.png){width=100% #fig-lic-step9}
+
+![Parameters after tuning n~0~ and Q~0~.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step9_2.png){width=15% #fig-lic-step9-2}
+
+10. To better match the initial guess to the data in the complex plane, the CPE exponents n~1~ and n~2~ should be decreased. However, decreasing n~1~ will cause the model's |Z| to differ greatly from the measured data. This can be remedied by adjusting Q~1~. A final, small adjustment of R~1~ gives rise to [@fig-lic-step10].
+
+![C||Li impedance spectrum after tuning n~1~, Q~1~, and R~1~.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step10.png){width=100% #fig-lic-step10}
+
+11. Adjusting n~2~, Q~2~ and R~2~ in the same order as n~1~, Q~1~ and R~1~ leads to [@fig-lic-step11]. The parameters are in [@fig-lic-step11-2].
+
+![C||Li impedance spectrum after tuning n~2~, Q~2~, and R~2~.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step11.png){width=100% #fig-lic-step11}
+
+![C||Li impedance spectrum after tuning n~2~, Q~2~, and R~2~.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step11_2.png){width=15% #fig-lic-step11-2}
+
+12. Now, the final corrections before automatic refinement should be made. First, L~0~ should be increased to around $1.7\times 10^{-6}$ H to better describe the phase data at the highest frequencies. On the other end of the spectrum, Q~0~ should be decreased to $3.2\times 10^{-2}$ Fs^n-1^. Then, Q~2~ can be decreased as well, to $2.4\times 10^{-3}$ Fs^n-1^. The result is [@fig-lic-step12].
+
+![C||Li impedance spectrum after tuning n~2~, Q~2~, and R~2~.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step12.png){width=100% #fig-lic-step12}
+
+13. It now appears that R~2~ is too large, so it should be decreased. Then, n~2~ should be increased to raise the the semicircle without widening it. Finally, n~0~ and Q~0~ should be tweaked to correct the low-frequency part of the spectrum. This leads to [@fig-lic-step13]. The parameters are in [@fig-lic-step13-2].
+
+![C||Li impedance spectrum before moving on to advanced refinement.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step13.png){width=100% #fig-lic-step13}
+
+![Parameters before moving on to advanced refinement.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step13_2.png){width=15% #fig-lic-step13-2}
+
+14. Now, it is time to move on to automatic refinement via ```Calculate>Advanced refinement...```. This will open a window with plots as in [@fig-lic-step14]. In the  window, the ```SciPy: Nelder-Mead``` optimizer and ```Calculated modulus``` weighting scheme (modulus weighting based on the model curve) should be selected.
+
+![Plots in the refinement window before any refinement has been done.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step14.png){width=100% #fig-lic-step14}
+
+15. The goal of the refinement is to improve the residuals. This will be done in several steps. First, the high-frequency part of the model should be optimized by selecting L~0~, R~0~, R~1~, Q~1~, and n~1~ on the left and setting the lower frequency limit to 10 Hz in the centre. The settings should look as in [@fig-lic-step15].
+
+![Refinement settings.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step15.png){width=75% #fig-lic-step15}
+
+16. Pressing ```Refine solution``` on the right results in [@fig-lic-step16].
+
+![High-frequency refinement result.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step16.png){width=100% #fig-lic-step16}
+
+17. Now, the lower frequencies should be treated. Because there are no points where Re[Z] = 0 or Im[Z] = 0 in this region, the weighting scheme can be set to ```Observed proportional``` (proportional weighting based on measured data). Refining with the upper frequency limit set to 10 Hz, the lower frequency limit set to 0.009 Hz, and R~2~, Q~2~, n~2~, Q~0~, and n~0~ selected, results in [@fig-lic-step17].
+
+![Low-frequency refinement result.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step17.png){width=100% #fig-lic-step17}
+
+18. The final refinement step covers the entire frequency range and all parameters. With the ```Calculated modulus``` weighting scheme, the result is [@fig-lic-step18].
+
+![Final refinement result.](figures/Examples/SoftX_Revision/Li_C_Half_Cell/Step18.png){width=100% #fig-lic-step18}
+
+19. The result can be saved to a .recm2 file with ```File>Save result...``` This file can be loaded again via ```File>Load result...```, which will load both the data and model.
+
+## Short examples {#sec-examples-short}
+
+### Changing the data file format for loading {#sec-examples-short-nonstandard}
+
+In this example, the loading of a data file with ($f$, $|Z|$, $\phi$) data instead of the standard ($f$, Re[Z], Im[Z]) is demonstrated.
+
+1. Go to ```Bode_format_data``` in the ```examples``` folder (```path_to_decim/DECiM/examples```). Open the ```CH4_H2.txt``` file in a text editor to check the format. You will see that it is formatted in three columns: each row has ($f$, $|Z|$, $\phi$) data instead of the standard ($f$, Re[Z], Im[Z]).
+
+2. Start DEC*i*M with ```python DECiM.py``` (or the equivalent on your system for starting a Python 3 script) in the ```src``` folder.
+
+3. Click ```File>Specify data file layout...``` and select the settings indicated in [@fig-bodeex-step3]. Then, click ```Save and exit```.
+
+![Modifying the data file layout specification.](figures/Examples/SoftX_Revision/BodeEx/Step3.png){width=30% #fig-bodeex-step3}
+
+4. Go to ```File```>```Load data...``` to open the file from step 1 in DEC*i*M. The data should now appear in the main DEC*i*M window ([@fig-bodeex-step4]).
+
+![Spectrum loaded from ($f$, $|Z|$, $\phi$) data.](figures/Examples/SoftX_Revision/BodeEx/Step4.png){width=100% #fig-bodeex-step4}
+
+5. To go back to the standard loading settings, go to ```File>Specify data file layout...``` and select the settings indicated in [@fig-bodeex-step5]. If you do not do this, DEC*i*M will continue to expect ($f$, $|Z|$, $\phi$) data even after closing the program.
+
+![Restoring the default data file layout specification.](figures/Examples/SoftX_Revision/BodeEx/Step5.png){width=30% #fig-bodeex-step5}
+
+# Copyright information {#sec-copyright}
+
+DEC*i*M is distributed under the MIT license.
+
+## DEC*i*M license {#sec-copyright-mit}
+
+The MIT License (MIT)
+
+Copyright 2024 Utrecht University
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# Citing {#sec-citing}
+
+## Scientific publication {#sec-citing-publication}
+
+Please cite the publication referenced on the DEC*i*M download page if you publish work in which you made use of DEC*i*M for data analysis.
+
+# References {#sec-references}
